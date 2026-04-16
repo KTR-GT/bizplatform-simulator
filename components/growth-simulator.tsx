@@ -478,7 +478,7 @@ function MarketTab() {
               <span className="font-inter font-black text-[110px] leading-none tabular-nums">83.8</span>
               <span className="text-4xl text-white/60 ml-1">%</span>
             </h1>
-            <p className="font-serif-display italic text-white text-3xl mt-1">が、年商3,000万円以下。</p>
+            <p className="font-serif-display italic text-white text-3xl mt-1">が、年商1億円以下。</p>
           </div>
           <div className="mb-4 border-l border-white/15 pl-6">
             <p className="text-white/40 text-sm leading-relaxed">国税庁・会社標本調査より推計<br />中小企業の大多数は年商数千万円規模。<br />これが<span className="text-white font-bold">コミットプランの主戦場</span>だ。</p>
