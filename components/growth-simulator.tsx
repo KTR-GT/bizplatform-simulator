@@ -820,7 +820,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             ["エリア指定",       "全国対応"],
             ["初回設定サポート", "無料"],
             ["マッチング精度",   "AI自動判定"],
-            ["契約形態",         "月次更新・解約自由"],
+            ["月次面談",         "担当者との案件すり合わせ"],
           ].map(([label, value]) => (
             <div key={label} className="px-8 py-5 border-b border-r border-black/10 last:border-r-0 flex justify-between items-center">
               <span className="text-sm text-black/45">{label}</span>
