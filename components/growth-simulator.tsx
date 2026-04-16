@@ -468,15 +468,15 @@ function MarketTab() {
           <br />
           <span className="text-4xl italic">は、年商1億円未満。</span>
         </h1>
-        <p className="text-white/40 text-sm mt-4">国内法人のうち年商1億円未満が占める割合（国税庁統計）</p>
+        <p className="text-white/40 text-sm mt-4">国内法人のうち年商1億円未満が占める割合（国税庁・会社標本調査より推計）</p>
       </div>
 
       <div className="grid grid-cols-4 gap-px bg-white/10 mb-12 stagger-2">
         {[
-          { num: 380, unit: "万社", label: "国内の法人総数",               sub: "国税庁統計" },
-          { num: 150, unit: "万社", label: "税理士が未関与の法人",         sub: "全体の約40%" },
+          { num: 296, unit: "万社", label: "国内の法人総数",               sub: "国税庁・令和5年度会社標本調査" },
+          { num: 31,  unit: "万社", label: "税理士が未関与の法人",         sub: "全体の約10%" },
           { num: 460, unit: "万人", label: "個人事業主（青色申告者）",     sub: "国税庁統計" },
-          { num: 13,  unit: "万社", label: "年間の新設法人数",             sub: "法務省統計" },
+          { num: 15,  unit: "万社", label: "年間の新設法人数",             sub: "法務省統計（2024年・過去最高）" },
         ].map(({ num, unit, label, sub }) => (
           <div key={label} className="bg-[#0A0A0A] px-6 py-10">
             <div className="font-inter font-black text-[60px] leading-none tabular-nums text-white">
@@ -520,8 +520,8 @@ function MarketTab() {
 
       <div className="grid grid-cols-2 gap-4 stagger-4">
         {[
-          { val: "約210万件", label: "潜在的に税理士変更・新規契約を検討しうる企業数", detail: "法人＋個人事業主の推計合計" },
-          { val: "¥28,000",   label: "中小法人の平均月額顧問料",                       detail: "業界平均値（推計）" },
+          { val: "約330万件", label: "潜在的に税理士変更・新規契約を検討しうる企業数", detail: "未関与法人＋個人事業主（弊社推計）" },
+          { val: "¥30,000〜40,000", label: "中小法人の平均月額顧問料",               detail: "日本税理士会連合会・業界実態調査より" },
         ].map(({ val, label, detail }) => (
           <div key={label} className="border border-white/10 px-8 py-6">
             <p className="font-inter font-black text-3xl text-white mb-2">{val}</p>
@@ -601,7 +601,7 @@ function DiagnosisTab({ diagnosis, chartData, displayName, planLabel }: any) {
       <div className="grid grid-cols-3 gap-px bg-black stagger-5">
         {[
           { num: "97%",   label: "年商1億円未満の法人割合", detail: "中小規模が市場の大多数" },
-          { num: "150万社", label: "税理士未関与の法人数",   detail: "潜在的な顧客市場" },
+          { num: "約31万社", label: "税理士未関与の法人数",   detail: "潜在的な顧客市場" },
           { num: "6.5%", label: "年間の顧客離脱率（業界平均）", detail: "放置すれば確実に減少" },
         ].map(({ num, label, detail }) => (
           <div key={label} className="bg-white px-8 py-8 text-center">
