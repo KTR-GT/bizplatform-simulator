@@ -461,47 +461,41 @@ function MarketTab() {
   const [hoveredKey, setHoveredKey] = useState<string | null>(null)
 
   // -------------------------------------------------------
-  // 1本の棒グラフ用データ
-  // barW = 実際の横幅%  (groupPct/100 * groupW で按分)
-  // 税理士あり層を全体の55%、なし層を45%と想定
+  // 1本バー — 左: アプローチ不可（暗）/ 右: アプローチ可能（明）
+  //
+  // 左側 (dark) ≈ 20%
+  //   大変満足: 20% × 55% = 11%
+  //   顕在層:   10% × 55% =  6%  ← 競合他社が対応
+  //   明確探索:  7% × 45% =  3%  ← 競合他社が対応
+  //
+  // 右側 (bright) ≈ 80%
+  //   普通・まあ満足: 35% × 55% = 19%
+  //   不満あり（潜在）: 35% × 55% = 19%
+  //   未検討層:       80% × 45% = 36%
+  //   潜在的な検討層: 13% × 45% =  6%
   // -------------------------------------------------------
-  type Seg = {
-    key: string; label: string; barW: number
-    target: boolean; competitive: boolean; desc: string
-    groupLabel?: string  // グループ境界に表示するラベル
-  }
+  type Seg = { key: string; label: string; barW: number; bright: boolean; desc: string }
   const segs: Seg[] = [
-    { key:"a1", label:"大変満足",           barW: 20*55/100, target:false, competitive:false,
-      groupLabel:"← 税理士と契約している層（法人の約90% ＋ 個人事業主の一部）",
+    // ── 左: 暗い（アプローチ不可） ──
+    { key:"a1", label:"大変満足",           barW: 11, bright:false,
       desc:"現状の顧問税理士に非常に満足。変更意向なし。年商規模が大きい法人に多い層。" },
-    { key:"a2", label:"普通・まあ満足",     barW: 35*55/100, target:true,  competitive:false,
+    { key:"a4", label:"顕在層",             barW:  6, bright:false,
+      desc:"HPやネット広告・紹介サービスで積極探索中。競合他社がすでに対応している層。BizplatFormが入る余地は少ない。" },
+    { key:"b3", label:"明確な探索層",       barW:  3, bright:false,
+      desc:"マッチングサイト等で具体的にアクション中。競合他社と正面衝突になる領域。" },
+    // ── 右: 明るい（BizplatFormがアプローチ可能） ──
+    { key:"a2", label:"普通・まあ満足",     barW: 19, bright:true,
       desc:"特段の不満はないが積極的な提案も受けていない層。変更のきっかけがあれば動く可能性がある。BizplatFormのターゲット。" },
-    { key:"a3", label:"不満あり（潜在層）", barW: 35*55/100, target:true,  competitive:false,
+    { key:"a3", label:"不満あり（潜在層）", barW: 19, bright:true,
       desc:"レスポンスの遅さ・提案不足・クラウド未対応などに不満。しかし「変えよう」とは自分から動かない。BizplatFormの主力ターゲット。" },
-    { key:"a4", label:"顕在層",             barW: 10*55/100, target:true,  competitive:true,
-      desc:"HPやネット広告・紹介サービスで積極探索中。BizplatFormもアプローチするが競合他社が多い層。" },
-    { key:"b1", label:"未検討層",            barW: 80*45/100, target:false, competitive:false,
-      groupLabel:"← 税理士と未契約の層（個人事業主の大半 ＋ 新設法人の一部）",
-      desc:"「まだ税理士は不要」と考えており税理士契約を検討していない層。当面はアプローチ対象外。" },
-    { key:"b2", label:"潜在的な検討層",     barW: 13*45/100, target:true,  competitive:false,
+    { key:"b1", label:"未検討層",           barW: 36, bright:true,
+      desc:"税理士契約をまだ検討していない層。インボイス対応・法人成り・代替わりなどのタイミングでニーズが顕在化する。BizplatFormのターゲット。" },
+    { key:"b2", label:"潜在的な検討層",     barW:  6, bright:true,
       desc:"インボイス対応・売上1,000万円突破（消費税課税）をきっかけに税理士を検討し始めた層。BizplatFormのサブターゲット。" },
-    { key:"b3", label:"明確な探索層",       barW:  7*45/100, target:true,  competitive:true,
-      desc:"紹介・マッチングサイトで具体的にアクション中の顕在層。競合と直接競合する。一部調査では「来年まで契約検討」が65%だが実際に動くのは1割程度。" },
   ]
 
-  // 色マップ（明度で役割を表現）
-  const colorMap: Record<string, string> = {
-    a1: "rgba(255,255,255,0.09)", a2: "rgba(255,255,255,0.42)",
-    a3: "rgba(255,255,255,0.60)", a4: "rgba(255,255,255,0.26)",
-    b1: "rgba(255,255,255,0.07)", b2: "rgba(255,255,255,0.48)",
-    b3: "rgba(255,255,255,0.24)",
-  }
-  const hoverColorMap: Record<string, string> = {
-    a1: "rgba(255,255,255,0.16)", a2: "rgba(255,255,255,0.56)",
-    a3: "rgba(255,255,255,0.75)", a4: "rgba(255,255,255,0.38)",
-    b1: "rgba(255,255,255,0.13)", b2: "rgba(255,255,255,0.63)",
-    b3: "rgba(255,255,255,0.36)",
-  }
+  // 境界位置（左ブロック合計 = 20%）
+  const dividerAt = 20
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
@@ -541,64 +535,55 @@ function MarketTab() {
         ))}
       </div>
 
-      {/* SINGLE COMBINED BAR */}
+      {/* SINGLE BAR */}
       <div className="stagger-3 mb-10">
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-6">
-          Market Structure — 誰に届けるか&nbsp;&nbsp;<span className="normal-case tracking-normal text-white/20">（各セグメントにカーソルを当てると詳細表示）</span>
+          Market Structure — 誰に届けるか
+          <span className="normal-case tracking-normal text-white/20 ml-3">（各セグメントにカーソルを当てると詳細表示）</span>
         </p>
 
-        {/* グループラベル行 */}
-        <div className="flex mb-1" style={{ gap: 0 }}>
-          {/* 税理士あり: 55% */}
-          <div style={{ width: "55%" }}>
-            <p className="font-inter text-[9px] text-white/30 truncate">税理士と契約している層（法人の約90% ＋ 個人事業主の一部）</p>
+        {/* 上部ラベル行 */}
+        <div className="flex mb-1 w-full">
+          <div style={{ width: `${dividerAt}%` }}>
+            <p className="font-inter text-[9px] text-white/25">競合他社が対応 / アプローチ不可</p>
           </div>
-          {/* 区切り */}
-          <div style={{ width: "2px" }} />
-          {/* 税理士なし: 45% */}
-          <div style={{ width: "calc(45% - 2px)" }}>
-            <p className="font-inter text-[9px] text-white/30 truncate">税理士と未契約の層（個人事業主の大半 ＋ 新設法人の一部）</p>
+          <div style={{ width: `${100 - dividerAt}%` }}>
+            <p className="font-inter text-[9px] text-white/60 text-right">← BizplatFormがアプローチ可能な領域</p>
           </div>
         </div>
 
         {/* バー本体 */}
-        <div className="relative flex h-20 w-full" style={{ gap: "1px" }}>
-          {segs.map((seg) => {
+        <div className="relative w-full flex h-20" style={{ gap: "1px" }}>
+          {segs.map((seg, i) => {
             const isHov = hoveredKey === seg.key
-            // グループ境界の前に区切り線を挿入 (b1の前)
+            // 明暗境界の直後に区切り線
+            const isDividerBefore = i === 3
+            const bg = seg.bright
+              ? (isHov ? "rgba(255,255,255,0.80)" : "rgba(255,255,255,0.58)")
+              : (isHov ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.09)")
             return (
               <div
                 key={seg.key}
                 style={{
                   width: `${seg.barW}%`,
-                  background: isHov ? hoverColorMap[seg.key] : colorMap[seg.key],
+                  background: bg,
                   transition: "background 0.15s ease",
                   position: "relative",
-                  ...(seg.key === "b1" ? { marginLeft: "3px", borderLeft: "1px solid rgba(255,255,255,0.2)" } : {}),
+                  ...(isDividerBefore ? { marginLeft: "3px", borderLeft: "2px solid rgba(255,255,255,0.5)" } : {}),
                 }}
                 onMouseEnter={() => setHoveredKey(seg.key)}
                 onMouseLeave={() => setHoveredKey(null)}
               >
-                {/* 競合あり斜線パターン */}
-                {seg.competitive && (
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,0.18) 4px, rgba(0,0,0,0.18) 6px)",
-                    }}
-                  />
-                )}
-
-                {/* % テキスト */}
-                {seg.barW >= 4 && (
+                {/* % テキスト（幅が十分ある時のみ） */}
+                {seg.barW >= 5 && (
                   <span
                     className="absolute inset-0 flex items-center justify-center font-inter font-black tabular-nums select-none"
                     style={{
-                      fontSize: seg.barW >= 10 ? "13px" : "10px",
-                      color: (seg.target && !seg.competitive) ? "#0A0A0A" : "rgba(255,255,255,0.55)",
+                      fontSize: seg.barW >= 12 ? "13px" : "10px",
+                      color: seg.bright ? "#0A0A0A" : "rgba(255,255,255,0.45)",
                     }}
                   >
-                    {Math.round(seg.barW)}%
+                    {seg.barW}%
                   </span>
                 )}
 
@@ -614,20 +599,13 @@ function MarketTab() {
                       padding: "14px 16px",
                     }}
                   >
-                    <p className="font-inter font-black text-[11px] mb-1">{seg.label}</p>
+                    <p className="font-inter font-black text-[11px] mb-1">{seg.label} — {seg.barW}%</p>
                     <p className="text-[10px] leading-relaxed text-black/60">{seg.desc}</p>
-                    <div className="flex gap-2 mt-2 flex-wrap">
-                      {seg.target && (
-                        <span className="inline-block bg-[#0A0A0A] text-white text-[8px] px-2 py-0.5 uppercase tracking-widest font-inter font-bold">
-                          BizplatForm Target
-                        </span>
-                      )}
-                      {seg.competitive && (
-                        <span className="inline-block border border-black/30 text-black/50 text-[8px] px-2 py-0.5 uppercase tracking-widest font-inter">
-                          競合あり
-                        </span>
-                      )}
-                    </div>
+                    {seg.bright && (
+                      <span className="inline-block mt-2 bg-[#0A0A0A] text-white text-[8px] px-2 py-0.5 uppercase tracking-widest font-inter font-bold">
+                        BizplatForm Target
+                      </span>
+                    )}
                     <div style={{
                       position:"absolute", bottom:"-6px", left:"50%", transform:"translateX(-50%)",
                       width:0, height:0,
@@ -641,19 +619,19 @@ function MarketTab() {
           })}
         </div>
 
-        {/* ラベル行（バー下） */}
-        <div className="flex mt-1" style={{ gap: "1px" }}>
-          {segs.map((seg) => (
+        {/* セグメントラベル（バー下） */}
+        <div className="flex mt-1 w-full" style={{ gap: "1px" }}>
+          {segs.map((seg, i) => (
             <div
               key={seg.key}
               style={{
                 width: `${seg.barW}%`,
-                ...(seg.key === "b1" ? { marginLeft: "3px" } : {}),
+                ...(i === 3 ? { marginLeft: "3px" } : {}),
               }}
             >
               <p
                 className="font-inter text-[9px] truncate px-0.5"
-                style={{ color: seg.target ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.22)" }}
+                style={{ color: seg.bright ? "rgba(255,255,255,0.70)" : "rgba(255,255,255,0.22)" }}
               >
                 {seg.label}
               </p>
@@ -662,18 +640,14 @@ function MarketTab() {
         </div>
 
         {/* 凡例 */}
-        <div className="mt-5 flex items-center gap-6 flex-wrap">
+        <div className="mt-5 flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-3" style={{ background: "rgba(255,255,255,0.55)" }} />
-            <span className="text-white/45 text-[10px] font-inter">BizplatFormがアプローチする領域</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-3 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.26)", backgroundImage:"repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(0,0,0,0.2) 4px,rgba(0,0,0,0.2) 6px)" }} />
-            <span className="text-white/35 text-[10px] font-inter">BizplatFormターゲット（競合あり）</span>
+            <div className="w-4 h-3" style={{ background: "rgba(255,255,255,0.58)" }} />
+            <span className="text-white/50 text-[10px] font-inter">BizplatFormがアプローチ可能な領域（約80%）</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-3" style={{ background: "rgba(255,255,255,0.09)" }} />
-            <span className="text-white/25 text-[10px] font-inter">当面ターゲット外</span>
+            <span className="text-white/25 text-[10px] font-inter">競合他社が対応 / アプローチ不可（約20%）</span>
           </div>
         </div>
       </div>
