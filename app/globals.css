@@ -1,0 +1,220 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #0A0A0A;
+  --card: #FFFFFF;
+  --card-foreground: #0A0A0A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0A0A0A;
+  --primary: #0A0A0A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F4F4F4;
+  --secondary-foreground: #0A0A0A;
+  --muted: #F4F4F4;
+  --muted-foreground: #888888;
+  --accent: #F4F4F4;
+  --accent-foreground: #0A0A0A;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #0A0A0A;
+  --input: #0A0A0A;
+  --ring: #0A0A0A;
+  --chart-1: #0A0A0A;
+  --chart-2: #555555;
+  --chart-3: #999999;
+  --chart-4: #CCCCCC;
+  --chart-5: #E8E8E8;
+  --radius: 0rem;
+}
+
+@theme inline {
+  --font-sans: var(--font-noto), 'Noto Sans JP', sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    cursor: none !important;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-noto), 'Noto Sans JP', sans-serif;
+  }
+}
+
+/* =====================================================
+   CUSTOM CURSOR
+===================================================== */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background: #0A0A0A;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.18s ease, height 0.18s ease, background 0.18s ease, border 0.18s ease;
+  will-change: left, top;
+}
+
+.custom-cursor.is-hovering {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1.5px solid #0A0A0A;
+}
+
+.custom-cursor.is-dark {
+  background: #FFFFFF;
+}
+
+.custom-cursor.is-dark.is-hovering {
+  background: transparent;
+  border-color: #FFFFFF;
+}
+
+/* =====================================================
+   FONT UTILITIES
+===================================================== */
+.font-inter {
+  font-family: var(--font-inter), 'Inter', sans-serif;
+}
+
+.font-serif-display {
+  font-family: var(--font-serif), 'DM Serif Display', serif;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =====================================================
+   TAB & PAGE ANIMATIONS
+===================================================== */
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(36px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-36px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+@keyframes floatDot {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.tab-enter {
+  animation: slideInFromRight 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tab-enter-left {
+  animation: slideInFromLeft 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger helpers */
+.stagger-1 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both; }
+.stagger-2 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both; }
+.stagger-3 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both; }
+.stagger-4 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both; }
+.stagger-5 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both; }
+.stagger-6 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both; }
+.stagger-7 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both; }
+.stagger-8 { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.46s both; }
+
+/* Blue Ocean pulse */
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.float-dot {
+  animation: floatDot 3s ease-in-out infinite;
+}
+
+/* Slide-fill button effect */
+.btn-fill {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #FFFFFF;
+  transform: translateX(-101%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+
+.btn-fill:hover::after {
+  transform: translateX(0);
+}
+
+/* =====================================================
+   PRINT / PDF STYLES
+===================================================== */
+@media print {
+  .no-print { display: none !important; }
+  .custom-cursor { display: none !important; }
+
+  body { background: white; color: black; }
+
+  .print-section {
+    page-break-after: always;
+    padding: 32px;
+  }
+}

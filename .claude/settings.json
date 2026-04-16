@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm dev *)",
+      "Bash(npx next *)",
+      "Bash(node_modules/.bin/next dev *)",
+      "Bash(npm install *)"
+    ]
+  }
+}
