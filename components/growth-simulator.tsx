@@ -471,14 +471,15 @@ function MarketTab() {
         <p className="text-white/40 text-sm mt-4">国内法人のうち年商1億円未満が占める割合（国税庁統計）</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-px bg-white/10 mb-12 stagger-2">
+      <div className="grid grid-cols-4 gap-px bg-white/10 mb-12 stagger-2">
         {[
-          { num: 380, unit: "万社", label: "国内の法人総数",       sub: "国税庁統計" },
-          { num: 150, unit: "万社", label: "税理士が未関与の法人", sub: "全体の約40%" },
-          { num: 13,  unit: "万社", label: "年間の新設法人数",     sub: "法務省統計" },
+          { num: 380, unit: "万社", label: "国内の法人総数",               sub: "国税庁統計" },
+          { num: 150, unit: "万社", label: "税理士が未関与の法人",         sub: "全体の約40%" },
+          { num: 460, unit: "万人", label: "個人事業主（青色申告者）",     sub: "国税庁統計" },
+          { num: 13,  unit: "万社", label: "年間の新設法人数",             sub: "法務省統計" },
         ].map(({ num, unit, label, sub }) => (
-          <div key={label} className="bg-[#0A0A0A] px-8 py-10">
-            <div className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
+          <div key={label} className="bg-[#0A0A0A] px-6 py-10">
+            <div className="font-inter font-black text-[60px] leading-none tabular-nums text-white">
               <AnimatedNumber value={num} suffix={unit} />
             </div>
             <p className="text-white/50 text-sm mt-3">{label}</p>
