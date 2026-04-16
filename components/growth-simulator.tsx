@@ -695,6 +695,45 @@ function MarketTab() {
           <p className="text-white/25 text-[10px] mt-1 font-inter">船井総研 2023年調査</p>
         </div>
       </div>
+
+      {/* 顧問料 × 企業数 横棒グラフ */}
+      <div className="stagger-5 mt-4">
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-5">
+          Fee × Volume — 顧問料帯ごとの法人数（296万社ベース）
+        </p>
+        <div className="space-y-3">
+          {[
+            { range: "〜1,000万円",    fee: "月額 1.0〜2.0万円", companies: 105, pct: 35.5 },
+            { range: "1,000〜3,000万円", fee: "月額 1.7〜3.0万円", companies:  80, pct: 26.9 },
+            { range: "3,000〜5,000万円", fee: "月額 2.0〜4.0万円", companies:  36, pct: 12.0 },
+            { range: "5,000万〜1億円",   fee: "月額 3.2〜6.0万円", companies:  28, pct:  9.4 },
+          ].map(({ range, fee, companies, pct }) => (
+            <div key={range} className="flex items-center gap-4">
+              {/* 年商ラベル */}
+              <span className="font-inter text-[11px] text-white/35 w-28 shrink-0 tabular-nums">{range}</span>
+              {/* バー */}
+              <div className="flex-1 relative h-8 bg-white/5">
+                <div
+                  className="absolute left-0 top-0 h-full bg-white/30 flex items-center"
+                  style={{ width: `${(companies / 105) * 100}%` }}
+                >
+                  <span className="font-inter font-black text-[11px] text-white tabular-nums pl-3 whitespace-nowrap">
+                    約{companies}万社
+                  </span>
+                </div>
+              </div>
+              {/* 顧問料 + 割合 */}
+              <div className="shrink-0 text-right w-36">
+                <p className="font-inter font-bold text-white text-[12px]">{fee}</p>
+                <p className="font-inter text-white/30 text-[10px] tabular-nums">全体の {pct}%</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-white/20 text-[10px] mt-4 font-inter">
+          ※ 国税庁・会社標本調査の年商分布を296万社に適用した推計値
+        </p>
+      </div>
     </div>
   )
 }
