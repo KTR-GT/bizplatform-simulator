@@ -458,14 +458,63 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 // 02 MARKET
 // ============================================================
 function MarketTab() {
-  // Revenue distribution bar data
+  const [hoveredSeg, setHoveredSeg] = useState<{ gi: number; si: number } | null>(null)
+
+  // Revenue distribution bars
   const revBars = [
-    { label: "〜500万",       pct: 18.6, width: "w-[22%]" },
-    { label: "500〜1,000万",  pct: 16.9, width: "w-[20%]" },
-    { label: "1,000〜3,000万",pct: 26.9, width: "w-[32%]" },
-    { label: "3,000〜5,000万",pct: 12.0, width: "w-[14%]" },
-    { label: "5,000万〜1億",  pct:  9.4, width: "w-[11%]" },
+    { label: "〜500万",        pct: 18.6 },
+    { label: "500〜1,000万",   pct: 16.9 },
+    { label: "1,000〜3,000万", pct: 26.9 },
+    { label: "3,000〜5,000万", pct: 12.0 },
+    { label: "5,000万〜1億",   pct:  9.4 },
   ]
+  const maxPct = 30
+
+  // Market structure groups for interactive bar
+  type Seg = { key: string; label: string; pct: number; desc: string; target: boolean }
+  const groups: { title: string; note: string; segs: Seg[] }[] = [
+    {
+      title: "税理士と契約している層",
+      note: "法人の約90% ＋ 個人事業主の一部",
+      segs: [
+        { key:"a1", label:"大変満足",        pct: 20, target: false,
+          desc: "現状の顧問税理士に非常に満足。変更意向なし。年商規模が大きい法人が多い。" },
+        { key:"a2", label:"普通・まあ満足",  pct: 35, target: false,
+          desc: "特段の不満はないが積極的な提案も受けていない層。変更を考えるきっかけがあれば動く可能性がある。" },
+        { key:"a3", label:"不満あり（潜在層）", pct: 35, target: true,
+          desc: "レスポンスの遅さ・提案不足・クラウド未対応などに不満。しかし「変えよう」とは自分から動かない。BizplatFormの主力ターゲット。" },
+        { key:"a4", label:"顕在層",          pct: 10, target: false,
+          desc: "HPやネット広告・税理士紹介サービスで積極的に探索中。競合他社と正面から競合する層。" },
+      ],
+    },
+    {
+      title: "税理士と未契約の層",
+      note: "個人事業主の大半 ＋ 新設法人の一部",
+      segs: [
+        { key:"b1", label:"自力申告層",        pct: 80, target: false,
+          desc: "ITリテラシーが高い若年層や売上が小規模な事業者。「まだ税理士は不要」と考えており、当面は自力申告を継続する見込み。" },
+        { key:"b2", label:"潜在的な検討層",    pct: 13, target: true,
+          desc: "インボイス対応・売上1,000万円突破（消費税課税）をきっかけに「そろそろ頼まないとまずい」と感じ始めている層。BizplatFormのサブターゲット。" },
+        { key:"b3", label:"明確な探索層",      pct:  7, target: false,
+          desc: "紹介・マッチングサイトで具体的にアクション中の顕在層。一部調査では「来年までに契約を検討」が65%だが実際に動くのは1割程度。" },
+      ],
+    },
+  ]
+
+  // Brightness map per segment key
+  const colorMap: Record<string, string> = {
+    a1: "rgba(255,255,255,0.10)", a2: "rgba(255,255,255,0.16)",
+    a3: "rgba(255,255,255,0.55)", a4: "rgba(255,255,255,0.28)",
+    b1: "rgba(255,255,255,0.08)", b2: "rgba(255,255,255,0.50)",
+    b3: "rgba(255,255,255,0.28)",
+  }
+  const hoverMap: Record<string, string> = {
+    a1: "rgba(255,255,255,0.18)", a2: "rgba(255,255,255,0.24)",
+    a3: "rgba(255,255,255,0.70)", a4: "rgba(255,255,255,0.38)",
+    b1: "rgba(255,255,255,0.14)", b2: "rgba(255,255,255,0.65)",
+    b3: "rgba(255,255,255,0.38)",
+  }
+
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
 
@@ -490,13 +539,13 @@ function MarketTab() {
       <div className="mb-10 stagger-2">
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-5">Revenue Distribution — 年商規模の分布</p>
         <div className="space-y-3">
-          {revBars.map(({ label, pct, width }) => (
+          {revBars.map(({ label, pct }) => (
             <div key={label} className="flex items-center gap-4">
               <span className="font-inter text-[11px] text-white/40 w-28 shrink-0 tabular-nums">{label}円</span>
-              <div className="flex-1 h-px bg-white/10 relative">
+              <div className="flex-1 bg-white/8 h-5 relative">
                 <div
-                  className={`absolute left-0 top-1/2 -translate-y-1/2 h-[3px] bg-white ${width}`}
-                  style={{ width: `${pct / 30 * 100}%` }}
+                  className="absolute left-0 top-0 h-full bg-white/35"
+                  style={{ width: `${(pct / maxPct) * 100}%` }}
                 />
               </div>
               <span className="font-inter font-black text-white tabular-nums text-sm w-12 text-right">{pct}%</span>
@@ -529,50 +578,126 @@ function MarketTab() {
         ))}
       </div>
 
-      {/* BLUE OCEAN — 顕在 vs 潜在 */}
+      {/* INTERACTIVE MARKET STRUCTURE BARS */}
       <div className="stagger-4 mb-10">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-5">Market Structure — 誰に届けるか</p>
-        <div className="grid grid-cols-5 border border-white/10">
-          <div className="col-span-1 border-r border-white/10 p-6 flex flex-col justify-between">
-            <div>
-              <p className="font-inter font-black text-[42px] leading-none tabular-nums text-white/30">5<span className="text-lg">〜</span>10<span className="text-xl">%</span></p>
-              <p className="text-white/25 text-xs mt-2">顕在層</p>
-              <p className="text-white/20 text-[11px] mt-2 leading-relaxed">WEB検索・税理士紹介サービスなど<br />「今すぐ探している」層</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-6">Market Structure — 誰に届けるか（各セグメントにカーソルを当てると詳細表示）</p>
+
+        <div className="space-y-8">
+          {groups.map((group, gi) => (
+            <div key={gi}>
+              {/* Group header */}
+              <div className="flex items-baseline gap-3 mb-2">
+                <p className="text-white text-sm font-bold">{group.title}</p>
+                <p className="text-white/30 text-[11px] font-inter">{group.note}</p>
+              </div>
+
+              {/* Bar */}
+              <div className="relative">
+                <div className="flex h-16 w-full gap-px">
+                  {group.segs.map((seg, si) => {
+                    const isHov = hoveredSeg?.gi === gi && hoveredSeg?.si === si
+                    return (
+                      <div
+                        key={seg.key}
+                        style={{
+                          width: `${seg.pct}%`,
+                          background: isHov ? hoverMap[seg.key] : colorMap[seg.key],
+                          transition: "background 0.15s ease",
+                          position: "relative",
+                        }}
+                        onMouseEnter={() => setHoveredSeg({ gi, si })}
+                        onMouseLeave={() => setHoveredSeg(null)}
+                      >
+                        {/* Pct label inside bar */}
+                        <span
+                          className="absolute inset-0 flex items-center justify-center font-inter font-black tabular-nums select-none"
+                          style={{
+                            fontSize: seg.pct >= 13 ? "13px" : "10px",
+                            color: seg.target ? "#0A0A0A" : "rgba(255,255,255,0.5)",
+                          }}
+                        >
+                          {seg.pct}%
+                        </span>
+
+                        {/* Tooltip */}
+                        {isHov && (
+                          <div
+                            className="absolute z-50 bg-white text-[#0A0A0A] shadow-2xl pointer-events-none"
+                            style={{
+                              bottom: "calc(100% + 10px)",
+                              left: "50%",
+                              transform: "translateX(-50%)",
+                              width: "220px",
+                              padding: "14px 16px",
+                            }}
+                          >
+                            <p className="font-inter font-black text-[11px] mb-1">{seg.label} — {seg.pct}%</p>
+                            <p className="text-[10px] leading-relaxed text-black/60">{seg.desc}</p>
+                            {seg.target && (
+                              <span className="inline-block mt-2 bg-[#0A0A0A] text-white text-[8px] px-2 py-0.5 uppercase tracking-widest font-inter font-bold">
+                                BizplatForm Target
+                              </span>
+                            )}
+                            {/* Arrow */}
+                            <div
+                              style={{
+                                position: "absolute",
+                                bottom: "-6px",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                width: 0,
+                                height: 0,
+                                borderLeft: "6px solid transparent",
+                                borderRight: "6px solid transparent",
+                                borderTop: "6px solid white",
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Segment labels below bar */}
+                <div className="flex gap-px mt-1">
+                  {group.segs.map((seg) => (
+                    <div key={seg.key} style={{ width: `${seg.pct}%` }}>
+                      <p
+                        className="font-inter text-[9px] truncate px-1"
+                        style={{ color: seg.target ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.25)" }}
+                      >
+                        {seg.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <span className="inline-block border border-white/15 text-white/25 text-[9px] px-2 py-1 uppercase tracking-wider font-inter mt-4">競合多数</span>
+          ))}
+        </div>
+
+        {/* Legend */}
+        <div className="mt-6 flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3" style={{ background: "rgba(255,255,255,0.55)" }} />
+            <span className="text-white/50 text-[10px] font-inter">= BizplatFormがアプローチする領域</span>
           </div>
-          <div className="col-span-4 p-8 relative overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-72 h-72 rounded-full border border-white/8 pulse-ring" />
-            </div>
-            <p className="font-inter font-black text-[80px] leading-none tabular-nums text-white relative z-10">30<span className="text-[40px]">〜</span>40<span className="text-[40px]">%</span></p>
-            <p className="text-white text-lg font-bold mt-1 relative z-10">不満を抱えているが、動いていない層</p>
-            <p className="text-white/45 text-sm mt-3 max-w-lg leading-relaxed relative z-10">
-              レスポンスが遅い、提案がない、クラウド未対応——<br />
-              <span className="font-inter font-bold text-white">不満はあっても「変えよう」とは動かない</span>。<br />
-              こちらから接触しなければ、永遠に出会えない。
-            </p>
-            <div className="mt-5 relative z-10 flex gap-3">
-              <span className="inline-block bg-white text-[#0A0A0A] text-[9px] px-3 py-1.5 uppercase tracking-widest font-inter font-bold">
-                BizplatFormがアプローチする領域
-              </span>
-              <span className="inline-block border border-white/30 text-white/50 text-[9px] px-3 py-1.5 uppercase tracking-widest font-inter">
-                ＋ 法人成り・代替わり・税務調査後
-              </span>
-            </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3" style={{ background: "rgba(255,255,255,0.12)" }} />
+            <span className="text-white/30 text-[10px] font-inter">= 競合他社が対応する領域 / 当面ターゲット外</span>
           </div>
         </div>
       </div>
 
       {/* FEE TABLE + KEY STAT */}
       <div className="grid grid-cols-2 gap-4 stagger-5">
-        {/* Fee table */}
         <div className="border border-white/10 px-8 py-6">
           <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">月額顧問料の相場（年商規模別）</p>
           <table className="w-full text-sm">
             <tbody className="divide-y divide-white/10">
               {[
-                { range: "〜1,000万円",   fee: "1.0万 〜 2.0万" },
+                { range: "〜1,000万円",    fee: "1.0万 〜 2.0万" },
                 { range: "1,000〜3,000万", fee: "1.7万 〜 3.0万" },
                 { range: "3,000〜5,000万", fee: "2.0万 〜 4.0万" },
                 { range: "5,000万〜1億",   fee: "3.2万 〜 6.0万" },
@@ -585,7 +710,6 @@ function MarketTab() {
             </tbody>
           </table>
         </div>
-        {/* Key stat */}
         <div className="border border-white/10 px-8 py-6 flex flex-col justify-between">
           <div>
             <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">変更・乗り換えのトリガー</p>
