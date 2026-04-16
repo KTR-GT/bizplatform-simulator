@@ -545,10 +545,10 @@ function MarketTab() {
         {/* 上部ラベル行 */}
         <div className="flex mb-1 w-full">
           <div style={{ width: `${dividerAt}%` }}>
-            <p className="font-inter text-[9px] text-white/25">競合他社が対応 / アプローチ不可</p>
+            <p className="font-inter text-[9px] text-white/25">明確に探しているか、完全に検討がない層</p>
           </div>
           <div style={{ width: `${100 - dividerAt}%` }}>
-            <p className="font-inter text-[9px] text-white/60 text-right">← BizplatFormがアプローチ可能な領域</p>
+            <p className="font-inter text-[9px] text-white/60 text-right">← プラットフォームだからこそアプローチが可能な領域</p>
           </div>
         </div>
 
@@ -643,11 +643,11 @@ function MarketTab() {
         <div className="mt-5 flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="w-4 h-3" style={{ background: "rgba(255,255,255,0.58)" }} />
-            <span className="text-white/50 text-[10px] font-inter">BizplatFormがアプローチ可能な領域（約80%）</span>
+            <span className="text-white/50 text-[10px] font-inter">プラットフォームだからこそアプローチが可能な領域（約80%）</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-3" style={{ background: "rgba(255,255,255,0.09)" }} />
-            <span className="text-white/25 text-[10px] font-inter">競合他社が対応 / アプローチ不可（約20%）</span>
+            <span className="text-white/25 text-[10px] font-inter">明確に探しているか、完全に検討がない層（約20%）</span>
           </div>
         </div>
       </div>
