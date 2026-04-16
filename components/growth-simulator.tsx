@@ -458,28 +458,69 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 // 02 MARKET
 // ============================================================
 function MarketTab() {
+  // Revenue distribution bar data
+  const revBars = [
+    { label: "〜500万",       pct: 18.6, width: "w-[22%]" },
+    { label: "500〜1,000万",  pct: 16.9, width: "w-[20%]" },
+    { label: "1,000〜3,000万",pct: 26.9, width: "w-[32%]" },
+    { label: "3,000〜5,000万",pct: 12.0, width: "w-[14%]" },
+    { label: "5,000万〜1億",  pct:  9.4, width: "w-[11%]" },
+  ]
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
-      <div className="mb-12 stagger-1">
+
+      {/* HERO */}
+      <div className="mb-10 stagger-1">
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/30 mb-3">Step 02</p>
-        <h1 className="font-serif-display italic text-white leading-none">
-          <span className="font-inter font-black text-[120px] leading-none tabular-nums">97</span>
-          <span className="text-4xl text-white/60 ml-2">%</span>
-          <br />
-          <span className="text-4xl italic">は、年商1億円未満。</span>
-        </h1>
-        <p className="text-white/40 text-sm mt-4">国内法人のうち年商1億円未満が占める割合（国税庁・会社標本調査より推計）</p>
+        <div className="flex items-end gap-6">
+          <div>
+            <h1 className="font-serif-display italic text-white leading-none">
+              <span className="font-inter font-black text-[110px] leading-none tabular-nums">83.8</span>
+              <span className="text-4xl text-white/60 ml-1">%</span>
+            </h1>
+            <p className="font-serif-display italic text-white text-3xl mt-1">が、年商3,000万円以下。</p>
+          </div>
+          <div className="mb-4 border-l border-white/15 pl-6">
+            <p className="text-white/40 text-sm leading-relaxed">国税庁・会社標本調査より推計<br />中小企業の大多数は年商数千万円規模。<br />これが<span className="text-white font-bold">コミットプランの主戦場</span>だ。</p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-px bg-white/10 mb-12 stagger-2">
+      {/* REVENUE DISTRIBUTION */}
+      <div className="mb-10 stagger-2">
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-5">Revenue Distribution — 年商規模の分布</p>
+        <div className="space-y-3">
+          {revBars.map(({ label, pct, width }) => (
+            <div key={label} className="flex items-center gap-4">
+              <span className="font-inter text-[11px] text-white/40 w-28 shrink-0 tabular-nums">{label}円</span>
+              <div className="flex-1 h-px bg-white/10 relative">
+                <div
+                  className={`absolute left-0 top-1/2 -translate-y-1/2 h-[3px] bg-white ${width}`}
+                  style={{ width: `${pct / 30 * 100}%` }}
+                />
+              </div>
+              <span className="font-inter font-black text-white tabular-nums text-sm w-12 text-right">{pct}%</span>
+            </div>
+          ))}
+          <div className="flex items-center gap-4 pt-2 border-t border-white/10">
+            <span className="font-inter text-[11px] text-white w-28 shrink-0 font-bold">合計（〜1億）</span>
+            <div className="flex-1" />
+            <span className="font-inter font-black text-white tabular-nums text-lg w-12 text-right">83.8%</span>
+          </div>
+        </div>
+        <p className="text-white/20 text-[10px] mt-3 font-inter">中央値：年商 約1,500万円</p>
+      </div>
+
+      {/* 4 KPIs */}
+      <div className="grid grid-cols-4 gap-px bg-white/10 mb-10 stagger-3">
         {[
-          { num: 296, unit: "万社", label: "国内の法人総数",               sub: "国税庁・令和5年度会社標本調査" },
-          { num: 31,  unit: "万社", label: "税理士が未関与の法人",         sub: "全体の約10%" },
-          { num: 460, unit: "万人", label: "個人事業主（青色申告者）",     sub: "国税庁統計" },
-          { num: 15,  unit: "万社", label: "年間の新設法人数",             sub: "法務省統計（2024年・過去最高）" },
+          { num: 296, unit: "万社", label: "国内の法人総数",           sub: "国税庁・令和5年度会社標本調査" },
+          { num: 90,  unit: "%",    label: "法人の税理士関与率",       sub: "申告関与ベース（業界推計）" },
+          { num: 460, unit: "万人", label: "個人事業主（青色申告者）", sub: "国税庁統計" },
+          { num: 15,  unit: "万社", label: "年間の新設法人数",         sub: "法務省統計（2024年・過去最高）" },
         ].map(({ num, unit, label, sub }) => (
           <div key={label} className="bg-[#0A0A0A] px-6 py-10">
-            <div className="font-inter font-black text-[60px] leading-none tabular-nums text-white">
+            <div className="font-inter font-black text-[54px] leading-none tabular-nums text-white">
               <AnimatedNumber value={num} suffix={unit} />
             </div>
             <p className="text-white/50 text-sm mt-3">{label}</p>
@@ -488,47 +529,85 @@ function MarketTab() {
         ))}
       </div>
 
-      <div className="stagger-3 mb-12">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-5">Market Structure — 市場の構造</p>
+      {/* BLUE OCEAN — 顕在 vs 潜在 */}
+      <div className="stagger-4 mb-10">
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-5">Market Structure — 誰に届けるか</p>
         <div className="grid grid-cols-5 border border-white/10">
-          <div className="col-span-1 border-r border-white/10 p-8 flex flex-col justify-between">
+          <div className="col-span-1 border-r border-white/10 p-6 flex flex-col justify-between">
             <div>
-              <p className="font-inter font-black text-[48px] leading-none tabular-nums text-white/30">20<span className="text-xl">%</span></p>
+              <p className="font-inter font-black text-[42px] leading-none tabular-nums text-white/30">5<span className="text-lg">〜</span>10<span className="text-xl">%</span></p>
               <p className="text-white/25 text-xs mt-2">顕在層</p>
-              <p className="text-white/20 text-[11px] mt-2 leading-relaxed">WEB検索・紹介など<br />積極的に探している層</p>
+              <p className="text-white/20 text-[11px] mt-2 leading-relaxed">WEB検索・税理士紹介サービスなど<br />「今すぐ探している」層</p>
             </div>
             <span className="inline-block border border-white/15 text-white/25 text-[9px] px-2 py-1 uppercase tracking-wider font-inter mt-4">競合多数</span>
           </div>
           <div className="col-span-4 p-8 relative overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-80 h-80 rounded-full border border-white/8 pulse-ring" />
+              <div className="w-72 h-72 rounded-full border border-white/8 pulse-ring" />
             </div>
-            <p className="font-inter font-black text-[88px] leading-none tabular-nums text-white relative z-10">80<span className="text-[44px]">%</span></p>
-            <p className="text-white text-lg font-bold mt-1 relative z-10">潜在層 — ブルーオーシャン</p>
+            <p className="font-inter font-black text-[80px] leading-none tabular-nums text-white relative z-10">30<span className="text-[40px]">〜</span>40<span className="text-[40px]">%</span></p>
+            <p className="text-white text-lg font-bold mt-1 relative z-10">不満を抱えているが、動いていない層</p>
             <p className="text-white/45 text-sm mt-3 max-w-lg leading-relaxed relative z-10">
-              課題はあるが行動していない企業群。約<span className="font-inter font-bold text-white">210万件</span>がこの層に該当。<br />
-              ホームページにはたどり着かない。<span className="text-white font-bold">競合のいない市場</span>がここにある。
+              レスポンスが遅い、提案がない、クラウド未対応——<br />
+              <span className="font-inter font-bold text-white">不満はあっても「変えよう」とは動かない</span>。<br />
+              こちらから接触しなければ、永遠に出会えない。
             </p>
-            <div className="mt-5 relative z-10">
+            <div className="mt-5 relative z-10 flex gap-3">
               <span className="inline-block bg-white text-[#0A0A0A] text-[9px] px-3 py-1.5 uppercase tracking-widest font-inter font-bold">
                 BizplatFormがアプローチする領域
+              </span>
+              <span className="inline-block border border-white/30 text-white/50 text-[9px] px-3 py-1.5 uppercase tracking-widest font-inter">
+                ＋ 法人成り・代替わり・税務調査後
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 stagger-4">
-        {[
-          { val: "約330万件", label: "潜在的に税理士変更・新規契約を検討しうる企業数", detail: "未関与法人＋個人事業主（弊社推計）" },
-          { val: "¥30,000〜40,000", label: "中小法人の平均月額顧問料",               detail: "日本税理士会連合会・業界実態調査より" },
-        ].map(({ val, label, detail }) => (
-          <div key={label} className="border border-white/10 px-8 py-6">
-            <p className="font-inter font-black text-3xl text-white mb-2">{val}</p>
-            <p className="text-white/50 text-sm">{label}</p>
-            <p className="text-white/25 text-[10px] mt-1 uppercase tracking-wider font-inter">{detail}</p>
+      {/* FEE TABLE + KEY STAT */}
+      <div className="grid grid-cols-2 gap-4 stagger-5">
+        {/* Fee table */}
+        <div className="border border-white/10 px-8 py-6">
+          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">月額顧問料の相場（年商規模別）</p>
+          <table className="w-full text-sm">
+            <tbody className="divide-y divide-white/10">
+              {[
+                { range: "〜1,000万円",   fee: "1.0万 〜 2.0万" },
+                { range: "1,000〜3,000万", fee: "1.7万 〜 3.0万" },
+                { range: "3,000〜5,000万", fee: "2.0万 〜 4.0万" },
+                { range: "5,000万〜1億",   fee: "3.2万 〜 6.0万" },
+              ].map(({ range, fee }) => (
+                <tr key={range}>
+                  <td className="py-2 text-white/40 font-inter text-[11px]">{range}円</td>
+                  <td className="py-2 text-white font-inter font-bold text-right tabular-nums">{fee}円</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Key stat */}
+        <div className="border border-white/10 px-8 py-6 flex flex-col justify-between">
+          <div>
+            <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">変更・乗り換えのトリガー</p>
+            <ul className="space-y-2 text-white/50 text-sm">
+              {[
+                "個人事業主 → 法人成りのタイミング",
+                "税務調査後の対応への不信感",
+                "代替わり（事業承継）で方針変更",
+                "クラウド会計・IT対応を求めた時",
+              ].map(t => (
+                <li key={t} className="flex items-start gap-2">
+                  <span className="text-white/20 mt-0.5">—</span>
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        ))}
+          <p className="font-inter font-black text-white text-2xl mt-6">
+            50.3<span className="text-base font-normal text-white/40 ml-1">% が一度も変更したことがない</span>
+          </p>
+          <p className="text-white/25 text-[10px] mt-1 font-inter">船井総研 2023年調査</p>
+        </div>
       </div>
     </div>
   )
