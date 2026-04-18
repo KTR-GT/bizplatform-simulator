@@ -88,9 +88,8 @@
   pointer-events: none;
   z-index: 99999;
   transform: translate(-50%, -50%);
-  transition: width 0.18s ease, height 0.18s ease, background 0.18s ease, border 0.18s ease, box-shadow 0.18s ease;
+  transition: width 0.18s ease, height 0.18s ease, background 0.18s ease, border 0.18s ease;
   will-change: left, top;
-  box-shadow: 0 0 0 1.5px rgba(255,255,255,0.7);
 }
 
 .custom-cursor.is-hovering {

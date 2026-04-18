@@ -180,7 +180,7 @@ export function GrowthSimulator() {
   const toggle = (arr: string[], val: string, set: (v: string[]) => void) =>
     set(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val])
 
-  const isDarkTab = activeTab === "market" || activeTab === "closing"
+  const isDarkTab = activeTab === "market" || activeTab === "closing" || activeTab === "plan"
 
   return (
     <div className={`min-h-screen ${isDarkTab ? "bg-[#0A0A0A]" : "bg-white"} transition-colors duration-500`}>
