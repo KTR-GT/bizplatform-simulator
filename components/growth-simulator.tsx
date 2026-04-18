@@ -593,32 +593,35 @@ function MarketTab() {
               <div key={s.label}
                 data-cursor
                 onClick={() => toggleReveal(s.label)}
-                className="bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 relative overflow-hidden group"
-                style={{ boxShadow: revealed ? "inset 0 0 0 1px rgba(255,255,255,0.12)" : "none" }}
+                className="bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 relative overflow-hidden group min-h-[180px] flex flex-col justify-between"
               >
-                <div className="mb-4">
-                  <p
-                    className="font-inter font-black leading-none tabular-nums transition-all duration-500"
-                    style={{
-                      fontSize: "clamp(28px, 3.5vw, 48px)",
-                      color: revealed ? "#ffffff" : "transparent",
-                      textShadow: revealed ? "none" : "0 0 18px rgba(255,255,255,0.6)",
-                      filter: revealed ? "none" : "blur(8px)",
-                    }}
-                  >
-                    {s.value}
-                  </p>
-                  {s.isEstimate && revealed && (
-                    <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-1 inline-block">推計</span>
-                  )}
-                </div>
-                {!revealed && (
-                  <p className="font-inter text-white/30 text-[10px] uppercase tracking-widest mb-3 group-hover:text-white/50 transition-colors">
-                    タップして確認 →
-                  </p>
+                {revealed ? (
+                  /* 開いた後：数値を大きく */
+                  <>
+                    <div>
+                      <p className="font-inter font-black leading-none tabular-nums text-white transition-all duration-500"
+                        style={{ fontSize: "clamp(32px, 4vw, 56px)" }}>
+                        {s.value}
+                      </p>
+                      {s.isEstimate && (
+                        <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-1 inline-block">推計</span>
+                      )}
+                    </div>
+                    <div className="mt-4">
+                      <p className="text-white/70 text-sm font-bold leading-snug">{s.label}</p>
+                      <p className="text-white/30 text-[10px] mt-1 font-inter leading-relaxed">{s.note}</p>
+                    </div>
+                  </>
+                ) : (
+                  /* 閉じた状態：ラベルを大きく */
+                  <>
+                    <p className="font-inter font-black text-white/80 text-xl leading-snug">{s.label}</p>
+                    <p className="text-white/30 text-[11px] mt-3 font-inter leading-relaxed">{s.note}</p>
+                    <p className="font-inter text-white/25 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">
+                      タップして確認 →
+                    </p>
+                  </>
                 )}
-                <p className="text-white/60 text-sm font-bold leading-snug">{s.label}</p>
-                <p className="text-white/25 text-[10px] mt-2 font-inter leading-relaxed">{s.note}</p>
               </div>
             )
           })}
@@ -630,33 +633,29 @@ function MarketTab() {
             <div
               data-cursor
               onClick={() => toggleReveal(s.label)}
-              className="mt-px bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 flex items-center gap-12 group"
-              style={{ boxShadow: revealed ? "inset 0 0 0 1px rgba(255,255,255,0.12)" : "none" }}
+              className="mt-px bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 flex items-center gap-12 group min-h-[120px]"
             >
-              <div className="flex-shrink-0">
-                <p
-                  className="font-inter font-black tabular-nums transition-all duration-500"
-                  style={{
-                    fontSize: "clamp(40px, 5vw, 72px)",
-                    lineHeight: 1,
-                    color: revealed ? "#ffffff" : "transparent",
-                    textShadow: revealed ? "none" : "0 0 24px rgba(255,255,255,0.6)",
-                    filter: revealed ? "none" : "blur(10px)",
-                  }}
-                >
-                  {s.value}
-                </p>
-                {!revealed && (
-                  <p className="font-inter text-white/30 text-[10px] uppercase tracking-widest mt-2 group-hover:text-white/50 transition-colors">タップして確認 →</p>
-                )}
-              </div>
-              <div>
-                <p className="text-white/70 text-lg font-bold">{s.label}</p>
-                <p className="text-white/30 text-xs mt-1 font-inter leading-relaxed max-w-xl">{s.note}</p>
-                {s.isEstimate && revealed && (
-                  <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-2 inline-block">推計</span>
-                )}
-              </div>
+              {revealed ? (
+                <>
+                  <p className="font-inter font-black tabular-nums text-white flex-shrink-0"
+                    style={{ fontSize: "clamp(40px, 5vw, 72px)", lineHeight: 1 }}>
+                    {s.value}
+                  </p>
+                  <div>
+                    <p className="text-white/70 text-lg font-bold">{s.label}</p>
+                    <p className="text-white/30 text-xs mt-1 font-inter leading-relaxed max-w-xl">{s.note}</p>
+                    {s.isEstimate && (
+                      <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-2 inline-block">推計</span>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1">
+                  <p className="font-inter font-black text-white/80 text-2xl">{s.label}</p>
+                  <p className="text-white/30 text-xs mt-2 font-inter leading-relaxed max-w-xl">{s.note}</p>
+                  <p className="font-inter text-white/25 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">タップして確認 →</p>
+                </div>
+              )}
             </div>
           )
         })()}
