@@ -578,23 +578,6 @@ function MarketTab() {
         </div>
       </div>
 
-      {/* 4 KPIs */}
-      <div className="grid grid-cols-4 gap-px bg-white/10 mb-10 stagger-2">
-        {[
-          { num: 296, unit: "万社", label: "国内の法人総数",           sub: "国税庁・令和5年度会社標本調査" },
-          { num: 90,  unit: "%",    label: "法人の税理士関与率",       sub: "申告関与ベース（業界推計）" },
-          { num: 460, unit: "万人", label: "個人事業主（青色申告者）", sub: "国税庁統計" },
-          { num: 15,  unit: "万社", label: "年間の新設法人数",         sub: "法務省統計（2024年・過去最高）" },
-        ].map(({ num, unit, label, sub }) => (
-          <div key={label} className="bg-[#0A0A0A] px-6 py-10">
-            <div className="font-inter font-black text-[54px] leading-none tabular-nums text-white">
-              <AnimatedNumber value={num} suffix={unit} />
-            </div>
-            <p className="text-white/50 text-sm mt-3">{label}</p>
-            <p className="text-white/25 text-[10px] mt-1 font-inter uppercase tracking-wider">{sub}</p>
-          </div>
-        ))}
-      </div>
 
       {/* SINGLE BAR */}
       <div className="stagger-3 mb-10">
@@ -796,46 +779,91 @@ function MarketTab() {
         </p>
       </div>
 
-      {/* 税理士市場 参考統計 */}
-      <div className="stagger-6 mt-4">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">
-          Tax Industry Reference — 税理士市場の参考データ
-          <span className="normal-case tracking-normal text-white/20 ml-2">（以下は推計・参考値）</span>
-        </p>
-        <div className="grid grid-cols-4 gap-px bg-white/10">
-          {marketStats.map(s => {
+      {/* 税理士市場 参考統計（ヒーロー表示） */}
+      <div className="stagger-5 mt-4">
+        <div className="flex items-baseline justify-between mb-6">
+          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/40">
+            Tax Industry Reference — 税理士市場の参考データ
+          </p>
+          <span className="text-white/20 text-[9px] font-inter">以下は推計・参考値</span>
+        </div>
+        <div className="grid grid-cols-3 gap-px bg-white/10">
+          {marketStats.slice(0, 6).map((s) => {
             const revealed = revealedStats.has(s.label)
             return (
               <div key={s.label}
                 data-cursor
                 onClick={() => toggleReveal(s.label)}
-                className="bg-[#0A0A0A] px-5 py-6 border border-white/5 cursor-pointer transition-all duration-300"
-                style={{ boxShadow: revealed ? "0 8px 32px rgba(255,255,255,0.08)" : "none", transform: revealed ? "translateY(-2px)" : "none" }}
+                className="bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 relative overflow-hidden group"
+                style={{ boxShadow: revealed ? "inset 0 0 0 1px rgba(255,255,255,0.12)" : "none" }}
               >
-                <div className="flex items-start gap-1 mb-1" style={{ transition: "all 0.4s ease" }}>
+                {/* 数値（ブラー→クリアアニメ） */}
+                <div className="mb-4">
                   <p
-                    className="font-inter font-black text-xl leading-tight transition-all duration-500"
+                    className="font-inter font-black leading-none tabular-nums transition-all duration-500"
                     style={{
+                      fontSize: "clamp(28px, 3.5vw, 48px)",
                       color: revealed ? "#ffffff" : "transparent",
-                      textShadow: revealed ? "none" : "0 0 12px rgba(255,255,255,0.5)",
-                      filter: revealed ? "none" : "blur(6px)",
+                      textShadow: revealed ? "none" : "0 0 18px rgba(255,255,255,0.6)",
+                      filter: revealed ? "none" : "blur(8px)",
                     }}
                   >
                     {s.value}
                   </p>
                   {s.isEstimate && revealed && (
-                    <span className="text-[8px] text-white/30 font-inter mt-0.5 border border-white/15 px-1">推計</span>
+                    <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-1 inline-block">推計</span>
                   )}
                 </div>
+                {/* タップ促し */}
                 {!revealed && (
-                  <p className="font-inter text-white/20 text-[9px] mb-1">タップして確認</p>
+                  <p className="font-inter text-white/30 text-[10px] uppercase tracking-widest mb-3 group-hover:text-white/50 transition-colors">
+                    タップして確認 →
+                  </p>
                 )}
-                <p className="text-white/50 text-xs mt-1">{s.label}</p>
-                <p className="text-white/20 text-[9px] mt-2 font-inter leading-tight">{s.note}</p>
+                <p className="text-white/60 text-sm font-bold leading-snug">{s.label}</p>
+                <p className="text-white/25 text-[10px] mt-2 font-inter leading-relaxed">{s.note}</p>
               </div>
             )
           })}
         </div>
+        {/* 最後の1件（顕在層）は全幅で強調 */}
+        {marketStats[6] && (() => {
+          const s = marketStats[6]
+          const revealed = revealedStats.has(s.label)
+          return (
+            <div
+              data-cursor
+              onClick={() => toggleReveal(s.label)}
+              className="mt-px bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 flex items-center gap-12 group"
+              style={{ boxShadow: revealed ? "inset 0 0 0 1px rgba(255,255,255,0.12)" : "none" }}
+            >
+              <div className="flex-shrink-0">
+                <p
+                  className="font-inter font-black tabular-nums transition-all duration-500"
+                  style={{
+                    fontSize: "clamp(40px, 5vw, 72px)",
+                    lineHeight: 1,
+                    color: revealed ? "#ffffff" : "transparent",
+                    textShadow: revealed ? "none" : "0 0 24px rgba(255,255,255,0.6)",
+                    filter: revealed ? "none" : "blur(10px)",
+                  }}
+                >
+                  {s.value}
+                </p>
+                {!revealed && (
+                  <p className="font-inter text-white/30 text-[10px] uppercase tracking-widest mt-2 group-hover:text-white/50 transition-colors">タップして確認 →</p>
+                )}
+              </div>
+              <div>
+                <p className="text-white/70 text-lg font-bold">{s.label}</p>
+                <p className="text-white/30 text-xs mt-1 font-inter leading-relaxed max-w-xl">{s.note}</p>
+                {s.isEstimate && revealed && (
+                  <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-2 inline-block">推計</span>
+                )}
+              </div>
+            </div>
+          )
+        })()}
       </div>
     </div>
   )
