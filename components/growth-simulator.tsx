@@ -961,6 +961,51 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, naturalIncrease, natu
 // 04 MECHANISM
 // ============================================================
 function MechanismTab() {
+  const [expandedStep, setExpandedStep] = useState<string | null>(null)
+
+  const steps = [
+    {
+      step: "01",
+      title: "コールセンターが\nアウトバウンド発信",
+      body: "専門オペレーターが潜在的ニーズを持つ企業に直接アプローチ。ホームページへのアクセスを待たずに接触します。",
+      tag: "顧客が動く前に接触",
+      details: [
+        "オペレーター×AIで、1日約2万件の圧倒的アプローチ",
+        "ターゲットは「まだ税理士を積極的に探していない」潜在層",
+        "月間約3,500件のマッチング、約1,000件の顧問契約",
+        "競合他社との相見積もりを避けるブルーオーシャン市場を開拓",
+        "40万件以上の見込み顧客リスト",
+        "業務提携先からの圧倒的な紹介量",
+      ],
+    },
+    {
+      step: "02",
+      title: "課題をヒアリング・\nニーズを確認",
+      body: "「税理士を探していない」段階でも、財務・税務の困りごとを引き出し、関心を醸成します。",
+      tag: "潜在ニーズを顕在化",
+      details: [
+        "「今は特に困っていない」という企業でも、財務・税務の悩みを引き出すトーク設計",
+        "インボイス対応・法人成り・資金調達など具体的なきっかけを確認",
+        "関心が高まった状態で先生に渡す（温度感を作ってからつなぐ）",
+        "先方の同意を得たうえで紹介するため、初回面談の受諾率が高い",
+        "過去の成約事例をセミナー動画にて公開",
+      ],
+    },
+    {
+      step: "03",
+      title: "先生の事務所に\nマッチング・紹介",
+      body: "業種・ソフト・エリアの適合性をAIが判定し、最適な税理士事務所として先生をご紹介します。",
+      tag: "競合なしで繋がる",
+      details: [
+        "事前ヒアリングで設定した「業種・ソフト・エリア・規模帯」をもとにAIがスコアリング",
+        "条件に最も合う事務所に優先的に紹介",
+        "コミット達成まで継続して紹介し続ける（成果が出るまで止まらない）",
+        "紹介後のコールセンターを使った長期的なアプローチ",
+        "定期面談によるフィードバックも実施",
+      ],
+    },
+  ]
+
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-12 stagger-1">
@@ -972,19 +1017,38 @@ function MechanismTab() {
       </div>
 
       <div className="grid grid-cols-3 gap-px bg-black mb-12 stagger-2">
-        {[
-          { step: "01", title: "コールセンターが\nアウトバウンド発信", body: "専門オペレーターが潜在的ニーズを持つ企業に直接アプローチ。ホームページへのアクセスを待たずに接触します。", tag: "顧客が動く前に接触" },
-          { step: "02", title: "課題をヒアリング・\nニーズを確認",      body: "「税理士を探していない」段階でも、財務・税務の困りごとを引き出し、関心を醸成します。",                   tag: "潜在ニーズを顕在化" },
-          { step: "03", title: "先生の事務所に\nマッチング・紹介",     body: "業種・ソフト・エリアの適合性をAIが判定し、最適な税理士事務所として先生をご紹介します。",               tag: "競合なしで繋がる" },
-        ].map(({ step, title, body, tag }) => (
-          <div key={step} className="bg-white px-8 py-10 relative overflow-hidden">
-            <span className="absolute bottom-3 right-5 font-inter font-black text-[80px] leading-none text-black/5 tabular-nums select-none">{step}</span>
-            <p className="font-inter font-black text-[9px] tracking-[0.2em] uppercase text-black/25 mb-4">Step {step}</p>
-            <h3 className="font-bold text-[#0A0A0A] text-lg leading-snug mb-4 whitespace-pre-line">{title}</h3>
-            <p className="text-black/45 text-sm leading-relaxed mb-6">{body}</p>
-            <span className="inline-block border border-black text-[#0A0A0A] text-[9px] px-2 py-1 uppercase tracking-widest font-inter font-bold">{tag}</span>
-          </div>
-        ))}
+        {steps.map(({ step, title, body, tag, details }) => {
+          const isOpen = expandedStep === step
+          return (
+            <div key={step}
+              data-cursor
+              onClick={() => setExpandedStep(isOpen ? null : step)}
+              className={`bg-white px-8 py-10 relative overflow-hidden cursor-pointer transition-all duration-200 ${isOpen ? "ring-2 ring-inset ring-black" : "hover:bg-[#FAFAFA]"}`}>
+              <span className="absolute bottom-3 right-5 font-inter font-black text-[80px] leading-none text-black/5 tabular-nums select-none">{step}</span>
+              <p className="font-inter font-black text-[9px] tracking-[0.2em] uppercase text-black/25 mb-4">Step {step}</p>
+              <h3 className="font-bold text-[#0A0A0A] text-lg leading-snug mb-4 whitespace-pre-line">{title}</h3>
+              <p className="text-black/45 text-sm leading-relaxed mb-5">{body}</p>
+              <div className="flex items-center justify-between">
+                <span className="inline-block border border-black text-[#0A0A0A] text-[9px] px-2 py-1 uppercase tracking-widest font-inter font-bold">{tag}</span>
+                <span className="font-inter text-[10px] text-black/30 hover:text-black/60">{isOpen ? "▲ 閉じる" : "▼ 詳細"}</span>
+              </div>
+
+              {/* 展開パネル */}
+              {isOpen && (
+                <div className="mt-6 pt-6 border-t border-black/10">
+                  <ul className="space-y-3">
+                    {details.map((d, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-[#0A0A0A] leading-relaxed">
+                        <span className="text-black/30 mt-0.5 shrink-0">—</span>
+                        <span>{d}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       <div className="stagger-3 mb-12">
