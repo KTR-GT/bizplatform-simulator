@@ -1171,13 +1171,13 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             <p className="font-inter font-black text-[28px] leading-tight text-white/80 mt-1">
               売上が伸びる
             </p>
-            <p className="text-white/35 text-sm mt-3 font-inter">紹介成約が積み上がるにつれて、毎月の顧問料収入がこの金額分だけ上乗せされる</p>
+            <p className="text-white/35 text-sm mt-3 font-inter">事務所の月商が、ここまで変わる。</p>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
             <div>
               <p className="text-white/35 text-[11px] uppercase tracking-wider font-inter mb-1">年間売上アップ額</p>
               <p className="font-inter font-black text-3xl text-white tabular-nums">+¥{(activePlan.commit * 12).toLocaleString("ja-JP")}</p>
-              <p className="text-white/25 text-xs mt-1">月間コミット × 12ヶ月</p>
+              <p className="text-white/25 text-xs mt-1">年間売上アップ</p>
             </div>
             <div className="pt-4 border-t border-white/10">
               <p className="text-white/20 text-[11px] uppercase tracking-wider font-inter mb-1">月額サービス料</p>
