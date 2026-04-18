@@ -5,6 +5,7 @@ import { type CommitPlan, commitPlans } from "@/data/commit-plans"
 import { useSimulatorModel } from "@/hooks/use-simulator-model"
 import { customerDatabase } from "@/data/customer-database"
 import { marketStats } from "@/data/market-reference"
+import { selectResonantCases } from "@/data/partner-cases"
 import { getInstallment } from "@/lib/simulator/installments"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -231,7 +232,7 @@ export function GrowthSimulator() {
       <main key={animKey} className={animDir === "right" ? "tab-enter" : "tab-enter-left"}>
         {activeTab === "hearing"   && <HearingTab   {...{ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, naturalIncrease, setNaturalIncrease, naturalDecrease, setNaturalDecrease, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, goodThemes, setGoodThemes, goodIndustries, setGoodIndustries, preferredRevRanges, setPreferredRevRanges, toggle }} />}
         {activeTab === "market"    && <MarketTab />}
-        {activeTab === "diagnosis" && <DiagnosisTab diagnosis={diagnosis} capacityNum={capacityNum} avgFeeNum={avgFeeNum} naturalIncrease={naturalIncrease} naturalDecrease={naturalDecrease} />}
+        {activeTab === "diagnosis" && <DiagnosisTab diagnosis={diagnosis} capacityNum={capacityNum} avgFeeNum={avgFeeNum} selectedArea={selectedArea} />}
         {activeTab === "mechanism" && <MechanismTab />}
         {activeTab === "matching"  && <MatchingTab   matched={matched} hasInput={selectedSoftware.length > 0 || selectedArea.length > 0 || preferredAccountingStyle !== "すべて" || preferredType !== "すべて" || preferredDigitalLevel !== "すべて"} />}
         {activeTab === "plan"      && <PlanTab plan={commitPlans[selectedPlanIndex]} index={selectedPlanIndex} totalInvestment={totalInvestment} commitRevenue={commitRevenue} roi={roi} payback={payback} capacityNum={capacityNum} avgFeeNum={avgFeeNum} showAllPlans={showAllPlans} setShowAllPlans={setShowAllPlans} selectedPlanIndex={selectedPlanIndex} setSelectedPlanIndex={setSelectedPlanIndex} commitPlans={commitPlans} />}
@@ -825,8 +826,9 @@ function MarketTab() {
 // ============================================================
 // 03 DIAGNOSIS（刷新版）
 // ============================================================
-function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum }: any) {
-  const unusedRevenue = capacityNum * avgFeeNum
+function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea }: any) {
+  const unusedRevenue  = capacityNum * avgFeeNum
+  const resonantCases  = selectResonantCases(selectedArea ?? [], avgFeeNum, capacityNum)
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
@@ -884,30 +886,28 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum }: any) {
         </div>
         <p className="text-black/20 text-[10px] font-inter mb-8">※ BizplatFormパートナー事務所の実績平均値（参考）</p>
 
-        {/* 実績事例 トップ事務所 */}
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/25 mb-4">Partner Cases — 提携事務所の実績事例</p>
+        {/* 実績事例 — AIが先生に最も響く3件を選定 */}
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/25 mb-1">Partner Cases — 先生のエリア・規模感に近い実績事例</p>
+        <p className="text-black/30 text-[10px] font-inter mb-4">エリア・平均顧問料・規模感をもとに自動選定しています</p>
         <div className="grid grid-cols-3 gap-px bg-black mb-1">
-          {[
-            { rank: 1, name: "越智聖税理士事務所",       area: "愛媛", contracts: 225, fee: 4352691,  annualFee: 52232292 },
-            { rank: 2, name: "山本聡公認会計士事務所",   area: "埼玉", contracts: 77,  fee: 3511583,  annualFee: 42138996 },
-            { rank: 3, name: "SOLA公認会計士事務所",     area: "東京", contracts: 57,  fee: 2853868,  annualFee: 34246416 },
-          ].map(({ rank, name, area, contracts, fee, annualFee }) => (
-            <div key={rank} className="bg-white px-6 py-6 relative overflow-hidden">
-              <span className="absolute top-4 right-5 font-inter font-black text-[48px] leading-none text-black/5 tabular-nums">#{rank}</span>
-              <p className="font-inter text-[9px] uppercase tracking-wider text-black/25 mb-2">{area}</p>
-              <p className="font-inter font-bold text-sm text-[#0A0A0A] mb-4 leading-snug">{name}</p>
+          {resonantCases.map((c, i) => (
+            <div key={c.name} className="bg-white px-6 py-6 relative overflow-hidden">
+              <span className="absolute top-4 right-5 font-inter font-black text-[48px] leading-none text-black/5 tabular-nums select-none">{i + 1}</span>
+              <p className="font-inter text-[9px] uppercase tracking-wider text-black/25 mb-1">{c.area} · {c.region}</p>
+              <p className="font-inter font-bold text-sm text-[#0A0A0A] mb-1 leading-snug">{c.name}</p>
+              <p className="text-black/35 text-[10px] mb-4 leading-relaxed">{c.note}</p>
               <div className="space-y-3">
                 <div>
                   <p className="font-inter text-[9px] text-black/30 mb-0.5">累計成約件数</p>
-                  <p className="font-inter font-black text-2xl tabular-nums text-[#0A0A0A]">{contracts}件</p>
+                  <p className="font-inter font-black text-2xl tabular-nums text-[#0A0A0A]">{c.contracts}件</p>
                 </div>
                 <div>
                   <p className="font-inter text-[9px] text-black/30 mb-0.5">月間顧問料合計</p>
-                  <p className="font-inter font-black text-lg tabular-nums text-[#0A0A0A]">¥{fee.toLocaleString("ja-JP")}</p>
+                  <p className="font-inter font-black text-lg tabular-nums text-[#0A0A0A]">¥{c.monthlyFee.toLocaleString("ja-JP")}</p>
                 </div>
                 <div>
-                  <p className="font-inter text-[9px] text-black/30 mb-0.5">年商換算</p>
-                  <p className="font-inter font-bold text-sm tabular-nums text-black/50">¥{(annualFee / 10000).toFixed(0)}万円/年</p>
+                  <p className="font-inter text-[9px] text-black/30 mb-0.5">1件あたり平均顧問料</p>
+                  <p className="font-inter font-bold text-sm tabular-nums text-black/50">¥{c.avgFeePerClient.toLocaleString("ja-JP")}/月</p>
                 </div>
               </div>
             </div>
