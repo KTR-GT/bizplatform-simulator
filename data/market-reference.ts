@@ -32,12 +32,6 @@ export const marketStats: MarketStat[] = [
     isEstimate: false,
   },
   {
-    label:      "税理士事務所数",
-    value:      "約3万事務所",
-    note:       "国税庁・統計情報ベース（推計）",
-    isEstimate: true,
-  },
-  {
     label:      "1顧客に対する競争率",
     value:      "約29社 / 人",
     note:       "法人税理士関与先 ÷ 税理士人口の単純推計。実態は事務所規模により大きく異なる",

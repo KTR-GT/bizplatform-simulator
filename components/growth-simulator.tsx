@@ -599,8 +599,8 @@ function MarketTab() {
                   /* 開いた後：数値を大きく */
                   <>
                     <div>
-                      <p className="font-inter font-black leading-none tabular-nums text-white transition-all duration-500"
-                        style={{ fontSize: "clamp(32px, 4vw, 56px)" }}>
+                      <p className="font-inter font-black leading-none tabular-nums text-white transition-all duration-500 whitespace-nowrap"
+                        style={{ fontSize: "clamp(22px, 2.8vw, 38px)" }}>
                         {s.value}
                       </p>
                       {s.isEstimate && (
