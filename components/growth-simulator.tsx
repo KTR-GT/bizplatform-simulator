@@ -52,6 +52,7 @@ const TABS = [
 function CustomCursor({ isDark }: { isDark: boolean }) {
   const ref    = useRef<HTMLDivElement>(null)
   const [hovering, setHovering] = useState(false)
+  const [onDark,   setOnDark]   = useState(false)
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -63,6 +64,7 @@ function CustomCursor({ isDark }: { isDark: boolean }) {
     const over = (e: MouseEvent) => {
       const t = e.target as HTMLElement
       setHovering(!!t.closest('button, a, input, label, select, textarea, [data-cursor]'))
+      setOnDark(!!t.closest('[data-dark-bg]'))
     }
     window.addEventListener('mousemove', move, { passive: true })
     document.addEventListener('mouseover', over)
@@ -72,10 +74,11 @@ function CustomCursor({ isDark }: { isDark: boolean }) {
     }
   }, [])
 
+  const dark = isDark || onDark
   return (
     <div
       ref={ref}
-      className={`custom-cursor${hovering ? ' is-hovering' : ''}${isDark ? ' is-dark' : ''}`}
+      className={`custom-cursor${hovering ? ' is-hovering' : ''}${dark ? ' is-dark' : ''}`}
     />
   )
 }
@@ -180,7 +183,7 @@ export function GrowthSimulator() {
   const toggle = (arr: string[], val: string, set: (v: string[]) => void) =>
     set(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val])
 
-  const isDarkTab = activeTab === "market" || activeTab === "closing" || activeTab === "plan"
+  const isDarkTab = activeTab === "market" || activeTab === "closing"
 
   return (
     <div className={`min-h-screen ${isDarkTab ? "bg-[#0A0A0A]" : "bg-white"} transition-colors duration-500`}>
@@ -601,7 +604,7 @@ function MarketTab() {
               <div key={s.label}
                 data-cursor
                 onClick={() => toggleReveal(s.label)}
-                className="bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 relative overflow-hidden group min-h-[180px] flex flex-col justify-between"
+                className="bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 relative overflow-hidden group min-h-[180px] flex flex-col justify-between" data-dark-bg
               >
                 {revealed ? (
                   /* 開いた後：数値を大きく */
@@ -641,7 +644,7 @@ function MarketTab() {
             <div
               data-cursor
               onClick={() => toggleReveal(s.label)}
-              className="mt-px bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 flex items-center gap-12 group min-h-[120px]"
+              className="mt-px bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 flex items-center gap-12 group min-h-[120px]" data-dark-bg
             >
               {revealed ? (
                 <>
@@ -852,7 +855,7 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea }: any) 
       </div>
 
       {/* ブロック③：未活用キャパシティ（前向き） */}
-      <div className="border-l-4 border-black bg-[#0A0A0A] px-8 py-8 mb-8 stagger-2">
+      <div className="border-l-4 border-black bg-[#0A0A0A] px-8 py-8 mb-8 stagger-2" data-dark-bg>
         <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/35 mb-3">Unused Capacity — 未活用の売上余地</p>
         <div className="flex items-baseline gap-4 flex-wrap">
           <div>
@@ -1047,7 +1050,7 @@ function MechanismTab() {
         </div>
       </div>
 
-      <div className="bg-[#0A0A0A] text-white px-10 py-10 stagger-4">
+      <div className="bg-[#0A0A0A] text-white px-10 py-10 stagger-4" data-dark-bg>
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">Blue Ocean Scale</p>
         <div className="flex items-baseline gap-3 mb-3">
           <span className="font-inter font-black text-[80px] leading-none tabular-nums">約400</span>
@@ -1158,7 +1161,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
 
       <div className="grid grid-cols-5 gap-px bg-black mb-8 stagger-2">
         {/* LEFT: Commit hero */}
-        <div className="col-span-3 bg-[#0A0A0A] px-10 py-10 flex flex-col justify-between">
+        <div className="col-span-3 bg-[#0A0A0A] px-10 py-10 flex flex-col justify-between" data-dark-bg>
           <div>
             <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/60 mb-2">
               Commit Plan {String(selectedPlanIndex + 1).padStart(2, "0")} — 月間コミット顧問料
