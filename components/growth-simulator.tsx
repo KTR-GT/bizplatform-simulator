@@ -1348,20 +1348,16 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
           </div>
           {/* 平均顧問料 */}
           <div>
-            <label className="font-inter text-[10px] uppercase tracking-wider text-black/35 block mb-4">平均顧問料</label>
-            <div className="flex items-center gap-4">
-              <button data-cursor
-                onClick={() => setSimAvgFee(Math.max(10000, effectiveAvgFee - 5000))}
-                className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">−</button>
-              <div className="flex-1 text-center">
-                <span className="font-inter font-black text-[36px] leading-none tabular-nums text-[#0A0A0A]">¥{effectiveAvgFee.toLocaleString("ja-JP")}</span>
-                <span className="font-inter text-sm text-black/35 ml-1">/月</span>
-              </div>
-              <button data-cursor
-                onClick={() => setSimAvgFee(Math.min(100000, effectiveAvgFee + 5000))}
-                className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">＋</button>
+            <div className="flex items-baseline justify-between mb-4">
+              <label className="font-inter text-[10px] uppercase tracking-wider text-black/35">平均顧問料</label>
+              <span className="font-inter font-black text-2xl text-[#0A0A0A]">¥{effectiveAvgFee.toLocaleString("ja-JP")}<span className="text-sm font-normal text-black/35 ml-1">/月</span></span>
             </div>
-            <p className="text-center text-[9px] text-black/20 font-inter mt-2">¥10,000〜¥100,000（5,000円刻み）</p>
+            <input type="range" min={10000} max={100000} step={5000} value={effectiveAvgFee}
+              onChange={e => setSimAvgFee(Number(e.target.value))}
+              className="w-full accent-black" />
+            <div className="flex justify-between text-[9px] text-black/25 font-inter mt-1">
+              <span>¥10,000</span><span>¥100,000</span>
+            </div>
           </div>
         </div>
       </div>
