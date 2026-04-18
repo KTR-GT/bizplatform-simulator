@@ -1192,7 +1192,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
               <p className="text-black/50 text-sm mb-4">
                 月間コミット <strong className="text-[#0A0A0A]">¥{activePlan.commit.toLocaleString("ja-JP")}</strong> プランの各払い方式
               </p>
-              <Tabs defaultValue="1y">
+              <Tabs defaultValue="7y">
                 <TabsList className="w-full grid grid-cols-3 mb-4">
                   <TabsTrigger value="1y" className="font-inter font-bold text-xs">1年払い</TabsTrigger>
                   <TabsTrigger value="3y" className="font-inter font-bold text-xs">3年払い</TabsTrigger>
@@ -1204,7 +1204,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                   { key: "7y", inst: activeInst7y, label: "7年払い" },
                 ] as const).map(({ key, inst, label }) => (
                   <TabsContent key={key} value={key} className="border border-black p-6">
-                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/35 mb-4">{label}</p>
+                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/35 mb-4">{label} — 月額サービス料</p>
                     <div className="grid grid-cols-3 gap-4 mb-4">
                       <div>
                         <p className="text-[10px] text-black/30 mb-1">月額</p>
@@ -1220,6 +1220,23 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                       </div>
                     </div>
                     <p className="text-black/30 text-[10px] border-t border-black/10 pt-3">※ 税抜表示</p>
+
+                    {/* システム利用料 */}
+                    <div className="mt-5 border-t border-black/10 pt-5">
+                      <p className="font-inter text-[9px] uppercase tracking-wider text-black/35 mb-3">システム利用料（別途）</p>
+                      <div className="bg-[#F4F4F4] px-4 py-4">
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <p className="font-inter font-black text-xl tabular-nums">¥2,000</p>
+                          <p className="text-black/40 text-sm">× 成約1件につき / 月</p>
+                        </div>
+                        <p className="text-black/40 text-xs leading-relaxed mt-1">
+                          BizplatForm経由で成約した関与先との契約が継続する限り、1件あたり月額¥2,000のシステム利用料が発生します。最大84ヶ月（7年）間。
+                        </p>
+                        <p className="text-black/25 text-[10px] mt-3 border-t border-black/10 pt-2">
+                          例）10件成約・全件継続中の場合 → ¥2,000 × 10件 = ¥20,000/月
+                        </p>
+                      </div>
+                    </div>
                   </TabsContent>
                 ))}
               </Tabs>
