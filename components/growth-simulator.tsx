@@ -346,6 +346,63 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
               ))}
             </div>
           </div>
+
+          <div className="stagger-4">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">対応会計ソフト</label>
+            <div className="grid grid-cols-3 gap-2">
+              {accountingSoftware.map(sw => {
+                const on = selectedSoftware.includes(sw)
+                return (
+                  <button key={sw} data-cursor onClick={() => toggle(selectedSoftware, sw, setSelectedSoftware)}
+                    className={`py-2 border text-xs font-bold transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                    {sw}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="stagger-5">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
+              希望する関与スタイル
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {accountingStyleOptions.map(opt => (
+                <button key={opt} data-cursor onClick={() => setPreferredAccountingStyle(opt)}
+                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredAccountingStyle === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="stagger-5">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
+              希望する顧客属性
+            </label>
+            <div className="flex gap-2">
+              {preferredTypeOptions.map(opt => (
+                <button key={opt} data-cursor onClick={() => setPreferredType(opt)}
+                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredType === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="stagger-5">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
+              希望するデジタルレベル
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {digitalLevelOptions.map(opt => (
+                <button key={opt} data-cursor onClick={() => setPreferredDigitalLevel(opt)}
+                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredDigitalLevel === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* 右 */}
@@ -431,21 +488,6 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
             </div>
           </div>
 
-          <div className="stagger-4">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">対応会計ソフト</label>
-            <div className="grid grid-cols-3 gap-2">
-              {accountingSoftware.map(sw => {
-                const on = selectedSoftware.includes(sw)
-                return (
-                  <button key={sw} data-cursor onClick={() => toggle(selectedSoftware, sw, setSelectedSoftware)}
-                    className={`py-2 border text-xs font-bold transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
-                    {sw}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
           <div className="stagger-5">
             <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-1">
               NG業種 <span className="normal-case tracking-normal text-black/25">（紹介不要な業種）</span>
@@ -463,47 +505,6 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
             </div>
           </div>
 
-          <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
-              希望する関与スタイル
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {accountingStyleOptions.map(opt => (
-                <button key={opt} data-cursor onClick={() => setPreferredAccountingStyle(opt)}
-                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredAccountingStyle === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
-                  {opt}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
-              希望する顧客属性
-            </label>
-            <div className="flex gap-2">
-              {preferredTypeOptions.map(opt => (
-                <button key={opt} data-cursor onClick={() => setPreferredType(opt)}
-                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredType === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
-                  {opt}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
-              希望するデジタルレベル
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {digitalLevelOptions.map(opt => (
-                <button key={opt} data-cursor onClick={() => setPreferredDigitalLevel(opt)}
-                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredDigitalLevel === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
-                  {opt}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>
