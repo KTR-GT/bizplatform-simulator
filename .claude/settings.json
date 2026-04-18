@@ -4,7 +4,16 @@
       "Bash(pnpm dev *)",
       "Bash(npx next *)",
       "Bash(node_modules/.bin/next dev *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "WebSearch",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git commit -m 'fix: customerDatabase の import を追加 *)"
     ]
   }
 }

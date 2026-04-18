@@ -39,7 +39,7 @@ export interface SimulatorInputs {
   preferredDigitalLevel:    string
   goodThemes:               string[]
   goodIndustries:           string[]
-  preferredRevRange:        string
+  preferredRevRanges:       string[]
 }
 
 export function useSimulatorModel(inputs: SimulatorInputs) {
@@ -105,15 +105,19 @@ export function useSimulatorModel(inputs: SimulatorInputs) {
            (inputs.preferredDigitalLevel as string) === c.digitalLevel ? 15 : 0)
         + (inputs.goodThemes.length > 0 && inputs.goodThemes.includes(c.theme) ? 25 : 0)
         + (inputs.goodIndustries.length > 0 && inputs.goodIndustries.includes(c.industry) ? 15 : 0)
-        + (inputs.preferredRevRange === "" ? 0 :
-           inputs.preferredRevRange === "小規模（〜3,000万）" && c.revenue < 3000 ? 15 :
-           inputs.preferredRevRange === "中規模（3,000万〜1億）" && c.revenue >= 3000 && c.revenue < 10000 ? 15 :
-           inputs.preferredRevRange === "大規模（1億〜）" && c.revenue >= 10000 ? 15 : 0),
+        + (inputs.preferredRevRanges.length === 0 ? 0 :
+           (inputs.preferredRevRanges.includes("〜500万")          && c.revenue < 500   ? 15 :
+            inputs.preferredRevRanges.includes("500万〜1,000万")   && c.revenue >= 500   && c.revenue < 1000  ? 15 :
+            inputs.preferredRevRanges.includes("1,000万〜3,000万") && c.revenue >= 1000  && c.revenue < 3000  ? 15 :
+            inputs.preferredRevRanges.includes("3,000万〜5,000万") && c.revenue >= 3000  && c.revenue < 5000  ? 15 :
+            inputs.preferredRevRanges.includes("5,000万〜1億")     && c.revenue >= 5000  && c.revenue < 10000 ? 15 :
+            inputs.preferredRevRanges.includes("1億〜3億")         && c.revenue >= 10000 && c.revenue < 30000 ? 15 :
+            inputs.preferredRevRanges.includes("3億〜")            && c.revenue >= 30000 ? 15 : 0)),
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 5)
   , [inputs.selectedSoftware, inputs.ngIndustries, inputs.selectedArea, inputs.preferredAccountingStyle,
-     inputs.preferredType, inputs.preferredDigitalLevel, inputs.goodThemes, inputs.goodIndustries, inputs.preferredRevRange])
+     inputs.preferredType, inputs.preferredDigitalLevel, inputs.goodThemes, inputs.goodIndustries, inputs.preferredRevRanges])
 
   return {
     clientNum, capacityNum, avgFeeNum, naturalIncreaseNum, naturalDecreaseNum,
