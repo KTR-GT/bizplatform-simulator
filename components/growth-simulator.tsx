@@ -825,17 +825,8 @@ function MarketTab() {
 // ============================================================
 // 03 DIAGNOSIS（刷新版）
 // ============================================================
-function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, naturalIncrease, naturalDecrease }: any) {
-  const naturalIncreaseNum = parseInt(naturalIncrease) || 0
-  const naturalDecreaseNum = parseInt(naturalDecrease) || 0
-  const netGrowth          = naturalIncreaseNum - naturalDecreaseNum
-  const unusedRevenue      = capacityNum * avgFeeNum
-  const yearsToFill        = netGrowth > 0 ? Math.ceil(capacityNum / netGrowth) : null
-
-  // 提携事務所ベンチマーク（固定参考値）
-  const benchIncrease    = 3.2
-  const benchDecrease    = 2.1
-  const benchBizplatForm = 12  // BizplatForm経由年間新規成約（参考）
+function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum }: any) {
+  const unusedRevenue = capacityNum * avgFeeNum
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
@@ -849,55 +840,8 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, naturalIncrease, natu
         <p className="text-black/35 text-xs mt-3">※ ヒアリング値を入力すると自動反映されます</p>
       </div>
 
-      {/* ブロック①：現在の売上力 */}
-      <div className="grid grid-cols-3 gap-px bg-black mb-8 stagger-2">
-        {[
-          { label: "月間売上",   value: diagnosis.monthly, prefix: "¥", suffix: "",    size: "text-4xl" },
-          { label: "年間売上",   value: diagnosis.annual,  prefix: "¥", suffix: "",    size: "text-4xl" },
-          { label: "引受余力",   value: capacityNum,       prefix: "",  suffix: "件",  size: "text-5xl" },
-        ].map(({ label, value, prefix, suffix, size }) => (
-          <div key={label} className="bg-white px-6 py-8">
-            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">{label}</p>
-            <p className={`font-inter font-black ${size} leading-none tabular-nums text-[#0A0A0A]`}>
-              <AnimatedNumber value={value} prefix={prefix} suffix={suffix} />
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* ブロック②：自力での増減バランス */}
-      <div className="grid grid-cols-3 gap-px bg-black mb-8 stagger-3">
-        <div className="bg-white px-6 py-7">
-          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">自然に増える顧客（年）</p>
-          <p className="font-inter font-black text-4xl leading-none tabular-nums text-[#0A0A0A]">
-            +<AnimatedNumber value={naturalIncreaseNum} suffix="件" />
-          </p>
-          <p className="text-black/30 text-xs mt-2">口コミ・紹介など</p>
-        </div>
-        <div className="bg-white px-6 py-7">
-          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">自然に離れる顧客（年）</p>
-          <p className="font-inter font-black text-4xl leading-none tabular-nums text-[#0A0A0A]">
-            −<AnimatedNumber value={naturalDecreaseNum} suffix="件" />
-          </p>
-          <p className="text-black/30 text-xs mt-2">廃業・解約など</p>
-        </div>
-        <div className={`px-6 py-7 ${netGrowth >= 0 ? "bg-white" : "bg-[#F4F4F4]"}`}>
-          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">差し引き純増（年）</p>
-          <p className={`font-inter font-black text-4xl leading-none tabular-nums ${netGrowth >= 0 ? "text-[#0A0A0A]" : "text-black/40"}`}>
-            {netGrowth >= 0 ? "+" : ""}{netGrowth}件
-          </p>
-          <p className="text-black/30 text-xs mt-2">
-            {yearsToFill
-              ? `このペースで引受余力を埋めるには約${yearsToFill}年`
-              : naturalIncreaseNum === 0 && naturalDecreaseNum === 0
-              ? "Step01で自然増減を入力すると表示されます"
-              : "自力での純増がない状態です"}
-          </p>
-        </div>
-      </div>
-
       {/* ブロック③：未活用キャパシティ（前向き） */}
-      <div className="border-l-4 border-black bg-[#0A0A0A] px-8 py-8 mb-8 stagger-4">
+      <div className="border-l-4 border-black bg-[#0A0A0A] px-8 py-8 mb-8 stagger-2">
         <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/35 mb-3">Unused Capacity — 未活用の売上余地</p>
         <div className="flex items-baseline gap-4 flex-wrap">
           <div>
@@ -912,51 +856,64 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, naturalIncrease, natu
         </p>
       </div>
 
-      {/* ブロック④：提携事務所との比較 */}
-      <div className="stagger-5">
+      {/* ブロック④：提携事務所との比較 + 実績事例 */}
+      <div className="stagger-3">
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/25 mb-4">Partner Benchmark — 提携事務所との比較</p>
-        <div className="grid grid-cols-3 gap-px bg-black mb-2">
+
+        {/* 平均値との比較 */}
+        <div className="grid grid-cols-3 gap-px bg-black mb-1">
           {[
-            {
-              label:  "年間自然増",
-              mine:   `${naturalIncreaseNum}件`,
-              bench:  `${benchIncrease}件`,
-              diff:   naturalIncreaseNum - benchIncrease,
-            },
-            {
-              label:  "年間自然減",
-              mine:   `${naturalDecreaseNum}件`,
-              bench:  `${benchDecrease}件`,
-              diff:   benchDecrease - naturalDecreaseNum,  // 少ない方が良い
-            },
-            {
-              label:  "BizplatForm経由 年間新規成約（参考）",
-              mine:   "—",
-              bench:  `${benchBizplatForm}件`,
-              diff:   null,
-            },
-          ].map(({ label, mine, bench, diff }) => (
+            { label: "平均関与先数",              mine: `${capacityNum}件`,                                              bench: "52件" },
+            { label: "BizplatForm経由 年間新規成約", mine: "—（提携前）",                                                    bench: "約12件" },
+            { label: "月額平均顧問料",              mine: `¥${avgFeeNum.toLocaleString("ja-JP")}`,                          bench: "¥31,200" },
+          ].map(({ label, mine, bench }) => (
             <div key={label} className="bg-white px-6 py-6">
               <p className="font-inter text-[9px] uppercase tracking-wider text-black/30 mb-4">{label}</p>
               <div className="flex items-end justify-between">
                 <div>
                   <p className="font-inter text-[9px] text-black/25 mb-1">先生（現状）</p>
-                  <p className="font-inter font-black text-2xl text-[#0A0A0A] tabular-nums">{mine}</p>
+                  <p className="font-inter font-black text-xl text-[#0A0A0A] tabular-nums">{mine}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-inter text-[9px] text-black/25 mb-1">提携事務所平均</p>
-                  <p className="font-inter font-black text-2xl text-[#0A0A0A] tabular-nums">{bench}</p>
+                  <p className="font-inter font-black text-xl text-[#0A0A0A] tabular-nums">{bench}</p>
                 </div>
               </div>
-              {diff !== null && (
-                <div className={`mt-3 px-2 py-1 text-[10px] font-inter font-bold inline-block ${diff >= 0 ? "bg-[#0A0A0A] text-white" : "bg-[#F4F4F4] text-black/40"}`}>
-                  {diff >= 0 ? `+${diff.toFixed(1)}件 上回っています` : `${diff.toFixed(1)}件 下回っています`}
-                </div>
-              )}
             </div>
           ))}
         </div>
-        <p className="text-black/20 text-[10px] font-inter">※ BizplatFormパートナー事務所の実績平均値（参考）</p>
+        <p className="text-black/20 text-[10px] font-inter mb-8">※ BizplatFormパートナー事務所の実績平均値（参考）</p>
+
+        {/* 実績事例 トップ事務所 */}
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/25 mb-4">Partner Cases — 提携事務所の実績事例</p>
+        <div className="grid grid-cols-3 gap-px bg-black mb-1">
+          {[
+            { rank: 1, name: "越智聖税理士事務所",       area: "愛媛", contracts: 225, fee: 4352691,  annualFee: 52232292 },
+            { rank: 2, name: "山本聡公認会計士事務所",   area: "埼玉", contracts: 77,  fee: 3511583,  annualFee: 42138996 },
+            { rank: 3, name: "SOLA公認会計士事務所",     area: "東京", contracts: 57,  fee: 2853868,  annualFee: 34246416 },
+          ].map(({ rank, name, area, contracts, fee, annualFee }) => (
+            <div key={rank} className="bg-white px-6 py-6 relative overflow-hidden">
+              <span className="absolute top-4 right-5 font-inter font-black text-[48px] leading-none text-black/5 tabular-nums">#{rank}</span>
+              <p className="font-inter text-[9px] uppercase tracking-wider text-black/25 mb-2">{area}</p>
+              <p className="font-inter font-bold text-sm text-[#0A0A0A] mb-4 leading-snug">{name}</p>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-inter text-[9px] text-black/30 mb-0.5">累計成約件数</p>
+                  <p className="font-inter font-black text-2xl tabular-nums text-[#0A0A0A]">{contracts}件</p>
+                </div>
+                <div>
+                  <p className="font-inter text-[9px] text-black/30 mb-0.5">月間顧問料合計</p>
+                  <p className="font-inter font-black text-lg tabular-nums text-[#0A0A0A]">¥{fee.toLocaleString("ja-JP")}</p>
+                </div>
+                <div>
+                  <p className="font-inter text-[9px] text-black/30 mb-0.5">年商換算</p>
+                  <p className="font-inter font-bold text-sm tabular-nums text-black/50">¥{(annualFee / 10000).toFixed(0)}万円/年</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-black/20 text-[10px] font-inter">※ BizplatForm公式サイト掲載の顧問料合計ランキングより（参考）</p>
       </div>
     </div>
   )
