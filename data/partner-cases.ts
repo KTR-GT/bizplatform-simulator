@@ -119,8 +119,14 @@ export function selectResonantCases(
     "鹿児島県": "九州・沖縄", "沖縄県": "九州・沖縄",
   }
 
+  // selectedArea は地域名（"関東"等）または都道府県名のどちらでも対応
+  const knownRegions = new Set(Object.values(prefectureToRegion))
   const myRegions = new Set(
-    selectedArea.flatMap(a => prefectureToRegion[a] ? [prefectureToRegion[a]] : [])
+    selectedArea.flatMap(a => {
+      if (a === "全国") return []
+      if (knownRegions.has(a)) return [a]  // すでに地域名
+      return prefectureToRegion[a] ? [prefectureToRegion[a]] : []  // 都道府県名
+    })
   )
 
   const scored = partnerCases.map(c => {
