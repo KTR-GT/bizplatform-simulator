@@ -1329,28 +1329,39 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
       <div className="border border-black p-8 mb-8 stagger-2">
         <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-black/25 mb-6">シミュレーター入力</p>
         <div className="grid grid-cols-2 gap-12">
+          {/* 月間受入ペース */}
           <div>
-            <div className="flex items-baseline justify-between mb-3">
-              <label className="font-inter text-[10px] uppercase tracking-wider text-black/35">月間受入ペース</label>
-              <span className="font-inter font-black text-2xl text-[#0A0A0A]">{simPace}<span className="text-sm font-normal text-black/35 ml-1">件/月</span></span>
+            <label className="font-inter text-[10px] uppercase tracking-wider text-black/35 block mb-4">月間受入ペース</label>
+            <div className="flex items-center gap-4">
+              <button data-cursor
+                onClick={() => setSimPace(Math.max(1, simPace - 1))}
+                className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">−</button>
+              <div className="flex-1 text-center">
+                <span className="font-inter font-black text-[48px] leading-none tabular-nums text-[#0A0A0A]">{simPace}</span>
+                <span className="font-inter text-sm text-black/35 ml-1">件/月</span>
+              </div>
+              <button data-cursor
+                onClick={() => setSimPace(Math.min(10, simPace + 1))}
+                className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">＋</button>
             </div>
-            <input type="range" min={1} max={10} value={simPace} onChange={e => setSimPace(Number(e.target.value))}
-              className="w-full accent-black" />
-            <div className="flex justify-between text-[9px] text-black/25 font-inter mt-1">
-              <span>1件</span><span>10件</span>
-            </div>
+            <p className="text-center text-[9px] text-black/20 font-inter mt-2">1〜10件</p>
           </div>
+          {/* 平均顧問料 */}
           <div>
-            <div className="flex items-baseline justify-between mb-3">
-              <label className="font-inter text-[10px] uppercase tracking-wider text-black/35">平均顧問料</label>
-              <span className="font-inter font-black text-2xl text-[#0A0A0A]">¥{effectiveAvgFee.toLocaleString("ja-JP")}<span className="text-sm font-normal text-black/35 ml-1">/月</span></span>
+            <label className="font-inter text-[10px] uppercase tracking-wider text-black/35 block mb-4">平均顧問料</label>
+            <div className="flex items-center gap-4">
+              <button data-cursor
+                onClick={() => setSimAvgFee(Math.max(10000, effectiveAvgFee - 5000))}
+                className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">−</button>
+              <div className="flex-1 text-center">
+                <span className="font-inter font-black text-[36px] leading-none tabular-nums text-[#0A0A0A]">¥{effectiveAvgFee.toLocaleString("ja-JP")}</span>
+                <span className="font-inter text-sm text-black/35 ml-1">/月</span>
+              </div>
+              <button data-cursor
+                onClick={() => setSimAvgFee(Math.min(100000, effectiveAvgFee + 5000))}
+                className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">＋</button>
             </div>
-            <input type="range" min={10000} max={100000} step={5000} value={effectiveAvgFee}
-              onChange={e => setSimAvgFee(Number(e.target.value))}
-              className="w-full accent-black" />
-            <div className="flex justify-between text-[9px] text-black/25 font-inter mt-1">
-              <span>¥10,000</span><span>¥100,000</span>
-            </div>
+            <p className="text-center text-[9px] text-black/20 font-inter mt-2">¥10,000〜¥100,000（5,000円刻み）</p>
           </div>
         </div>
       </div>
