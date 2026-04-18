@@ -1452,7 +1452,6 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
             <p className="font-inter font-black text-xs tabular-nums text-black/50 mt-0.5">
               ¥{Math.round(plan.commit / 10000)}万/月
             </p>
-            <p className="font-inter text-[8px] text-black/20 mt-1 text-center leading-tight">7年保証</p>
           </div>
         </div>
 
