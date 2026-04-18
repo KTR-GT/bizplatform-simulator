@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
-import { type CommitPlan } from "@/data/commit-plans"
+import { type CommitPlan, commitPlans } from "@/data/commit-plans"
 import { useSimulatorModel } from "@/hooks/use-simulator-model"
 import { partnerBenchmarks } from "@/data/partner-benchmark"
 import { customerDatabase } from "@/data/customer-database"
@@ -162,6 +162,13 @@ export function GrowthSimulator() {
     goodThemes, goodIndustries, preferredRevRange,
   })
 
+  const [showAllPlans, setShowAllPlans] = useState(false)
+  const [selectedPlanIndex, setSelectedPlanIndex] = useState(recommendedPlanIndex)
+  useEffect(() => { setSelectedPlanIndex(recommendedPlanIndex) }, [recommendedPlanIndex])
+
+  const [simPace,   setSimPace]   = useState(2)
+  const [simAvgFee, setSimAvgFee] = useState(0)
+
   const goToTab = useCallback((tabId: string) => {
     const cur  = TABS.findIndex(t => t.id === activeTab)
     const next = TABS.findIndex(t => t.id === tabId)
@@ -228,8 +235,8 @@ export function GrowthSimulator() {
         {activeTab === "diagnosis" && <DiagnosisTab  diagnosis={diagnosis} chartData={chartData} displayName={displayName} planLabel={`¥${plan.monthly.toLocaleString("ja-JP")}`} />}
         {activeTab === "mechanism" && <MechanismTab />}
         {activeTab === "matching"  && <MatchingTab   matched={matched} hasInput={selectedSoftware.length > 0 || selectedArea.length > 0 || preferredAccountingStyle !== "すべて" || preferredType !== "すべて" || preferredDigitalLevel !== "すべて"} />}
-        {activeTab === "plan"      && <PlanTab       plan={plan} index={recommendedPlanIndex} totalInvestment={totalInvestment} commitRevenue={commitRevenue} roi={roi} payback={payback} capacityNum={capacityNum} avgFeeNum={avgFeeNum} />}
-        {activeTab === "roi"       && <ROITab        plan={plan} chartData={chartData} roi={roi} payback={payback} totalInvestment={totalInvestment} commitRevenue={commitRevenue} />}
+        {activeTab === "plan"      && <PlanTab plan={commitPlans[selectedPlanIndex]} index={selectedPlanIndex} totalInvestment={totalInvestment} commitRevenue={commitRevenue} roi={roi} payback={payback} capacityNum={capacityNum} avgFeeNum={avgFeeNum} showAllPlans={showAllPlans} setShowAllPlans={setShowAllPlans} selectedPlanIndex={selectedPlanIndex} setSelectedPlanIndex={setSelectedPlanIndex} commitPlans={commitPlans} />}
+        {activeTab === "roi"       && <ROITab plan={commitPlans[selectedPlanIndex]} roi={roi} payback={payback} totalInvestment={totalInvestment} commitRevenue={commitRevenue} simPace={simPace} setSimPace={setSimPace} simAvgFee={simAvgFee} setSimAvgFee={setSimAvgFee} avgFeeNum={avgFeeNum} matched={matched} />}
         {activeTab === "closing"   && <ClosingTab    displayName={displayName} plan={plan} />}
       </main>
 
@@ -493,6 +500,12 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 // ============================================================
 function MarketTab() {
   const [hoveredKey, setHoveredKey] = useState<string | null>(null)
+  const [revealedStats, setRevealedStats] = useState<Set<string>>(new Set())
+  const toggleReveal = (label: string) => setRevealedStats(prev => {
+    const next = new Set(prev)
+    next.has(label) ? next.delete(label) : next.add(label)
+    return next
+  })
 
   // -------------------------------------------------------
   // 1本バー — 左: アプローチ不可（暗）/ 右: アプローチ可能（明）
@@ -776,18 +789,38 @@ function MarketTab() {
           <span className="normal-case tracking-normal text-white/20 ml-2">（以下は推計・参考値）</span>
         </p>
         <div className="grid grid-cols-4 gap-px bg-white/10">
-          {marketStats.map(s => (
-            <div key={s.label} className="bg-[#0A0A0A] px-5 py-6 border border-white/5">
-              <div className="flex items-start gap-1 mb-1">
-                <p className="font-inter font-black text-xl text-white leading-tight">{s.value}</p>
-                {s.isEstimate && (
-                  <span className="text-[8px] text-white/30 font-inter mt-0.5 border border-white/15 px-1">推計</span>
+          {marketStats.map(s => {
+            const revealed = revealedStats.has(s.label)
+            return (
+              <div key={s.label}
+                data-cursor
+                onClick={() => toggleReveal(s.label)}
+                className="bg-[#0A0A0A] px-5 py-6 border border-white/5 cursor-pointer transition-all duration-300"
+                style={{ boxShadow: revealed ? "0 8px 32px rgba(255,255,255,0.08)" : "none", transform: revealed ? "translateY(-2px)" : "none" }}
+              >
+                <div className="flex items-start gap-1 mb-1" style={{ transition: "all 0.4s ease" }}>
+                  <p
+                    className="font-inter font-black text-xl leading-tight transition-all duration-500"
+                    style={{
+                      color: revealed ? "#ffffff" : "transparent",
+                      textShadow: revealed ? "none" : "0 0 12px rgba(255,255,255,0.5)",
+                      filter: revealed ? "none" : "blur(6px)",
+                    }}
+                  >
+                    {s.value}
+                  </p>
+                  {s.isEstimate && revealed && (
+                    <span className="text-[8px] text-white/30 font-inter mt-0.5 border border-white/15 px-1">推計</span>
+                  )}
+                </div>
+                {!revealed && (
+                  <p className="font-inter text-white/20 text-[9px] mb-1">タップして確認</p>
                 )}
+                <p className="text-white/50 text-xs mt-1">{s.label}</p>
+                <p className="text-white/20 text-[9px] mt-2 font-inter leading-tight">{s.note}</p>
               </div>
-              <p className="text-white/50 text-xs mt-1">{s.label}</p>
-              <p className="text-white/20 text-[9px] mt-2 font-inter leading-tight">{s.note}</p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>
@@ -1034,12 +1067,14 @@ function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[
 // ============================================================
 // 06 PLAN
 // ============================================================
-function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, capacityNum, avgFeeNum }: any) {
-  const potential  = capacityNum * avgFeeNum
-  const annual     = plan.commit * 12
-  const inst1y     = getInstallment(plan, "1y")
-  const inst3y     = getInstallment(plan, "3y")
-  const inst7y     = getInstallment(plan, "7y")
+function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, capacityNum, avgFeeNum, showAllPlans, setShowAllPlans, selectedPlanIndex, setSelectedPlanIndex, commitPlans }: any) {
+  const activePlan = commitPlans[selectedPlanIndex]
+  const activeInst1y = getInstallment(activePlan, "1y")
+  const activeInst3y = getInstallment(activePlan, "3y")
+  const activeInst7y = getInstallment(activePlan, "7y")
+  const annual = activePlan.commit * 12
+  const total7y = activePlan.commit * 84
+  const potential = capacityNum * avgFeeNum
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
@@ -1052,30 +1087,31 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
       </div>
 
       <div className="grid grid-cols-5 gap-px bg-black mb-8 stagger-2">
+        {/* LEFT: Commit hero */}
         <div className="col-span-3 bg-[#0A0A0A] px-10 py-10 flex flex-col justify-between">
           <div>
-            <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/25 mb-6">
-              Commit Plan {String(index + 1).padStart(2, "0")}
+            <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/25 mb-2">
+              Commit Plan {String(selectedPlanIndex + 1).padStart(2, "0")} — 月間コミット顧問料
             </p>
             <p className="font-inter font-black text-[96px] leading-none tabular-nums text-white">
-              ¥{plan.monthly.toLocaleString("ja-JP")}
+              ¥{activePlan.commit.toLocaleString("ja-JP")}
             </p>
-            <p className="text-white/35 text-lg mt-1 font-inter">/ 月（税抜）</p>
+            <p className="text-white/50 text-base mt-1 font-inter">毎月この金額分の新規顧問料が積み上がる</p>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
             <div>
-              <p className="text-white/35 text-[11px] uppercase tracking-wider font-inter mb-1">月間コミット</p>
-              <p className="font-inter font-black text-4xl text-white tabular-nums">¥{plan.commit.toLocaleString("ja-JP")}</p>
-              <p className="text-white/25 text-xs mt-1">の新規顧問料をコミット（保証）</p>
-            </div>
-            <div>
-              <p className="text-white/35 text-[11px] uppercase tracking-wider font-inter mb-1">年換算コミット</p>
-              <p className="font-inter font-bold text-2xl text-white tabular-nums">¥{annual.toLocaleString("ja-JP")}</p>
+              <p className="text-white/35 text-[11px] uppercase tracking-wider font-inter mb-1">年間換算コミット</p>
+              <p className="font-inter font-black text-3xl text-white tabular-nums">¥{annual.toLocaleString("ja-JP")}</p>
               <p className="text-white/25 text-xs mt-1">月間コミット × 12ヶ月</p>
+            </div>
+            <div className="pt-4 border-t border-white/10">
+              <p className="text-white/20 text-[11px] uppercase tracking-wider font-inter mb-1">月額サービス料</p>
+              <p className="font-inter text-white/40 text-xl tabular-nums">¥{activePlan.monthly.toLocaleString("ja-JP")} / 月</p>
             </div>
           </div>
         </div>
 
+        {/* RIGHT: Why + Dialog */}
         <div className="col-span-2 bg-white px-8 py-10 flex flex-col justify-between">
           <div>
             <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-black/25 mb-6">なぜこのプランか</p>
@@ -1087,7 +1123,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
               </div>
               <div className="border-l-2 border-black/20 pl-4">
                 <p className="text-[9px] text-black/35 font-inter uppercase tracking-wider mb-1">最適コミット額</p>
-                <p className="font-inter font-bold text-lg tabular-nums text-[#0A0A0A]">¥{plan.commit.toLocaleString("ja-JP")} / 月</p>
+                <p className="font-inter font-bold text-lg tabular-nums text-[#0A0A0A]">¥{activePlan.commit.toLocaleString("ja-JP")} / 月</p>
                 <p className="text-[10px] text-black/30 mt-0.5">ポテンシャルに最も近いプランを自動選定</p>
               </div>
               <div className="border-l-2 border-black/10 pl-4">
@@ -1097,13 +1133,9 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
               </div>
             </div>
           </div>
-          {/* 料金体系確認ダイアログ */}
           <Dialog>
             <DialogTrigger asChild>
-              <button
-                data-cursor
-                className="mt-6 pt-5 border-t border-black/10 w-full text-left font-inter text-[11px] font-bold tracking-[0.12em] uppercase text-black/45 hover:text-black transition-colors flex items-center gap-2"
-              >
+              <button data-cursor className="mt-6 pt-5 border-t border-black/10 w-full text-left font-inter text-[11px] font-bold tracking-[0.12em] uppercase text-black/45 hover:text-black transition-colors flex items-center gap-2">
                 <span className="border border-black/20 px-2 py-0.5">→</span>
                 料金体系を確認する
               </button>
@@ -1113,7 +1145,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                 <DialogTitle className="font-inter font-black text-xl tracking-wide">料金体系 — お支払い方式</DialogTitle>
               </DialogHeader>
               <p className="text-black/50 text-sm mb-4">
-                月間コミット <strong className="text-[#0A0A0A]">¥{plan.commit.toLocaleString("ja-JP")}</strong> プランの各払い方式
+                月間コミット <strong className="text-[#0A0A0A]">¥{activePlan.commit.toLocaleString("ja-JP")}</strong> プランの各払い方式
               </p>
               <Tabs defaultValue="1y">
                 <TabsList className="w-full grid grid-cols-3 mb-4">
@@ -1121,12 +1153,11 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                   <TabsTrigger value="3y" className="font-inter font-bold text-xs">3年払い</TabsTrigger>
                   <TabsTrigger value="7y" className="font-inter font-bold text-xs">7年払い</TabsTrigger>
                 </TabsList>
-
                 {([
-                  { key: "1y", inst: inst1y, label: "1年払い", note: "月額は基準単価×スケールで計算" },
-                  { key: "3y", inst: inst3y, label: "3年払い", note: "月額は基準単価×スケールで計算" },
-                  { key: "7y", inst: inst7y, label: "7年払い", note: "月額はプランのサービス料金をそのまま適用" },
-                ] as const).map(({ key, inst, label, note }) => (
+                  { key: "1y", inst: activeInst1y, label: "1年払い" },
+                  { key: "3y", inst: activeInst3y, label: "3年払い" },
+                  { key: "7y", inst: activeInst7y, label: "7年払い" },
+                ] as const).map(({ key, inst, label }) => (
                   <TabsContent key={key} value={key} className="border border-black p-6">
                     <p className="font-inter text-[9px] uppercase tracking-wider text-black/35 mb-4">{label}</p>
                     <div className="grid grid-cols-3 gap-4 mb-4">
@@ -1143,17 +1174,38 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                         <p className="font-inter font-black text-2xl tabular-nums">¥{inst.total.toLocaleString("ja-JP")}</p>
                       </div>
                     </div>
-                    <p className="text-black/30 text-[10px] border-t border-black/10 pt-3">{note}</p>
+                    <p className="text-black/30 text-[10px] border-t border-black/10 pt-3">※ 税抜表示</p>
                   </TabsContent>
                 ))}
               </Tabs>
-              <p className="text-black/20 text-[10px] mt-3">※ 税抜表示。詳細は担当者にご確認ください。</p>
             </DialogContent>
           </Dialog>
         </div>
       </div>
 
-      <div className="border border-black stagger-3">
+      {/* Other plans toggle */}
+      <div className="stagger-3 mb-8">
+        <button data-cursor onClick={() => setShowAllPlans(!showAllPlans)}
+          className="font-inter text-[11px] uppercase tracking-wider text-black/35 hover:text-black transition-colors flex items-center gap-2">
+          <span className="border border-black/20 px-2 py-0.5">{showAllPlans ? "▲" : "▼"}</span>
+          {showAllPlans ? "他のプランを閉じる" : "他のプランを見る"}
+        </button>
+        {showAllPlans && (
+          <div className="mt-4 grid grid-cols-5 gap-px bg-black">
+            {commitPlans.map((p: any, i: number) => (
+              <button key={i} data-cursor onClick={() => setSelectedPlanIndex(i)}
+                className={`px-4 py-5 text-left transition-colors ${selectedPlanIndex === i ? "bg-[#0A0A0A] text-white" : "bg-white hover:bg-[#F4F4F4] text-[#0A0A0A]"}`}>
+                <p className={`font-inter text-[9px] uppercase tracking-wider mb-2 ${selectedPlanIndex === i ? "text-white/40" : "text-black/30"}`}>Plan {String(i+1).padStart(2,"0")}</p>
+                <p className="font-inter font-black text-lg tabular-nums">¥{p.commit.toLocaleString("ja-JP")}</p>
+                <p className={`text-[10px] mt-1 ${selectedPlanIndex === i ? "text-white/30" : "text-black/25"}`}>¥{p.monthly.toLocaleString("ja-JP")}/月</p>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Included items */}
+      <div className="border border-black stagger-4">
         <div className="px-8 py-4 border-b border-black bg-[#F4F4F4]">
           <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35">このプランに含まれるもの</p>
         </div>
@@ -1178,94 +1230,145 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
 }
 
 // ============================================================
-// 07 ROI （刷新版 — ネガ曲線なし・前向き累積・マイルストーン中心）
+// 07 ROI
 // ============================================================
-function ROITab({ plan, chartData, roi, payback, totalInvestment, commitRevenue }: any) {
-  // 累積コミット売上のみのグラフデータ（改善後のみ）
-  const cumulativeData = chartData.map((d: any, i: number) => ({
-    year:   d.year,
-    累積売上: chartData.slice(0, i + 1).reduce((sum: number, x: any) => sum + x["改善後"], 0),
-  }))
+function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, setSimPace, simAvgFee, setSimAvgFee, avgFeeNum, matched }: any) {
+  const effectiveAvgFee = simAvgFee > 0 ? simAvgFee : (avgFeeNum || 30000)
+  const neededClients   = Math.ceil(plan.commit / effectiveAvgFee)
+  const achieveMonth    = Math.ceil(neededClients / simPace)
+  const cappedAchieve   = Math.min(achieveMonth, 84)
 
-  // マイルストーン
-  const milestones = [
-    { label: "投資回収",    timing: `${payback}ヶ月後`,        detail: `月額サービス料¥${plan.monthly.toLocaleString("ja-JP")}を回収` },
-    { label: "累積売上2倍", timing: `約${Math.ceil(payback * 2 / 12)}年後`, detail: `総投資額の2倍のコミット売上を達成` },
-    { label: "7年間の実績", timing: "84ヶ月",                   detail: `累積コミット売上¥${commitRevenue.toLocaleString("ja-JP")}` },
-  ]
+  // Graph data: monthly advisory income accumulation over 84 months
+  const graphData = Array.from({ length: 85 }, (_, m) => {
+    const clientsSoFar = Math.min(m * simPace, neededClients)
+    const monthlyIncome = clientsSoFar * effectiveAvgFee
+    const serviceFee    = plan.monthly
+    const ratio         = monthlyIncome > 0 ? Math.round((serviceFee / monthlyIncome) * 100) : 100
+    return {
+      month: `${m}ヶ月`,
+      顧問料収入: Math.round(monthlyIncome / 10000),
+      サービス料: Math.round(serviceFee / 10000),
+      ratio,
+    }
+  })
+
+  const finalRatio = Math.round((plan.monthly / plan.commit) * 100)
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-10 stagger-1">
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 07</p>
         <h1 className="font-serif-display italic text-4xl text-[#0A0A0A] leading-tight">
-          コミットプランで、<br />
-          <span className="not-italic font-inter font-black">売上はこう積み上がる。</span>
+          受注ペースを動かして、<br />
+          <span className="not-italic font-inter font-black">収益性の変化を確認する。</span>
         </h1>
       </div>
 
-      {/* ROI + 主要KPI */}
-      <div className="grid grid-cols-4 gap-px bg-black mb-10 stagger-2">
-        <div className="col-span-2 bg-[#0A0A0A] px-8 py-8">
-          <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/25 mb-2">7年間 ROI</p>
-          <div className="flex items-baseline gap-1">
-            <span className="font-inter font-black text-[80px] leading-none tabular-nums text-white">
-              <AnimatedNumber value={Math.round(roi)} duration={1500} />
-            </span>
-            <span className="font-inter font-black text-3xl text-white">%</span>
+      {/* Simulator inputs */}
+      <div className="border border-black p-8 mb-8 stagger-2">
+        <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-black/25 mb-6">シミュレーター入力</p>
+        <div className="grid grid-cols-2 gap-12">
+          <div>
+            <div className="flex items-baseline justify-between mb-3">
+              <label className="font-inter text-[10px] uppercase tracking-wider text-black/35">月間受入ペース</label>
+              <span className="font-inter font-black text-2xl text-[#0A0A0A]">{simPace}<span className="text-sm font-normal text-black/35 ml-1">件/月</span></span>
+            </div>
+            <input type="range" min={1} max={10} value={simPace} onChange={e => setSimPace(Number(e.target.value))}
+              className="w-full accent-black" />
+            <div className="flex justify-between text-[9px] text-black/25 font-inter mt-1">
+              <span>1件</span><span>10件</span>
+            </div>
           </div>
-          <p className="text-white/25 text-[10px] mt-2">（コミット売上 − 総投資額）÷ 総投資額 × 100</p>
+          <div>
+            <div className="flex items-baseline justify-between mb-3">
+              <label className="font-inter text-[10px] uppercase tracking-wider text-black/35">平均顧問料</label>
+              <span className="font-inter font-black text-2xl text-[#0A0A0A]">¥{effectiveAvgFee.toLocaleString("ja-JP")}<span className="text-sm font-normal text-black/35 ml-1">/月</span></span>
+            </div>
+            <input type="range" min={10000} max={100000} step={5000} value={effectiveAvgFee}
+              onChange={e => setSimAvgFee(Number(e.target.value))}
+              className="w-full accent-black" />
+            <div className="flex justify-between text-[9px] text-black/25 font-inter mt-1">
+              <span>¥10,000</span><span>¥100,000</span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Key metrics from simulation */}
+      <div className="grid grid-cols-4 gap-px bg-black mb-8 stagger-3">
         {[
-          { label: "7年間のコミット売上", value: commitRevenue, prefix: "¥", suffix: "",    size: "text-2xl" },
-          { label: "投資回収期間",        value: payback,       prefix: "",  suffix: "ヶ月", size: "text-3xl" },
-          { label: "月間コミット",        value: plan.commit,   prefix: "¥", suffix: "",    size: "text-2xl" },
-        ].map(({ label, value, prefix, suffix, size }) => (
-          <div key={label} className="bg-white px-5 py-8">
+          { label: "必要成約件数",    value: `${neededClients}件`,                    sub: `¥${plan.commit.toLocaleString("ja-JP")} ÷ ¥${effectiveAvgFee.toLocaleString("ja-JP")}` },
+          { label: "コミット達成月",  value: `${cappedAchieve}ヶ月目`,               sub: cappedAchieve < 84 ? "7年以内に達成" : "7年（最終保証）" },
+          { label: "達成後のコスト率",value: `${finalRatio}%`,                        sub: `月額¥${plan.monthly.toLocaleString("ja-JP")} ÷ 顧問料¥${plan.commit.toLocaleString("ja-JP")}` },
+          { label: "月間コミット顧問料", value: `¥${plan.commit.toLocaleString("ja-JP")}`, sub: "コミット達成後に毎月積み上がる" },
+        ].map(({ label, value, sub }) => (
+          <div key={label} className="bg-white px-6 py-8">
             <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/25 mb-3">{label}</p>
-            <p className={`font-inter font-black ${size} leading-none tabular-nums text-[#0A0A0A]`}>
-              <AnimatedNumber value={value} prefix={prefix} suffix={suffix} />
-            </p>
+            <p className="font-inter font-black text-2xl leading-none text-[#0A0A0A] tabular-nums">{value}</p>
+            <p className="text-black/25 text-[10px] mt-2 leading-tight">{sub}</p>
           </div>
         ))}
       </div>
 
-      {/* 累積コミット売上グラフ（改善後のみ） */}
-      <div className="mb-10 stagger-3">
-        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35 mb-4">累積コミット売上の推移（万円）</p>
+      {/* Graph */}
+      <div className="mb-8 stagger-4">
+        <div className="flex items-baseline justify-between mb-4">
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35">月別 顧問料収入 vs サービス料（万円）</p>
+          <p className="text-[10px] text-black/25 font-inter">ペース {simPace}件/月 · {cappedAchieve}ヶ月で達成</p>
+        </div>
         <div className="h-64 border border-black/10">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={cumulativeData} margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
-              <defs>
-                <linearGradient id="grad-roi" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#0A0A0A" stopOpacity={0.12} />
-                  <stop offset="95%" stopColor="#0A0A0A" stopOpacity={0} />
-                </linearGradient>
-              </defs>
+            <LineChart data={graphData.filter((_, i) => i % 6 === 0 || i === cappedAchieve)} margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#EBEBEB" />
-              <XAxis dataKey="year" tick={{ fontFamily: "Inter", fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={v => `${v}万`} tick={{ fontFamily: "Inter", fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-              <Tooltip formatter={(v: number) => [`${v.toLocaleString("ja-JP")}万円`, "累積売上"]}
+              <XAxis dataKey="month" tick={{ fontFamily: "Inter", fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} />
+              <YAxis tickFormatter={v => `${v}万`} tick={{ fontFamily: "Inter", fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} />
+              <Tooltip formatter={(v: number) => [`${v}万円`, ""]}
                 contentStyle={{ border: "1px solid #0A0A0A", borderRadius: 0, background: "#fff", fontFamily: "Inter", fontSize: 12 }} />
-              <Area type="monotone" dataKey="累積売上" stroke="#0A0A0A" strokeWidth={3} fill="url(#grad-roi)" dot={false} />
-            </AreaChart>
+              <Legend wrapperStyle={{ fontFamily: "Inter", fontSize: 12 }} />
+              <Line type="monotone" dataKey="顧問料収入" stroke="#0A0A0A" strokeWidth={3} dot={false} />
+              <Line type="monotone" dataKey="サービス料" stroke="#D0D0D0" strokeDasharray="6 3" strokeWidth={2} dot={false} />
+            </LineChart>
           </ResponsiveContainer>
         </div>
+        <p className="text-black/25 text-[10px] mt-2 font-inter">
+          ※ 顧問料収入はペース通りに成約が積み上がった場合の推計。実際の達成タイミングはBizplatFormが7年以内を保証。
+        </p>
       </div>
 
-      {/* マイルストーン */}
-      <div className="stagger-4">
-        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35 mb-4">成長マイルストーン</p>
-        <div className="grid grid-cols-3 gap-px bg-black">
-          {milestones.map(m => (
-            <div key={m.label} className="bg-white px-8 py-6">
-              <p className="font-inter font-black text-xl text-[#0A0A0A] mb-1">{m.timing}</p>
-              <p className="font-bold text-sm text-[#0A0A0A] mb-2">{m.label}</p>
-              <p className="text-black/35 text-xs">{m.detail}</p>
-            </div>
-          ))}
-        </div>
+      {/* Cost ratio message */}
+      <div className="border-l-4 border-black bg-[#F4F4F4] px-6 py-5 mb-8 stagger-5">
+        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1">コスト構造の変化</p>
+        <p className="text-lg font-bold text-[#0A0A0A]">
+          コミット達成後、月額サービス料は顧問料収入の
+          <span className="font-inter font-black text-[40px] leading-none tabular-nums mx-2">{finalRatio}%</span>
+          に過ぎない。
+        </p>
+        <p className="text-black/35 text-xs mt-2">新規成約が積み上がるほど、BizplatFormへの月額の比重は薄れていく。</p>
       </div>
+
+      {/* Matched companies preview */}
+      {matched && matched.length > 0 && (
+        <div className="stagger-6">
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35 mb-4">
+            対象となる企業イメージ — AIマッチング候補より
+          </p>
+          <div className="grid grid-cols-3 gap-px bg-black">
+            {matched.slice(0, 3).map((c: any) => (
+              <div key={c.id} className="bg-white px-6 py-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-bold text-sm text-[#0A0A0A]">{c.name}</span>
+                  <span className="font-inter text-[9px] border border-black px-1.5 py-0.5 text-black/50">{c.industry}</span>
+                </div>
+                <p className="text-black/50 text-xs mb-3 leading-relaxed">{c.situation}</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="font-inter font-black text-xl text-[#0A0A0A] tabular-nums">¥{c.fee.toLocaleString("ja-JP")}</span>
+                  <span className="text-black/30 text-xs">/月</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
