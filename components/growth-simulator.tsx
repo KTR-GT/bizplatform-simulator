@@ -278,7 +278,7 @@ export function GrowthSimulator() {
 // ============================================================
 // 01 HEARING
 // ============================================================
-function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, naturalIncrease, setNaturalIncrease, naturalDecrease, setNaturalDecrease, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, goodThemes, setGoodThemes, goodIndustries, setGoodIndustries, preferredRevRange, setPreferredRevRange, toggle }: any) {
+function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, naturalIncrease, setNaturalIncrease, naturalDecrease, setNaturalDecrease, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, goodThemes, setGoodThemes, goodIndustries, setGoodIndustries, preferredRevRanges, setPreferredRevRanges, toggle }: any) {
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-12 stagger-1">
@@ -402,16 +402,31 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 
           {/* 得意年商レンジ */}
           <div className="stagger-6">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">得意な年商規模</label>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">得意な年商規模<span className="ml-2 normal-case tracking-normal text-black/25">複数選択可</span></label>
             <div className="space-y-2">
-              {(["", ...revenueRangeOptions] as const).map(opt => (
-                <label key={opt} className="flex items-center gap-3" data-cursor onClick={() => setPreferredRevRange(opt as any)}>
-                  <span className={`w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-all ${preferredRevRange === opt ? "border-black bg-black" : "border-black/25"}`}>
-                    {preferredRevRange === opt && <span className="text-white text-[8px]">✓</span>}
-                  </span>
-                  <span className="text-sm text-[#0A0A0A]">{opt === "" ? "指定なし" : opt}</span>
-                </label>
-              ))}
+              {/* 指定なし */}
+              <label key="all" className="flex items-center gap-3 cursor-pointer" data-cursor
+                onClick={() => setPreferredRevRanges([])}>
+                <span className={`w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-all ${preferredRevRanges.length === 0 ? "border-black bg-black" : "border-black/25"}`}>
+                  {preferredRevRanges.length === 0 && <span className="text-white text-[8px]">✓</span>}
+                </span>
+                <span className="text-sm text-[#0A0A0A]">指定なし</span>
+              </label>
+              {revenueRangeOptions.map(opt => {
+                const on = preferredRevRanges.includes(opt)
+                return (
+                  <label key={opt} className="flex items-center gap-3 cursor-pointer" data-cursor
+                    onClick={() => setPreferredRevRanges(on
+                      ? preferredRevRanges.filter((r: string) => r !== opt)
+                      : [...preferredRevRanges, opt]
+                    )}>
+                    <span className={`w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-all ${on ? "border-black bg-black" : "border-black/25"}`}>
+                      {on && <span className="text-white text-[8px]">✓</span>}
+                    </span>
+                    <span className="text-sm text-[#0A0A0A]">{opt}</span>
+                  </label>
+                )
+              })}
             </div>
           </div>
 
