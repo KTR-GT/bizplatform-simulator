@@ -515,7 +515,7 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 // ============================================================
 function MarketTab() {
   const [revealedStats, setRevealedStats] = useState<Set<string>>(new Set())
-  const [expandedStructure, setExpandedStructure] = useState(false)
+  const [expandedSide, setExpandedSide] = useState<"manifest" | "latent" | null>(null)
   const toggleReveal = (label: string) => setRevealedStats(prev => {
     const next = new Set(prev)
     next.has(label) ? next.delete(label) : next.add(label)
@@ -674,66 +674,74 @@ function MarketTab() {
           Market Structure — 誰に届けるか
         </p>
 
-        {/* 常時表示: 2ボックス（20:80比率） */}
-        <div className="flex gap-px bg-white/10 mb-2">
+        {/* 常時表示: 2ボックス（20:80比率）— タップで内訳展開 */}
+        <div className="flex gap-px bg-white/10">
           {/* 左: 顕在層 20% */}
-          <div className="px-8 py-8 flex-none" style={{ width: "20%", background: "rgba(255,255,255,0.06)" }}>
+          <button
+            data-cursor
+            onClick={() => setExpandedSide(v => v === "manifest" ? null : "manifest")}
+            className="flex-none px-8 py-8 text-left transition-opacity hover:opacity-80 active:opacity-60"
+            style={{ width: "20%", background: expandedSide === "manifest" ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)" }}
+          >
+            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-white/30 mb-1">顕在層</p>
             <p className="font-inter font-black text-[56px] leading-none tabular-nums text-white/40">20%</p>
-            <p className="text-white/35 text-xs mt-3 font-bold leading-snug">競合と正面衝突になる顕在層</p>
-          </div>
-          {/* 右: BizplatFormターゲット 80% */}
-          <div className="px-8 py-8 flex-1" style={{ background: "rgba(255,255,255,0.55)" }}>
+            <p className="text-white/30 text-[10px] mt-3 leading-snug">競合と正面衝突になる市場</p>
+            <p className="text-white/20 text-[9px] mt-2">{expandedSide === "manifest" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
+          </button>
+          {/* 右: 潜在層 80% */}
+          <button
+            data-cursor
+            onClick={() => setExpandedSide(v => v === "latent" ? null : "latent")}
+            className="flex-1 px-8 py-8 text-left transition-opacity hover:opacity-90 active:opacity-70"
+            style={{ background: expandedSide === "latent" ? "rgba(255,255,255,0.70)" : "rgba(255,255,255,0.55)" }}
+          >
+            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-black/35 mb-1">潜在層</p>
             <p className="font-inter font-black text-[72px] leading-none tabular-nums text-[#0A0A0A]">80%</p>
             <p className="text-[#0A0A0A] text-sm mt-3 font-bold">BizplatFormだからこそ届く領域</p>
-            <p className="text-black/45 text-xs mt-1 font-inter leading-relaxed">
-              潜在層・未検討層・不満はあるが自分からは動かない層。紹介型でしか刈り取れない市場。
+            <p className="text-black/40 text-xs mt-1 font-inter leading-relaxed">
+              未検討層・不満はあるが自分からは動かない層。紹介型でしか刈り取れない市場。
             </p>
-          </div>
+            <p className="text-black/25 text-[9px] mt-2">{expandedSide === "latent" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
+          </button>
         </div>
 
-        {/* アコーディオントリガー */}
-        <button
-          data-cursor
-          onClick={() => setExpandedStructure(v => !v)}
-          className="w-full flex items-center justify-between px-4 py-3 border border-white/10 text-white/30 hover:text-white/60 transition-colors font-inter text-[10px] uppercase tracking-widest"
-        >
-          <span>各層の詳細を{expandedStructure ? "閉じる" : "見る"}</span>
-          <span>{expandedStructure ? "▲" : "▼"}</span>
-        </button>
-
-        {/* アコーディオン内訳 */}
-        {expandedStructure && (
-          <div className="border border-white/10 border-t-0 divide-y divide-white/10">
-            {segs.map(seg => (
-              <div key={seg.key} className="flex items-stretch">
-                {/* 左: 割合バー */}
-                <div
-                  className="flex-none flex items-center justify-center w-16 py-5"
-                  style={{ background: seg.bright ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)" }}
-                >
-                  <span className="font-inter font-black text-sm tabular-nums"
-                    style={{ color: seg.bright ? "rgba(255,255,255,0.80)" : "rgba(255,255,255,0.25)" }}>
-                    {seg.barW}%
-                  </span>
+        {/* タップで展開する内訳パネル */}
+        {expandedSide && (() => {
+          const filtered = expandedSide === "manifest"
+            ? segs.filter(s => !s.bright)
+            : segs.filter(s => s.bright)
+          const isDark = expandedSide === "manifest"
+          return (
+            <div className="border border-white/10 divide-y divide-white/10"
+              style={{ background: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.08)" }}>
+              {filtered.map(seg => (
+                <div key={seg.key} className="flex items-stretch">
+                  <div
+                    className="flex-none flex items-center justify-center w-16 py-5"
+                    style={{ background: isDark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.10)" }}
+                  >
+                    <span className="font-inter font-black text-sm tabular-nums"
+                      style={{ color: isDark ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.80)" }}>
+                      {seg.barW}%
+                    </span>
+                  </div>
+                  <div className="flex-1 px-6 py-4">
+                    <p className="font-inter font-black text-[13px] mb-1"
+                      style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.90)" }}>
+                      {seg.tag}
+                    </p>
+                    <p className="font-inter text-[10px] mb-2"
+                      style={{ color: isDark ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.45)" }}>
+                      {seg.label}
+                      {!isDark && <span className="ml-2 border border-white/20 px-1 text-[8px] uppercase tracking-wider">Target</span>}
+                    </p>
+                    <p className="text-white/25 text-[10px] leading-relaxed">{seg.desc}</p>
+                  </div>
                 </div>
-                {/* 右: 説明 */}
-                <div className="flex-1 px-6 py-4">
-                  {/* タグ（一言キャッチ） */}
-                  <p className="font-inter font-black text-[13px] mb-1"
-                    style={{ color: seg.bright ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.28)" }}>
-                    {seg.tag}
-                  </p>
-                  <p className="font-inter text-[10px] mb-2"
-                    style={{ color: seg.bright ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.18)" }}>
-                    {seg.label}
-                    {seg.bright && <span className="ml-2 border border-white/20 px-1 text-[8px] uppercase tracking-wider">Target</span>}
-                  </p>
-                  <p className="text-white/25 text-[10px] leading-relaxed">{seg.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )
+        })()}
       </div>
 
       {/* FEE TABLE + KEY STAT */}
@@ -908,6 +916,7 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea }: any) 
                 <div>
                   <p className="font-inter text-[9px] text-black/30 mb-0.5">1件あたり平均顧問料</p>
                   <p className="font-inter font-bold text-sm tabular-nums text-black/50">¥{c.avgFeePerClient.toLocaleString("ja-JP")}/月</p>
+                  <p className="font-inter text-[8px] text-black/20 mt-0.5 leading-tight">※ スポット・単発契約を含む場合あり（参考値）</p>
                 </div>
               </div>
             </div>

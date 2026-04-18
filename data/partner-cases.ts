@@ -146,21 +146,34 @@ export function selectResonantCases(
   // スコア降順でソート、同点は月額顧問料で差をつける
   scored.sort((a, b) => b.score - a.score || b.monthlyFee - a.monthlyFee)
 
-  // 地域の多様性を確保（同じ地域から2件以上選ばない）
+  // 平均単価・成約件数の多様性を確保（低・中・高それぞれのティアから選ぶ）
+  const feeTier = (fee: number) =>
+    fee < 25000 ? "low" : fee < 40000 ? "mid" : "high"
+  const contractTier = (cnt: number) =>
+    cnt < 60 ? "small" : cnt < 100 ? "mid" : "large"
+
   const selected: typeof scored = []
-  const usedRegions = new Set<string>()
+  const usedFeeTiers    = new Set<string>()
+  const usedContractTiers = new Set<string>()
+
+  // パス1: 単価ティアが被らないよう選ぶ
   for (const c of scored) {
     if (selected.length >= 3) break
-    if (!usedRegions.has(c.region) || myRegions.has(c.region)) {
+    const ft = feeTier(c.avgFeePerClient)
+    if (!usedFeeTiers.has(ft)) {
       selected.push(c)
-      usedRegions.add(c.region)
+      usedFeeTiers.add(ft)
+      usedContractTiers.add(contractTier(c.contracts))
     }
   }
-  // 足りない場合は補充
+
+  // パス2: 単価ティアが埋まったが件数も多様化できる余地があれば入れ替え検討（3件未満の補充）
   if (selected.length < 3) {
     for (const c of scored) {
       if (selected.length >= 3) break
-      if (!selected.find(s => s.name === c.name)) selected.push(c)
+      if (!selected.find(s => s.name === c.name)) {
+        selected.push(c)
+      }
     }
   }
 
