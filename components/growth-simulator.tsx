@@ -1128,10 +1128,13 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/60 mb-2">
               Commit Plan {String(selectedPlanIndex + 1).padStart(2, "0")} — 月間コミット顧問料
             </p>
-            <p className="font-inter font-black text-[96px] leading-none tabular-nums text-white">
-              ¥{activePlan.commit.toLocaleString("ja-JP")}
+            <p className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
+              月額¥{activePlan.commit.toLocaleString("ja-JP")}
             </p>
-            <p className="text-white/50 text-base mt-1 font-inter">毎月この金額分の新規顧問料が積み上がる</p>
+            <p className="font-inter font-black text-[32px] leading-tight text-white/80 mt-2">
+              コミットプラン
+            </p>
+            <p className="text-white/50 text-base mt-3 font-inter">毎月この金額分の新規顧問料が積み上がる</p>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
             <div>
