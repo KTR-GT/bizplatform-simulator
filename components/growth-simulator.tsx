@@ -668,18 +668,15 @@ function MarketTab() {
           Market Structure — 誰に届けるか
         </p>
 
-        {/* 常時表示: 2ボックス */}
-        <div className="grid grid-cols-2 gap-px bg-white/10 mb-2">
+        {/* 常時表示: 2ボックス（20:80比率） */}
+        <div className="flex gap-px bg-white/10 mb-2">
           {/* 左: 顕在層 20% */}
-          <div className="bg-white/8 px-8 py-8" style={{ background: "rgba(255,255,255,0.06)" }}>
-            <p className="font-inter font-black text-[72px] leading-none tabular-nums text-white/40">20%</p>
-            <p className="text-white/35 text-sm mt-3 font-bold">明確に探している顕在層</p>
-            <p className="text-white/20 text-xs mt-1 font-inter leading-relaxed">
-              すでに税理士を積極的に検索・比較中。競合と正面衝突になる領域。
-            </p>
+          <div className="px-8 py-8 flex-none" style={{ width: "20%", background: "rgba(255,255,255,0.06)" }}>
+            <p className="font-inter font-black text-[56px] leading-none tabular-nums text-white/40">20%</p>
+            <p className="text-white/35 text-xs mt-3 font-bold leading-snug">競合と正面衝突になる顕在層</p>
           </div>
           {/* 右: BizplatFormターゲット 80% */}
-          <div className="px-8 py-8" style={{ background: "rgba(255,255,255,0.55)" }}>
+          <div className="px-8 py-8 flex-1" style={{ background: "rgba(255,255,255,0.55)" }}>
             <p className="font-inter font-black text-[72px] leading-none tabular-nums text-[#0A0A0A]">80%</p>
             <p className="text-[#0A0A0A] text-sm mt-3 font-bold">BizplatFormだからこそ届く領域</p>
             <p className="text-black/45 text-xs mt-1 font-inter leading-relaxed">
@@ -694,55 +691,42 @@ function MarketTab() {
           onClick={() => setExpandedStructure(v => !v)}
           className="w-full flex items-center justify-between px-4 py-3 border border-white/10 text-white/30 hover:text-white/60 transition-colors font-inter text-[10px] uppercase tracking-widest"
         >
-          <span>内訳を{expandedStructure ? "閉じる" : "見る"}</span>
+          <span>各層の詳細を{expandedStructure ? "閉じる" : "見る"}</span>
           <span>{expandedStructure ? "▲" : "▼"}</span>
         </button>
 
         {/* アコーディオン内訳 */}
         {expandedStructure && (
-          <div className="border border-white/10 border-t-0">
-            {/* 全セグメントバー */}
-            <div className="px-6 pt-6 pb-2">
-              <div className="relative w-full flex h-10" style={{ gap: "1px" }}>
-                {segs.map((seg, i) => (
-                  <div
-                    key={seg.key}
-                    style={{
-                      width: `${seg.barW}%`,
-                      background: seg.bright ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.08)",
-                      position: "relative",
-                      ...(i === 3 ? { marginLeft: "3px", borderLeft: "2px solid rgba(255,255,255,0.4)" } : {}),
-                    }}
-                  >
-                    {seg.barW >= 10 && (
-                      <span className="absolute inset-0 flex items-center justify-center font-inter font-black text-[11px] tabular-nums select-none"
-                        style={{ color: seg.bright ? "#0A0A0A" : "rgba(255,255,255,0.40)" }}>
-                        {seg.barW}%
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* セグメント説明リスト */}
-            <div className="divide-y divide-white/8">
-              {segs.map(seg => (
-                <div key={seg.key} className="flex items-start gap-4 px-6 py-4">
-                  <span className="font-inter font-black tabular-nums text-sm w-10 shrink-0 pt-0.5"
+          <div className="border border-white/10 border-t-0 divide-y divide-white/10">
+            {segs.map(seg => (
+              <div key={seg.key} className="flex items-stretch">
+                {/* 左: 割合バー */}
+                <div
+                  className="flex-none flex items-center justify-center w-16 py-5"
+                  style={{ background: seg.bright ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)" }}
+                >
+                  <span className="font-inter font-black text-sm tabular-nums"
                     style={{ color: seg.bright ? "rgba(255,255,255,0.80)" : "rgba(255,255,255,0.25)" }}>
                     {seg.barW}%
                   </span>
-                  <div>
-                    <p className="font-inter font-bold text-[12px]"
-                      style={{ color: seg.bright ? "rgba(255,255,255,0.80)" : "rgba(255,255,255,0.30)" }}>
-                      {seg.label}
-                      {seg.bright && <span className="ml-2 text-[8px] border border-white/20 px-1 py-0.5 uppercase tracking-wider font-normal">Target</span>}
-                    </p>
-                    <p className="text-white/30 text-[10px] mt-0.5 leading-relaxed">{seg.desc}</p>
-                  </div>
                 </div>
-              ))}
-            </div>
+                {/* 右: 説明 */}
+                <div className="flex-1 px-6 py-5">
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="font-inter font-bold text-[12px]"
+                      style={{ color: seg.bright ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.30)" }}>
+                      {seg.label}
+                    </p>
+                    {seg.bright && (
+                      <span className="text-[8px] bg-white/15 text-white/60 px-1.5 py-0.5 uppercase tracking-wider font-inter">
+                        BizplatForm Target
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-white/35 text-[11px] leading-relaxed">{seg.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
