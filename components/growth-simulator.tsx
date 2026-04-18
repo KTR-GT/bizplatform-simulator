@@ -1168,13 +1168,13 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             <p className="font-inter font-black text-[32px] leading-tight text-white/80 mt-2">
               コミットプラン
             </p>
-            <p className="text-white/50 text-base mt-3 font-inter">毎月この金額分の新規顧問料が積み上がる</p>
+            <p className="text-white/50 text-base mt-3 font-inter">BizplatForm経由の紹介成約が積み上がり、月間顧問料がこの水準に達することを保証</p>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
             <div>
-              <p className="text-white/35 text-[11px] uppercase tracking-wider font-inter mb-1">年間換算コミット</p>
-              <p className="font-inter font-black text-3xl text-white tabular-nums">¥{annual.toLocaleString("ja-JP")}</p>
-              <p className="text-white/25 text-xs mt-1">月間コミット × 12ヶ月</p>
+              <p className="text-white/35 text-[11px] uppercase tracking-wider font-inter mb-1">年間サービス料</p>
+              <p className="font-inter font-black text-3xl text-white tabular-nums">¥{(activePlan.monthly * 12).toLocaleString("ja-JP")}</p>
+              <p className="text-white/25 text-xs mt-1">月額サービス料 × 12ヶ月</p>
             </div>
             <div className="pt-4 border-t border-white/10">
               <p className="text-white/20 text-[11px] uppercase tracking-wider font-inter mb-1">月額サービス料</p>
