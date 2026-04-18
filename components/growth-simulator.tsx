@@ -1265,7 +1265,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                         <p className="font-inter font-black text-2xl tabular-nums">¥{inst.total.toLocaleString("ja-JP")}</p>
                         {key !== "7y" && discount > 0 && (
                           <p className="font-inter font-bold text-xs mt-1 text-[#0A0A0A]">
-                            7年払い比 <span className="text-emerald-600">{discount}%お得</span>
+                            7年払い比 <span className="text-emerald-600">{discount}% OFF</span>
                           </p>
                         )}
                       </div>
