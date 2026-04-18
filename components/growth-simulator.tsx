@@ -1194,10 +1194,11 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
 
             {/* 保証内容 */}
             <div className="bg-[#F7F7F7] px-5 py-4 border-l-4 border-black">
-              <p className="font-inter text-[9px] uppercase tracking-wider text-black/40 mb-1">7年間の成約保証</p>
+              <p className="font-inter text-[9px] uppercase tracking-wider text-black/40 mb-1">成約保証</p>
               <p className="font-inter font-black text-base text-[#0A0A0A]">
-                月間コミット ¥{activePlan.commit.toLocaleString("ja-JP")} 分の<br />
-                新規顧客を7年以内に紹介
+                月間顧問料合計 ¥{activePlan.commit.toLocaleString("ja-JP")}<br />
+                （年間 ¥{(activePlan.commit * 12).toLocaleString("ja-JP")}）を<br />
+                コミットします
               </p>
             </div>
 
