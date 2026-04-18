@@ -535,23 +535,29 @@ function MarketTab() {
   //   未検討層:       80% × 45% = 36%
   //   潜在的な検討層: 13% × 45% =  6%
   // -------------------------------------------------------
-  type Seg = { key: string; label: string; barW: number; bright: boolean; desc: string }
-  const segs: Seg[] = [
+  const segs = [
     // ── 左: 暗い（アプローチ不可） ──
     { key:"a1", label:"大変満足",           barW: 11, bright:false,
+      tag: "変更意向なし",
       desc:"現状の顧問税理士に非常に満足。変更意向なし。年商規模が大きい法人に多い層。" },
     { key:"a4", label:"顕在層",             barW:  6, bright:false,
+      tag: "今まさに探している",
       desc:"すでに税理士を探してアクションしている層。他の紹介サービスや広告にも問い合わせが集中するほど、ニーズが顕在化している。競合が多いことが、この市場の需要の大きさを証明している。" },
     { key:"b3", label:"明確な探索層",       barW:  3, bright:false,
+      tag: "競合と正面衝突",
       desc:"マッチングサイト等で具体的にアクション中。競合他社と正面衝突になる領域。" },
     // ── 右: 明るい（BizplatFormがアプローチ可能） ──
     { key:"a2", label:"普通・まあ満足",     barW: 19, bright:true,
+      tag: "きっかけがあれば動く",
       desc:"特段の不満はないが積極的な提案も受けていない層。変更のきっかけがあれば動く可能性がある。BizplatFormのターゲット。" },
     { key:"a3", label:"不満あり（潜在層）", barW: 19, bright:true,
+      tag: "不満だが自分からは動かない",
       desc:"レスポンスの遅さ・提案不足・クラウド未対応などに不満。しかし「変えよう」とは自分から動かない。BizplatFormの主力ターゲット。" },
     { key:"b1", label:"未検討層",           barW: 36, bright:true,
+      tag: "まだ税理士を意識していない",
       desc:"税理士契約をまだ検討していない層。インボイス対応・法人成り・代替わりなどのタイミングでニーズが顕在化する。BizplatFormのターゲット。" },
     { key:"b2", label:"潜在的な検討層",     barW:  6, bright:true,
+      tag: "検討し始めたばかり",
       desc:"インボイス対応・売上1,000万円突破（消費税課税）をきっかけに税理士を検討し始めた層。BizplatFormのサブターゲット。" },
   ]
 
@@ -710,19 +716,18 @@ function MarketTab() {
                   </span>
                 </div>
                 {/* 右: 説明 */}
-                <div className="flex-1 px-6 py-5">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="font-inter font-bold text-[12px]"
-                      style={{ color: seg.bright ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.30)" }}>
-                      {seg.label}
-                    </p>
-                    {seg.bright && (
-                      <span className="text-[8px] bg-white/15 text-white/60 px-1.5 py-0.5 uppercase tracking-wider font-inter">
-                        BizplatForm Target
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-white/35 text-[11px] leading-relaxed">{seg.desc}</p>
+                <div className="flex-1 px-6 py-4">
+                  {/* タグ（一言キャッチ） */}
+                  <p className="font-inter font-black text-[13px] mb-1"
+                    style={{ color: seg.bright ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.28)" }}>
+                    {seg.tag}
+                  </p>
+                  <p className="font-inter text-[10px] mb-2"
+                    style={{ color: seg.bright ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.18)" }}>
+                    {seg.label}
+                    {seg.bright && <span className="ml-2 border border-white/20 px-1 text-[8px] uppercase tracking-wider">Target</span>}
+                  </p>
+                  <p className="text-white/25 text-[10px] leading-relaxed">{seg.desc}</p>
                 </div>
               </div>
             ))}

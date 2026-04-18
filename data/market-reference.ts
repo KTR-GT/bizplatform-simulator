@@ -38,9 +38,9 @@ export const marketStats: MarketStat[] = [
     isEstimate: true,
   },
   {
-    label:      "集客にコストをかけている開業事務所割合",
-    value:      "約15%前後",
-    note:       "業界調査ベースの参考値。大多数は紹介・口コミのみに依存（推計）",
+    label:      "年間の法人＋個人事業廃業数",
+    value:      "約25万件",
+    note:       "法人約6.9万件（帝国データバンク2024年）＋個人事業主460万×3.9%≒約18万件の合計推計。既存顧客が毎年一定数自然に離脱する",
     isEstimate: true,
   },
   {
