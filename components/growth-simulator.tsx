@@ -1162,14 +1162,11 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/60 mb-2">
               Commit Plan {String(selectedPlanIndex + 1).padStart(2, "0")} — 月間コミット顧問料
             </p>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="font-inter text-white/50 text-2xl font-bold">月額</span>
-              <span className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
-                +¥{activePlan.commit.toLocaleString("ja-JP")}
-              </span>
-            </div>
-            <p className="font-inter font-black text-[28px] leading-tight text-white/80 mt-1">
-              売上が伸びる
+            <p className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
+              月額¥{activePlan.commit.toLocaleString("ja-JP")}
+            </p>
+            <p className="font-inter font-black text-[32px] leading-tight text-white/80 mt-2">
+              コミットプラン
             </p>
             <p className="text-white/35 text-sm mt-3 font-inter">事務所の月商が、ここまで変わる。</p>
           </div>
