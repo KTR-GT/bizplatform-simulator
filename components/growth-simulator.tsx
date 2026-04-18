@@ -1400,42 +1400,48 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
         </div>
       </div>
 
-      {/* Key metrics from simulation */}
-      <div className="grid grid-cols-4 gap-px bg-black mb-8 stagger-3">
-        {[
-          { label: "必要成約件数",    value: `${neededClients}件`,                    sub: `¥${plan.commit.toLocaleString("ja-JP")} ÷ ¥${effectiveAvgFee.toLocaleString("ja-JP")}` },
-          { label: "コミット達成月",  value: `${cappedAchieve}ヶ月目`,               sub: cappedAchieve < 84 ? "7年以内に達成" : "7年（最終保証）" },
-          { label: "達成後のコスト率",value: `${finalRatio}%`,                        sub: `月額¥${plan.monthly.toLocaleString("ja-JP")} ÷ 顧問料¥${plan.commit.toLocaleString("ja-JP")}` },
-          { label: "月間コミット顧問料", value: `¥${plan.commit.toLocaleString("ja-JP")}`, sub: "コミット達成後に毎月積み上がる" },
-        ].map(({ label, value, sub }) => (
-          <div key={label} className="bg-white px-6 py-8">
-            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/25 mb-3">{label}</p>
-            <p className="font-inter font-black text-2xl leading-none text-[#0A0A0A] tabular-nums">{value}</p>
-            <p className="text-black/25 text-[10px] mt-2 leading-tight">{sub}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Graph */}
-      <div className="mb-8 stagger-4">
+      {/* Graph — 0〜24ヶ月 + 波線で84ヶ月継続を示す */}
+      <div className="mb-8 stagger-3">
         <div className="flex items-baseline justify-between mb-4">
           <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35">月別 顧問料収入 vs サービス料（万円）</p>
-          <p className="text-[10px] text-black/25 font-inter">ペース {simPace}件/月 · {cappedAchieve}ヶ月で達成</p>
+          <p className="text-[10px] text-black/25 font-inter">ペース {simPace}件/月</p>
         </div>
-        <div className="h-64 border border-black/10">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={graphData.filter((_, i) => i % 6 === 0 || i === cappedAchieve)} margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#EBEBEB" />
-              <XAxis dataKey="month" tick={{ fontFamily: "Inter", fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={v => `${v}万`} tick={{ fontFamily: "Inter", fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} />
-              <Tooltip formatter={(v: number) => [`${v}万円`, ""]}
-                contentStyle={{ border: "1px solid #0A0A0A", borderRadius: 0, background: "#fff", fontFamily: "Inter", fontSize: 12 }} />
-              <Legend wrapperStyle={{ fontFamily: "Inter", fontSize: 12 }} />
-              <Line type="monotone" dataKey="顧問料収入" stroke="#0A0A0A" strokeWidth={3} dot={false} />
-              <Line type="monotone" dataKey="サービス料" stroke="#D0D0D0" strokeDasharray="6 3" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+
+        {/* チャート本体 + 波線継続 */}
+        <div className="flex items-stretch border border-black/10">
+          {/* 0〜24ヶ月グラフ */}
+          <div className="h-64 flex-1">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={graphData.filter((_, i) => i <= 24 && (i % 6 === 0 || i === cappedAchieve))}
+                margin={{ top: 20, right: 8, bottom: 0, left: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#EBEBEB" />
+                <XAxis dataKey="month" tick={{ fontFamily: "Inter", fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} />
+                <YAxis tickFormatter={v => `${v}万`} tick={{ fontFamily: "Inter", fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} />
+                <Tooltip formatter={(v: number) => [`${v}万円`, ""]}
+                  contentStyle={{ border: "1px solid #0A0A0A", borderRadius: 0, background: "#fff", fontFamily: "Inter", fontSize: 12 }} />
+                <Legend wrapperStyle={{ fontFamily: "Inter", fontSize: 12 }} />
+                <Line type="monotone" dataKey="顧問料収入" stroke="#0A0A0A" strokeWidth={3} dot={false} />
+                <Line type="monotone" dataKey="サービス料" stroke="#D0D0D0" strokeDasharray="6 3" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* 波線 + 84ヶ月エンドポイント */}
+          <div className="flex flex-col items-center justify-center px-3 border-l border-dashed border-black/15" style={{ width: 90 }}>
+            <svg width="56" height="20" viewBox="0 0 56 20">
+              <path d="M0,10 Q7,2 14,10 Q21,18 28,10 Q35,2 42,10 Q49,18 56,10"
+                fill="none" stroke="#999" strokeWidth="1.5" />
+            </svg>
+            <p className="font-inter text-[9px] text-black/30 mt-2 text-center leading-tight">84ヶ月目</p>
+            <p className="font-inter font-black text-xs tabular-nums text-black/50 mt-0.5">
+              ¥{Math.round(plan.commit / 10000)}万/月
+            </p>
+            <p className="font-inter text-[8px] text-black/20 mt-1 text-center leading-tight">7年保証</p>
+          </div>
         </div>
+
         <p className="text-black/25 text-[10px] mt-2 font-inter">
           ※ 顧問料収入はペース通りに成約が積み上がった場合の推計。実際の達成タイミングはBizplatFormが7年以内を保証。
         </p>
