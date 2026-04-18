@@ -202,6 +202,8 @@ const industries                = ["建設", "小売", "飲食", "製造", "IT",
 const areas                     = ["全国", "関東", "関西", "東海", "北海道・東北", "中国・四国", "九州・沖縄"]
 const expansionOptions          = ["積極的に増やしたい", "慎重に検討中", "現状維持でよい"] as const
 const aiUsageOptions            = ["積極活用している", "一部のみ活用", "ほぼ未活用"] as const
+const preferredThemeOptions  = ["節税", "融資", "法人化", "事業承継", "インボイス", "記帳代行"] as const
+const revenueRangeOptions    = ["小規模（〜3,000万）", "中規模（3,000万〜1億）", "大規模（1億〜）"] as const
 const accountingStyleOptions    = ["すべて", "月次訪問希望", "クラウド完結", "担当者任せ"] as const
 const preferredTypeOptions      = ["すべて", "法人", "個人事業主"] as const
 const digitalLevelOptions       = ["すべて", "デジタル初心者", "中程度", "デジタル得意"] as const
@@ -311,10 +313,10 @@ const prefectureToArea: Record<string, string> = {
   "鹿児島県": "九州・沖縄", "沖縄県": "九州・沖縄",
 }
 
-function areaMatch(prefecture: string, selectedArea: string[]): boolean {
-  if (selectedArea.length === 0 || selectedArea.includes("全国")) return true
+function areaMatch(selectedArea: string, prefecture: string): boolean {
+  if (selectedArea === "全国") return true
   const area = prefectureToArea[prefecture]
-  return area ? selectedArea.includes(area) : false
+  return area === selectedArea
 }
 
 // ============================================================
@@ -339,6 +341,9 @@ export function GrowthSimulator() {
   const [preferredAccountingStyle, setPreferredAccountingStyle] = useState<typeof accountingStyleOptions[number]>(accountingStyleOptions[0])
   const [preferredType,          setPreferredType]          = useState<typeof preferredTypeOptions[number]>(preferredTypeOptions[0])
   const [preferredDigitalLevel,  setPreferredDigitalLevel]  = useState<typeof digitalLevelOptions[number]>(digitalLevelOptions[0])
+  const [goodThemes,         setGoodThemes]         = useState<string[]>([])
+  const [goodIndustries,     setGoodIndustries]      = useState<string[]>([])
+  const [preferredRevRange,  setPreferredRevRange]   = useState<typeof revenueRangeOptions[number] | "">("")
 
   const clientNum   = parseInt(clientCount)  || 30
   const capacityNum = parseInt(capacity)     || 20
@@ -377,18 +382,30 @@ export function GrowthSimulator() {
   const matched = useMemo(() =>
     customerDatabase
       .filter(c => !ngIndustries.includes(c.industry))
-      .filter(c => preferredType === "すべて" || c.type === preferredType)
       .map(c => ({
         ...c,
-        score: (selectedSoftware.includes(c.software) ? 30 : selectedSoftware.length === 0 ? 15 : 0)
-             + (c.founded <= 3 ? 20 : 0)
-             + (areaMatch(c.prefecture, selectedArea) ? 15 : 0)
-             + (preferredAccountingStyle !== "すべて" && c.accountingStyle === preferredAccountingStyle ? 20 : 0)
-             + (preferredDigitalLevel !== "すべて" && c.digitalLevel === preferredDigitalLevel ? 15 : 0),
+        score:
+          (selectedSoftware.includes(c.software) ? 30 : selectedSoftware.length === 0 ? 10 : 0)
+        + (selectedArea.length === 0 || selectedArea.includes("全国") ? 15 :
+           selectedArea.some(a => areaMatch(a, c.prefecture)) ? 15 : 0)
+        + ((preferredAccountingStyle as string) === "どちらでも" ? 0 :
+           (preferredAccountingStyle as string) === "丸投げ歓迎" && c.accountingStyle === "丸投げ" ? 20 :
+           (preferredAccountingStyle as string) === "クラウド推奨" && (c.accountingStyle === "クラウド自力" || c.accountingStyle === "クラウド移行中") ? 20 : 0)
+        + ((preferredType as string) === "どちらでも" ? 0 :
+           (preferredType as string) === "法人メイン" && c.type === "法人" ? 15 :
+           (preferredType as string) === "個人メイン" && c.type === "個人事業主" ? 15 : 0)
+        + ((preferredDigitalLevel as string) === "どちらでも" ? 0 :
+           (preferredDigitalLevel as string) === c.digitalLevel ? 15 : 0)
+        + (goodThemes.length > 0 && goodThemes.includes(c.theme) ? 25 : 0)
+        + (goodIndustries.length > 0 && goodIndustries.includes(c.industry) ? 15 : 0)
+        + (preferredRevRange === "" ? 0 :
+           preferredRevRange === "小規模（〜3,000万）" && c.revenue < 3000 ? 15 :
+           preferredRevRange === "中規模（3,000万〜1億）" && c.revenue >= 3000 && c.revenue < 10000 ? 15 :
+           preferredRevRange === "大規模（1億〜）" && c.revenue >= 10000 ? 15 : 0),
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 5)
-  , [selectedSoftware, ngIndustries, selectedArea, preferredType, preferredAccountingStyle, preferredDigitalLevel])
+  , [selectedSoftware, ngIndustries, selectedArea, preferredAccountingStyle, preferredType, preferredDigitalLevel, goodThemes, goodIndustries, preferredRevRange])
 
   const plan            = commitPlans[recommendedPlanIndex]
   const totalInvestment = plan.monthly * 84
@@ -457,7 +474,7 @@ export function GrowthSimulator() {
 
       {/* CONTENT */}
       <main key={animKey} className={animDir === "right" ? "tab-enter" : "tab-enter-left"}>
-        {activeTab === "hearing"   && <HearingTab   {...{ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, toggle }} />}
+        {activeTab === "hearing"   && <HearingTab   {...{ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, goodThemes, setGoodThemes, goodIndustries, setGoodIndustries, preferredRevRange, setPreferredRevRange, toggle }} />}
         {activeTab === "market"    && <MarketTab />}
         {activeTab === "diagnosis" && <DiagnosisTab  diagnosis={diagnosis} chartData={chartData} displayName={displayName} planLabel={`¥${plan.monthly.toLocaleString("ja-JP")}`} />}
         {activeTab === "mechanism" && <MechanismTab />}
@@ -473,7 +490,7 @@ export function GrowthSimulator() {
 // ============================================================
 // 01 HEARING
 // ============================================================
-function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, toggle }: any) {
+function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, goodThemes, setGoodThemes, goodIndustries, setGoodIndustries, preferredRevRange, setPreferredRevRange, toggle }: any) {
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-12 stagger-1">
@@ -554,6 +571,57 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
                   </button>
                 )
               })}
+            </div>
+          </div>
+
+          {/* 得意テーマ */}
+          <div className="stagger-4">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
+              得意テーマ <span className="normal-case tracking-normal text-black/25">（複数選択可）</span>
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {preferredThemeOptions.map(t => {
+                const on = goodThemes.includes(t)
+                return (
+                  <button key={t} data-cursor onClick={() => toggle(goodThemes, t, setGoodThemes)}
+                    className={`py-2 border text-xs font-bold transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                    {t}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* 得意業種（加点） */}
+          <div className="stagger-5">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-1">
+              得意業種 <span className="normal-case tracking-normal text-black/25">（マッチ加点）</span>
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {industries.map(ind => {
+                const on = goodIndustries.includes(ind)
+                return (
+                  <button key={ind} data-cursor onClick={() => toggle(goodIndustries, ind, setGoodIndustries)}
+                    className={`px-3 py-2 border text-xs font-bold text-left transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/30 border-black/10 hover:border-black/40 hover:text-black"}`}>
+                    {on && "★ "}{ind}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* 得意年商レンジ */}
+          <div className="stagger-6">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">得意な年商規模</label>
+            <div className="space-y-2">
+              {(["", ...revenueRangeOptions] as const).map(opt => (
+                <label key={opt} className="flex items-center gap-3" data-cursor onClick={() => setPreferredRevRange(opt as any)}>
+                  <span className={`w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-all ${preferredRevRange === opt ? "border-black bg-black" : "border-black/25"}`}>
+                    {preferredRevRange === opt && <span className="text-white text-[8px]">✓</span>}
+                  </span>
+                  <span className="text-sm text-[#0A0A0A]">{opt === "" ? "指定なし" : opt}</span>
+                </label>
+              ))}
             </div>
           </div>
 
