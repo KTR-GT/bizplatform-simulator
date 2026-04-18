@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { type CommitPlan, commitPlans } from "@/data/commit-plans"
 import { useSimulatorModel } from "@/hooks/use-simulator-model"
-import { partnerBenchmarks } from "@/data/partner-benchmark"
 import { customerDatabase } from "@/data/customer-database"
 import { marketStats } from "@/data/market-reference"
 import { getInstallment } from "@/lib/simulator/installments"
@@ -232,7 +231,7 @@ export function GrowthSimulator() {
       <main key={animKey} className={animDir === "right" ? "tab-enter" : "tab-enter-left"}>
         {activeTab === "hearing"   && <HearingTab   {...{ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, naturalIncrease, setNaturalIncrease, naturalDecrease, setNaturalDecrease, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, goodThemes, setGoodThemes, goodIndustries, setGoodIndustries, preferredRevRange, setPreferredRevRange, toggle }} />}
         {activeTab === "market"    && <MarketTab />}
-        {activeTab === "diagnosis" && <DiagnosisTab  diagnosis={diagnosis} chartData={chartData} displayName={displayName} planLabel={`¥${plan.monthly.toLocaleString("ja-JP")}`} />}
+        {activeTab === "diagnosis" && <DiagnosisTab diagnosis={diagnosis} capacityNum={capacityNum} avgFeeNum={avgFeeNum} naturalIncrease={naturalIncrease} naturalDecrease={naturalDecrease} />}
         {activeTab === "mechanism" && <MechanismTab />}
         {activeTab === "matching"  && <MatchingTab   matched={matched} hasInput={selectedSoftware.length > 0 || selectedArea.length > 0 || preferredAccountingStyle !== "すべて" || preferredType !== "すべて" || preferredDigitalLevel !== "すべて"} />}
         {activeTab === "plan"      && <PlanTab plan={commitPlans[selectedPlanIndex]} index={selectedPlanIndex} totalInvestment={totalInvestment} commitRevenue={commitRevenue} roi={roi} payback={payback} capacityNum={capacityNum} avgFeeNum={avgFeeNum} showAllPlans={showAllPlans} setShowAllPlans={setShowAllPlans} selectedPlanIndex={selectedPlanIndex} setSelectedPlanIndex={setSelectedPlanIndex} commitPlans={commitPlans} />}
@@ -828,26 +827,38 @@ function MarketTab() {
 }
 
 // ============================================================
-// 03 DIAGNOSIS
+// 03 DIAGNOSIS（刷新版）
 // ============================================================
-function DiagnosisTab({ diagnosis, chartData, displayName, planLabel }: any) {
+function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, naturalIncrease, naturalDecrease }: any) {
+  const naturalIncreaseNum = parseInt(naturalIncrease) || 0
+  const naturalDecreaseNum = parseInt(naturalDecrease) || 0
+  const netGrowth          = naturalIncreaseNum - naturalDecreaseNum
+  const unusedRevenue      = capacityNum * avgFeeNum
+  const yearsToFill        = netGrowth > 0 ? Math.ceil(capacityNum / netGrowth) : null
+
+  // 提携事務所ベンチマーク（固定参考値）
+  const benchIncrease    = 3.2
+  const benchDecrease    = 2.1
+  const benchBizplatForm = 12  // BizplatForm経由年間新規成約（参考）
+
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
+      {/* ヘッダー */}
       <div className="mb-10 stagger-1">
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 04</p>
         <h1 className="font-serif-display italic text-4xl text-[#0A0A0A] leading-tight">
-          同規模の事務所で、<br />
-          <span className="not-italic font-inter font-black">いま何が起きているか。</span>
+          先生の事務所の現在地と、<br />
+          <span className="not-italic font-inter font-black">未活用の余白。</span>
         </h1>
-        <p className="text-black/35 text-xs mt-3">※ 関与先30件・月額顧問料¥25,000のモデルケース（ヒアリング値を入力すると自動反映）</p>
+        <p className="text-black/35 text-xs mt-3">※ ヒアリング値を入力すると自動反映されます</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-px bg-black mb-10 stagger-2">
+      {/* ブロック①：現在の売上力 */}
+      <div className="grid grid-cols-3 gap-px bg-black mb-8 stagger-2">
         {[
-          { label: "月間売上",   value: diagnosis.monthly,          prefix: "¥", suffix: "",  size: "text-4xl" },
-          { label: "年間売上",   value: diagnosis.annual,           prefix: "¥", suffix: "",  size: "text-4xl" },
-          { label: "年間離脱リスク", value: diagnosis.churnRisk,    prefix: "",  suffix: "件", size: "text-6xl" },
-          { label: "3年後の予測年商", value: Math.round(diagnosis.y3), prefix: "¥", suffix: "", size: "text-4xl" },
+          { label: "月間売上",   value: diagnosis.monthly, prefix: "¥", suffix: "",    size: "text-4xl" },
+          { label: "年間売上",   value: diagnosis.annual,  prefix: "¥", suffix: "",    size: "text-4xl" },
+          { label: "引受余力",   value: capacityNum,       prefix: "",  suffix: "件",  size: "text-5xl" },
         ].map(({ label, value, prefix, suffix, size }) => (
           <div key={label} className="bg-white px-6 py-8">
             <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">{label}</p>
@@ -858,66 +869,98 @@ function DiagnosisTab({ diagnosis, chartData, displayName, planLabel }: any) {
         ))}
       </div>
 
-      <div className="border-l-4 border-black bg-[#F4F4F4] px-6 py-5 mb-10 stagger-3">
-        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1">Churn Risk — 離脱リスク</p>
-        <p className="text-lg font-bold text-[#0A0A0A]">
-          何もしなければ3年後に年間売上が
-          <span className="font-inter font-black text-[32px] leading-none tabular-nums mx-2">
-            ▼¥<AnimatedNumber value={Math.round(diagnosis.diff)} />
-          </span>
-          減少。
-        </p>
-        <p className="text-black/35 text-xs mt-2">年間離脱率6.5%（業界平均）× 3年間の複利計算</p>
-      </div>
-
-      <div className="stagger-4 mb-10">
-        <div className="flex items-baseline justify-between mb-4">
-          <p className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35">7年間の収益推移（万円）</p>
-          <p className="text-[10px] text-black/25">{planLabel}コミットプラン適用時</p>
+      {/* ブロック②：自力での増減バランス */}
+      <div className="grid grid-cols-3 gap-px bg-black mb-8 stagger-3">
+        <div className="bg-white px-6 py-7">
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">自然に増える顧客（年）</p>
+          <p className="font-inter font-black text-4xl leading-none tabular-nums text-[#0A0A0A]">
+            +<AnimatedNumber value={naturalIncreaseNum} suffix="件" />
+          </p>
+          <p className="text-black/30 text-xs mt-2">口コミ・紹介など</p>
         </div>
-        <div className="h-72 border border-black/10">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#EBEBEB" />
-              <XAxis dataKey="year" tick={{ fontFamily: "Inter", fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={v => `${v}万`} tick={{ fontFamily: "Inter", fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-              <Tooltip formatter={(v: number) => [`${v.toLocaleString("ja-JP")}万円`, ""]}
-                contentStyle={{ border: "1px solid #0A0A0A", borderRadius: 0, background: "#fff", fontFamily: "Inter", fontSize: 12 }} />
-              <Legend wrapperStyle={{ fontFamily: "Inter", fontSize: 12 }} />
-              <Line type="monotone" dataKey="現状維持" stroke="#D0D0D0" strokeDasharray="6 3" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="改善後"   stroke="#0A0A0A" strokeWidth={3} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="bg-white px-6 py-7">
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">自然に離れる顧客（年）</p>
+          <p className="font-inter font-black text-4xl leading-none tabular-nums text-[#0A0A0A]">
+            −<AnimatedNumber value={naturalDecreaseNum} suffix="件" />
+          </p>
+          <p className="text-black/30 text-xs mt-2">廃業・解約など</p>
+        </div>
+        <div className={`px-6 py-7 ${netGrowth >= 0 ? "bg-white" : "bg-[#F4F4F4]"}`}>
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/30 mb-3">差し引き純増（年）</p>
+          <p className={`font-inter font-black text-4xl leading-none tabular-nums ${netGrowth >= 0 ? "text-[#0A0A0A]" : "text-black/40"}`}>
+            {netGrowth >= 0 ? "+" : ""}{netGrowth}件
+          </p>
+          <p className="text-black/30 text-xs mt-2">
+            {yearsToFill
+              ? `このペースで引受余力を埋めるには約${yearsToFill}年`
+              : naturalIncreaseNum === 0 && naturalDecreaseNum === 0
+              ? "Step01で自然増減を入力すると表示されます"
+              : "自力での純増がない状態です"}
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-px bg-black stagger-5">
-        {[
-          { num: "97%",   label: "年商1億円未満の法人割合", detail: "中小規模が市場の大多数" },
-          { num: "約31万社", label: "税理士未関与の法人数",   detail: "潜在的な顧客市場" },
-          { num: "6.5%", label: "年間の顧客離脱率（業界平均）", detail: "放置すれば確実に減少" },
-        ].map(({ num, label, detail }) => (
-          <div key={label} className="bg-white px-8 py-8 text-center">
-            <p className="font-inter font-black text-[40px] leading-none text-[#0A0A0A] mb-2">{num}</p>
-            <p className="text-[#0A0A0A] text-sm font-bold">{label}</p>
-            <p className="text-black/30 text-xs mt-1">{detail}</p>
+      {/* ブロック③：未活用キャパシティ（前向き） */}
+      <div className="border-l-4 border-black bg-[#0A0A0A] px-8 py-8 mb-8 stagger-4">
+        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/35 mb-3">Unused Capacity — 未活用の売上余地</p>
+        <div className="flex items-baseline gap-4 flex-wrap">
+          <div>
+            <p className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
+              ¥<AnimatedNumber value={unusedRevenue} />
+            </p>
+            <p className="text-white/40 text-sm mt-1">/月 — 今すぐ受けられる余力の月額換算</p>
           </div>
-        ))}
+        </div>
+        <p className="text-white/25 text-xs mt-4">
+          引受余力{capacityNum}件 × 平均顧問料¥{avgFeeNum.toLocaleString("ja-JP")} = ¥{unusedRevenue.toLocaleString("ja-JP")}/月
+        </p>
       </div>
 
-      {/* 提携事務所ベンチマーク */}
-      <div className="mt-8 stagger-6">
+      {/* ブロック④：提携事務所との比較 */}
+      <div className="stagger-5">
         <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/25 mb-4">Partner Benchmark — 提携事務所との比較</p>
-        <div className="grid grid-cols-4 gap-px bg-black/10">
-          {partnerBenchmarks.map(b => (
-            <div key={b.label} className="bg-[#F9F9F9] px-5 py-5 border border-black/5">
-              <p className="font-inter text-[9px] uppercase tracking-wider text-black/30 mb-2">{b.label}</p>
-              <p className="font-inter font-black text-2xl text-[#0A0A0A] leading-none">{b.value}</p>
-              <p className="text-black/25 text-[10px] mt-2">{b.detail}</p>
+        <div className="grid grid-cols-3 gap-px bg-black mb-2">
+          {[
+            {
+              label:  "年間自然増",
+              mine:   `${naturalIncreaseNum}件`,
+              bench:  `${benchIncrease}件`,
+              diff:   naturalIncreaseNum - benchIncrease,
+            },
+            {
+              label:  "年間自然減",
+              mine:   `${naturalDecreaseNum}件`,
+              bench:  `${benchDecrease}件`,
+              diff:   benchDecrease - naturalDecreaseNum,  // 少ない方が良い
+            },
+            {
+              label:  "BizplatForm経由 年間新規成約（参考）",
+              mine:   "—",
+              bench:  `${benchBizplatForm}件`,
+              diff:   null,
+            },
+          ].map(({ label, mine, bench, diff }) => (
+            <div key={label} className="bg-white px-6 py-6">
+              <p className="font-inter text-[9px] uppercase tracking-wider text-black/30 mb-4">{label}</p>
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="font-inter text-[9px] text-black/25 mb-1">先生（現状）</p>
+                  <p className="font-inter font-black text-2xl text-[#0A0A0A] tabular-nums">{mine}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-inter text-[9px] text-black/25 mb-1">提携事務所平均</p>
+                  <p className="font-inter font-black text-2xl text-[#0A0A0A] tabular-nums">{bench}</p>
+                </div>
+              </div>
+              {diff !== null && (
+                <div className={`mt-3 px-2 py-1 text-[10px] font-inter font-bold inline-block ${diff >= 0 ? "bg-[#0A0A0A] text-white" : "bg-[#F4F4F4] text-black/40"}`}>
+                  {diff >= 0 ? `+${diff.toFixed(1)}件 上回っています` : `${diff.toFixed(1)}件 下回っています`}
+                </div>
+              )}
             </div>
           ))}
         </div>
-        <p className="text-black/20 text-[10px] mt-2 font-inter">※ BizplatFormパートナー事務所の実績平均値（参考）</p>
+        <p className="text-black/20 text-[10px] font-inter">※ BizplatFormパートナー事務所の実績平均値（参考）</p>
       </div>
     </div>
   )
