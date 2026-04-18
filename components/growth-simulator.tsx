@@ -1244,7 +1244,11 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                   { key: "1y", inst: activeInst1y, label: "1年払い" },
                   { key: "3y", inst: activeInst3y, label: "3年払い" },
                   { key: "7y", inst: activeInst7y, label: "7年払い" },
-                ] as const).map(({ key, inst, label }) => (
+                ] as const).map(({ key, inst, label }) => {
+                  const discount = key !== "7y"
+                    ? Math.round((1 - inst.total / activeInst7y.total) * 100)
+                    : 0
+                  return (
                   <TabsContent key={key} value={key} className="border border-black p-6">
                     <p className="font-inter text-[9px] uppercase tracking-wider text-black/35 mb-4">{label} — 月額サービス料</p>
                     <div className="grid grid-cols-3 gap-4 mb-4">
@@ -1259,6 +1263,11 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                       <div>
                         <p className="text-[10px] text-black/30 mb-1">総額</p>
                         <p className="font-inter font-black text-2xl tabular-nums">¥{inst.total.toLocaleString("ja-JP")}</p>
+                        {key !== "7y" && discount > 0 && (
+                          <p className="font-inter font-bold text-xs mt-1 text-[#0A0A0A]">
+                            7年払い比 <span className="text-red-600">+{discount}%</span>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <p className="text-black/30 text-[10px] border-t border-black/10 pt-3">※ 税抜表示</p>
@@ -1280,7 +1289,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                       </div>
                     </div>
                   </TabsContent>
-                ))}
+                )})}
               </Tabs>
             </DialogContent>
           </Dialog>
