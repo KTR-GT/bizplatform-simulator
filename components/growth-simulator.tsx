@@ -36,14 +36,14 @@ const preferredTypeOptions      = ["すべて", "法人", "個人事業主"] as 
 const digitalLevelOptions       = ["すべて", "デジタル初心者", "中程度", "デジタル得意"] as const
 
 const TABS = [
-  { id: "hearing",   label: "ヒアリング",         num: "01" },
-  { id: "mechanism", label: "集客の仕組み",       num: "02" },
-  { id: "market",    label: "市場背景",           num: "03" },
-  { id: "diagnosis", label: "現状診断",           num: "04" },
-  { id: "matching",  label: "AIマッチング",       num: "05" },
-  { id: "plan",      label: "プラン提案",         num: "06" },
-  { id: "roi",       label: "ROIシミュレーション", num: "07" },
-  { id: "closing",   label: "ご契約・次のステップ", num: "08" },
+  { id: "mechanism", label: "集客の仕組み",           num: "01" },
+  { id: "market",    label: "市場背景",               num: "02" },
+  { id: "hearing",   label: "あなたの事務所を設定",   num: "03" },
+  { id: "diagnosis", label: "現状診断",               num: "04" },
+  { id: "matching",  label: "AIマッチング",           num: "05" },
+  { id: "plan",      label: "プラン提案",             num: "06" },
+  { id: "roi",       label: "ROIシミュレーション",    num: "07" },
+  { id: "closing",   label: "ご契約・次のステップ",   num: "08" },
 ]
 
 // ============================================================
@@ -127,7 +127,7 @@ function AnimatedNumber({ value, prefix = "", suffix = "", className = "", durat
 // MAIN COMPONENT
 // ============================================================
 export function GrowthSimulator() {
-  const [activeTab, setActiveTab] = useState("hearing")
+  const [activeTab, setActiveTab] = useState("mechanism")
   const [animDir,   setAnimDir]   = useState<"right" | "left">("right")
   const [animKey,   setAnimKey]   = useState(0)
 
