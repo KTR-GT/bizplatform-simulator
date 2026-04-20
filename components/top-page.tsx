@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { commitPlans } from "@/data/commit-plans"
 
 function CustomCursor() {
   const ref = useRef<HTMLDivElement>(null)
@@ -49,9 +50,11 @@ const PARTICLES = [
   { text: "%",      x: 30, y: 90, size: 76,  opacity: 0.03, delay: 0.3  },
 ]
 
-// タイマーで積み上がる「機会損失」の最終値（年間コミット想定）
-const LOSS_TARGET = 6_000_000
-const TIMER_DURATION_MS = 28_000 // 28秒で最終値に到達
+// タイマーで積み上がる「機会損失」の最終値
+// 中央値プラン（commitPlans の中央）の年間コミット額を参照
+const MID_PLAN      = commitPlans[Math.floor(commitPlans.length / 2)]
+const LOSS_TARGET   = MID_PLAN.commit * 12   // 月間コミット × 12ヶ月
+const TIMER_DURATION_MS = 28_000             // 28秒で最終値に到達
 
 interface TopPageProps {
   onStart: (officeName: string) => void
