@@ -235,7 +235,7 @@ export function GrowthSimulator({ initialDisplayName = "" }: { initialDisplayNam
       <main key={animKey} className={animDir === "right" ? "tab-enter" : "tab-enter-left"}>
         {activeTab === "hearing"   && <HearingTab   {...{ officeName, setOfficeName, clientCount, setClientCount, capacity, setCapacity, employees, setEmployees, avgFee, setAvgFee, naturalIncrease, setNaturalIncrease, naturalDecrease, setNaturalDecrease, expansionWill, setExpansionWill, selectedArea, setSelectedArea, selectedSoftware, setSelectedSoftware, ngIndustries, setNgIndustries, aiUsage, setAiUsage, preferredAccountingStyle, setPreferredAccountingStyle, preferredType, setPreferredType, preferredDigitalLevel, setPreferredDigitalLevel, goodThemes, setGoodThemes, goodIndustries, setGoodIndustries, preferredRevRanges, setPreferredRevRanges, toggle }} />}
         {activeTab === "market"    && <MarketTab />}
-        {activeTab === "diagnosis" && <DiagnosisTab diagnosis={diagnosis} capacityNum={capacityNum} avgFeeNum={avgFeeNum} selectedArea={selectedArea} />}
+        {activeTab === "diagnosis" && <DiagnosisTab diagnosis={diagnosis} capacityNum={capacityNum} avgFeeNum={avgFeeNum} selectedArea={selectedArea} goodThemes={goodThemes} goodIndustries={goodIndustries} preferredRevRanges={preferredRevRanges} />}
         {activeTab === "mechanism" && <MechanismTab />}
         {activeTab === "matching"  && <MatchingTab   matched={matched} hasInput={selectedSoftware.length > 0 || selectedArea.length > 0 || preferredAccountingStyle !== "すべて" || preferredType !== "すべて" || preferredDigitalLevel !== "すべて"} />}
         {activeTab === "plan"      && <PlanTab plan={commitPlans[selectedPlanIndex]} index={selectedPlanIndex} totalInvestment={totalInvestment} commitRevenue={commitRevenue} roi={roi} payback={payback} capacityNum={capacityNum} avgFeeNum={avgFeeNum} showAllPlans={showAllPlans} setShowAllPlans={setShowAllPlans} selectedPlanIndex={selectedPlanIndex} setSelectedPlanIndex={setSelectedPlanIndex} commitPlans={commitPlans} />}
@@ -838,9 +838,9 @@ function MarketTab() {
 // ============================================================
 // 03 DIAGNOSIS（刷新版）
 // ============================================================
-function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea }: any) {
+function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea, goodThemes, goodIndustries, preferredRevRanges }: any) {
   const unusedRevenue  = capacityNum * avgFeeNum
-  const resonantCases  = selectResonantCases(selectedArea ?? [], avgFeeNum, capacityNum)
+  const resonantCases  = selectResonantCases(selectedArea ?? [], avgFeeNum, capacityNum, goodThemes, goodIndustries, preferredRevRanges)
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">

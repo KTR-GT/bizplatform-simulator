@@ -119,9 +119,12 @@ export const partnerCases: PartnerCase[] = [
 
 /** ヒアリング値をもとに最も響く事例を3件選定 */
 export function selectResonantCases(
-  selectedArea: string[],   // 対応エリア
-  avgFeeNum:    number,     // 平均顧問料
-  capacityNum:  number,     // 引受余力
+  selectedArea:      string[],   // 対応エリア
+  avgFeeNum:         number,     // 平均顧問料
+  capacityNum:       number,     // 引受余力
+  goodThemes?:       string[],   // 得意テーマ（任意）
+  goodIndustries?:   string[],   // 得意業種（任意）
+  preferredRevRanges?: string[], // 得意な年商規模（任意）
 ): PartnerCase[] {
   // エリア→地域ブロックの変換
   const prefectureToRegion: Record<string, string> = {
