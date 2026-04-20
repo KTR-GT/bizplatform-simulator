@@ -84,6 +84,102 @@ function CustomCursor({ isDark }: { isDark: boolean }) {
 }
 
 // ============================================================
+// CUSTOMER NAME ANONYMIZER
+// ============================================================
+function anonymizeName(name: string): string {
+  // 個人名系（職種＋姓）→ 職種＋イニシャル様
+  const personalMap: Record<string, string> = {
+    "不動産投資家 中村":    "不動産投資家 N様",
+    "軽貨物ドライバー 鈴木": "軽貨物 S様",
+    "速達便 ハヤシ":        "速達便 H様",
+    "トラック野郎 野田":    "軽貨物 N様",
+    "ストリートフード 坂本": "フード販売 S様",
+  }
+  if (personalMap[name]) return personalMap[name]
+
+  // 業種＋固有名詞が分かれているもの → 業種はそのまま・固有名詞をイニシャル化
+  const splitMap: Record<string, [string, string]> = {
+    "cafe&bar KUBO":          ["カフェバー",       "K"],
+    "Bistro SAKAMOTO":        ["ビストロ",         "S"],
+    "スパイスカレー KIKU":    ["スパイスカレー",   "K"],
+    "グリーンファーム 山田":  ["グリーンファーム", "Y"],
+    "hair salon MOCA":        ["ヘアサロン",       "M"],
+    "IRON BODY GYM":          ["ジム",             "I"],
+    "BBQレストラン 炭火亭":   ["BBQレストラン",    "T"],
+    "ヨガスタジオ ANANDA":    ["ヨガスタジオ",     "A"],
+    "Book&Brew":              ["書店カフェ",       "B"],
+    "ファッションハウスODA":  ["ファッション",     "O"],
+    "ラーメン工房 麺道":      ["ラーメン店",       "M"],
+    "パン工房 麦の穂":        ["パン工房",         "M"],
+    "居酒屋 和楽":            ["居酒屋",           "W"],
+    "焼き鳥 炎上":            ["焼き鳥店",         "E"],
+    "うどん処 讃岐屋":        ["うどん店",         "S"],
+    "麺屋 武蔵坊":            ["麺店",             "M"],
+    "串焼き どんき":          ["串焼き店",         "D"],
+    "カフェ アンサンブル":    ["カフェ",           "A"],
+    "ビストロ 丸の内":        ["ビストロ",         "M"],
+    "島料理 琉球":            ["料理店",           "R"],
+    "Webデザイン工房 ピクセル": ["デザイン工房",   "P"],
+    "建築設計事務所 空間工房": ["設計事務所",      "K"],
+    "ハンドメイド工房 てしごと": ["工房",          "T"],
+    "デザインハウス 葵":      ["デザイン",         "A"],
+    "スポーツショップ 速星":  ["スポーツ店",       "H"],
+    "ランニングギア 疾走":    ["スポーツ用品",     "S"],
+    "ペットショップ モフモフ": ["ペットショップ",  "M"],
+    "雑貨店 ことり屋":        ["雑貨店",           "K"],
+    "輸入雑貨 MONDE":         ["輸入雑貨",         "M"],
+    "アニメグッズ 夢工場":    ["グッズ店",         "Y"],
+    "ホームファニチャー 和":  ["家具店",           "W"],
+    "ビューティー 美神":      ["エステ",           "B"],
+    "ファームマーケット 直":  ["直売所",           "N"],
+    "スイーツ工房 ル・シェル": ["スイーツ店",      "L"],
+    "高原リゾートホテル":     ["ホテル",           "K"],
+    "民泊 里山の宿":          ["民泊",             "S"],
+    "プレミアム民泊 京の宿":  ["民泊",             "K"],
+    "介護施設 さくら園":      ["介護施設",         "S"],
+    "保育園 ひまわりキッズ":  ["保育園",           "H"],
+    "放課後デイ ゆめ":        ["放課後デイ",       "Y"],
+    "リハビリ施設 空":        ["リハビリ施設",     "S"],
+    "たんぽぽ障害福祉":       ["障害福祉",         "T"],
+    "フリート管理 九州":      ["車両管理",         "K"],
+    "コンサルティング ストラテジクス": ["コンサル", "S"],
+    "グリーン土地建物":       ["不動産",           "G"],
+    "空き家再生 スマイルホーム": ["不動産",        "S"],
+    "オフィスビル 関西管理":  ["ビル管理",         "K"],
+    "ネクスト・ベンチャーズ": ["ベンチャー",       "N"],
+    "食品加工 山の幸":        ["食品加工",         "Y"],
+    "農業法人 緑の大地":      ["農業法人",         "M"],
+    "木工家具 職人堂":        ["家具工房",         "S"],
+    "土地活用 山下":          ["土地活用",         "Y"],
+    "投資用マンション 木下":  ["不動産投資",       "K"],
+    "マンション投資 福田":    ["不動産投資",       "F"],
+    "物流センター 丸栄":      ["物流センター",     "M"],
+    "ロジスティクス 白鳥":   ["ロジスティクス",   "S"],
+  }
+  if (splitMap[name]) {
+    const [biz, initial] = splitMap[name]
+    return `${biz} ${initial}社`
+  }
+
+  // 一語完結の英語・カタカナ英語混在 → 先頭1文字＋社
+  const allEnglishOrMixed = /^[A-Za-z0-9&\s]+$/.test(name) || /^[A-Za-z]/.test(name)
+  if (allEnglishOrMixed) {
+    return `${name[0].toUpperCase()}社`
+  }
+
+  // 日本語・カタカナで業種が末尾にある → 先頭1文字＋残り
+  // 先頭の固有名詞部分（漢字1〜3文字 or カタカナ複数文字）を1文字イニシャルに
+  const initial = name[0]
+  // 先頭の「固有名詞らしき部分」を除去して業種部分を残す
+  // パターン: 漢字1字＋残り、またはカタカナ複数字＋残り
+  const stripped = name
+    .replace(/^[\u4e00-\u9fff]{1,4}/, "")     // 先頭漢字1〜4文字を除去
+    .replace(/^[\u30a0-\u30ff]{2,8}/, "")     // 先頭カタカナ2〜8文字を除去
+  const biz = stripped || "社"
+  return `${initial}${biz || "社"}`
+}
+
+// ============================================================
 // ANIMATED NUMBER
 // ============================================================
 function AnimatedNumber({ value, prefix = "", suffix = "", className = "", duration = 1200 }: {
@@ -906,7 +1002,7 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea, goodThe
             <div key={c.name} className="bg-white px-6 py-6 relative overflow-hidden">
               <span className="absolute top-4 right-5 font-inter font-black text-[48px] leading-none text-black/5 tabular-nums select-none">{i + 1}</span>
               <p className="font-inter text-[9px] uppercase tracking-wider text-black/25 mb-1">{c.area} · {c.region}</p>
-              <p className="font-inter font-bold text-sm text-[#0A0A0A] mb-1 leading-snug">{c.name}</p>
+              <p className="font-inter font-bold text-sm text-[#0A0A0A] mb-1 leading-snug">{anonymizeName(c.name)}</p>
               <p className="text-black/35 text-[10px] mb-4 leading-relaxed">{c.note}</p>
               <div className="space-y-3">
                 <div>
@@ -1101,7 +1197,7 @@ function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[
                 </div>
                 <div className="col-span-8 px-6 py-5 border-r border-black/10">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    <span className="font-bold text-[#0A0A0A] text-base">{c.name}</span>
+                    <span className="font-bold text-[#0A0A0A] text-base">{anonymizeName(c.name)}</span>
                     <span className="font-inter text-[9px] uppercase tracking-wider border border-black px-2 py-0.5 text-black/55">{c.industry}</span>
                     <span className="font-inter text-[9px] uppercase tracking-wider border border-black/20 px-2 py-0.5 text-black/35">{c.type}</span>
                     <span className="font-inter text-[9px] tracking-wide border border-black/20 px-2 py-0.5 text-black/40">{c.accountingStyle}</span>
@@ -1481,7 +1577,7 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
             {matched.slice(0, 3).map((c: any) => (
               <div key={c.id} className="bg-white px-6 py-5">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="font-bold text-sm text-[#0A0A0A]">{c.name}</span>
+                  <span className="font-bold text-sm text-[#0A0A0A]">{anonymizeName(c.name)}</span>
                   <span className="font-inter text-[9px] border border-black px-1.5 py-0.5 text-black/50">{c.industry}</span>
                 </div>
                 <p className="text-black/50 text-xs mb-3 leading-relaxed">{c.situation}</p>
