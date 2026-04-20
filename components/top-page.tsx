@@ -62,14 +62,14 @@ export function TopPage({ onStart }: TopPageProps) {
         data-dark-bg
       >
         {/* ── ヘッダー：ブランド名 ── */}
-        <header className="px-10 py-8 flex items-center">
+        <header className="px-10 py-8 flex items-center justify-center">
           <span className="font-inter font-black text-white text-sm tracking-[0.22em] uppercase">
             BizplatForm
           </span>
         </header>
 
         {/* ── メイン ── */}
-        <main className="flex-1 flex flex-col justify-center px-10 pb-16 max-w-2xl">
+        <main className="flex-1 flex flex-col items-center justify-center px-10 pb-16 text-center">
 
           {/* キャッチ */}
           <div className="mb-14">
@@ -91,7 +91,7 @@ export function TopPage({ onStart }: TopPageProps) {
           </div>
 
           {/* 入力 */}
-          <div className="flex flex-col gap-4 max-w-sm">
+          <div className="flex flex-col gap-4 w-full max-w-sm">
             <Input
               value={officeName}
               onChange={e => setOfficeName(e.target.value)}
@@ -100,7 +100,7 @@ export function TopPage({ onStart }: TopPageProps) {
               autoFocus
               className="
                 bg-transparent border-0 border-b border-white/20 rounded-none
-                text-white placeholder:text-white/20
+                text-white placeholder:text-white/20 text-center
                 text-base font-inter px-0 py-3 h-auto
                 focus-visible:ring-0 focus-visible:border-white/60
                 transition-colors duration-200
