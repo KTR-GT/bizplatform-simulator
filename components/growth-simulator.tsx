@@ -126,13 +126,13 @@ function AnimatedNumber({ value, prefix = "", suffix = "", className = "", durat
 // ============================================================
 // MAIN COMPONENT
 // ============================================================
-export function GrowthSimulator() {
+export function GrowthSimulator({ initialDisplayName = "" }: { initialDisplayName?: string }) {
   const [activeTab, setActiveTab] = useState("mechanism")
   const [animDir,   setAnimDir]   = useState<"right" | "left">("right")
   const [animKey,   setAnimKey]   = useState(0)
 
   // 01 Hearing
-  const [officeName,       setOfficeName]       = useState("")
+  const [officeName,       setOfficeName]       = useState(initialDisplayName)
   const [clientCount,      setClientCount]      = useState("")
   const [capacity,         setCapacity]         = useState("")
   const [employees,        setEmployees]        = useState("")
