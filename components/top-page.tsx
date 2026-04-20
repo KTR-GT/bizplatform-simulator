@@ -4,6 +4,37 @@ import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+function CustomCursor() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [hovering, setHovering] = useState(false)
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => {
+      if (ref.current) {
+        ref.current.style.left = `${e.clientX}px`
+        ref.current.style.top  = `${e.clientY}px`
+      }
+    }
+    const over = (e: MouseEvent) => {
+      const t = e.target as HTMLElement
+      setHovering(!!t.closest('button, a, input, label, select, textarea, [data-cursor]'))
+    }
+    window.addEventListener('mousemove', move, { passive: true })
+    document.addEventListener('mouseover', over)
+    return () => {
+      window.removeEventListener('mousemove', move)
+      document.removeEventListener('mouseover', over)
+    }
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className={`custom-cursor is-dark${hovering ? ' is-hovering' : ''}`}
+    />
+  )
+}
+
 // 背景に浮かぶパーティクル用データ
 const PARTICLES = [
   { text: "¥",      x: 8,  y: 12, size: 96,  opacity: 0.04, delay: 0    },
@@ -61,9 +92,12 @@ export function TopPage({ onStart }: TopPageProps) {
   }
 
   return (
+    <>
+    <CustomCursor />
     <div
       className="relative w-full h-screen overflow-hidden bg-[#0A0A0A] flex flex-col items-center justify-center"
       style={{ opacity: entered ? 0 : 1, transition: "opacity 0.5s ease" }}
+      data-dark-bg
     >
       {/* ── 背景パーティクル ── */}
       {PARTICLES.map((p, i) => (
@@ -149,5 +183,6 @@ export function TopPage({ onStart }: TopPageProps) {
         </p>
       </div>
     </div>
+    </>
   )
 }
