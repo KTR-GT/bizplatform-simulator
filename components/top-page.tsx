@@ -125,7 +125,7 @@ export function TopPage({ onStart }: TopPageProps) {
         {/* ── フッター ── */}
         <footer className="px-10 py-6 flex items-center justify-between border-t border-white/8">
           <p className="text-white/20 text-xs font-inter">所要時間 約10分</p>
-          <p className="text-white/20 text-xs font-inter">導入事務所 100社超 · 全国対応</p>
+          <p className="text-white/20 text-xs font-inter">導入事務所 約2,000事務所 · 全国対応</p>
         </footer>
       </div>
     </>
