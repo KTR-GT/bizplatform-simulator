@@ -282,7 +282,7 @@ export function GrowthSimulator({ initialDisplayName = "" }: { initialDisplayNam
   const isDarkTab = activeTab === "market" || activeTab === "closing"
 
   return (
-    <div className={`min-h-screen ${isDarkTab ? "bg-[#0A0A0A]" : "bg-white"} transition-colors duration-500`}>
+    <div className={`min-h-screen ${isDarkTab ? "bg-[#141414]" : "bg-white"} transition-colors duration-500`}>
       <CustomCursor isDark={isDarkTab} />
 
       {/* HEADER */}
@@ -314,8 +314,8 @@ export function GrowthSimulator({ initialDisplayName = "" }: { initialDisplayNam
                   flex-1 flex flex-col items-start px-4 py-3 border-r transition-all duration-200
                   ${isDarkTab ? "border-white/10" : "border-black"}
                   ${isActive
-                    ? isDarkTab ? "bg-white text-[#0A0A0A]" : "bg-[#0A0A0A] text-white"
-                    : isDarkTab ? "bg-transparent text-white/65 hover:text-white/70" : "bg-white text-[#0A0A0A]/30 hover:text-[#0A0A0A]/70"
+                    ? isDarkTab ? "bg-white text-[#0A0A0A]" : "bg-[#141414] text-white"
+                    : isDarkTab ? "bg-transparent text-white/85 hover:text-white/70" : "bg-white text-[#0A0A0A]/30 hover:text-[#0A0A0A]/70"
                   }
                 `}
               >
@@ -351,7 +351,7 @@ export function GrowthSimulator({ initialDisplayName = "" }: { initialDisplayNam
                 data-cursor
                 onClick={() => goToTab(prev.id)}
                 className={`font-inter font-bold text-[11px] tracking-[0.15em] uppercase flex items-center gap-2 transition-colors ${
-                  isDarkTab ? "text-white/65 hover:text-white" : "text-black/60 hover:text-black"
+                  isDarkTab ? "text-white/85 hover:text-white" : "text-black/60 hover:text-black"
                 }`}
               >
                 ← {prev.num} {prev.label}
@@ -670,12 +670,12 @@ function MarketTab() {
 
       {/* HERO */}
       <div className="mb-10 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/60 mb-3">Step 02</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/88 mb-3">Step 02</p>
         <div className="flex items-end gap-6">
           <div>
             <h1 className="font-serif-display italic text-white leading-none">
               <span className="font-inter font-black text-[110px] leading-none tabular-nums">83.8</span>
-              <span className="text-4xl text-white/60 ml-1">%</span>
+              <span className="text-4xl text-white/88 ml-1">%</span>
             </h1>
             <p className="font-serif-display italic text-white text-3xl mt-1">が、年商1億円以下。</p>
           </div>
@@ -691,7 +691,7 @@ function MarketTab() {
           <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/40">
             Tax Industry Reference — 税理士市場の参考データ
           </p>
-          <span className="text-white/50 text-[9px] font-inter">以下は推計・参考値</span>
+          <span className="text-white/85 text-[9px] font-inter">以下は推計・参考値</span>
         </div>
         <div className="grid grid-cols-3 gap-px bg-white/10">
           {marketStats.slice(0, 6).map((s) => {
@@ -700,7 +700,7 @@ function MarketTab() {
               <div key={s.label}
                 data-cursor
                 onClick={() => toggleReveal(s.label)}
-                className="bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 relative overflow-hidden group min-h-[180px] flex flex-col justify-between" data-dark-bg
+                className="bg-[#141414] px-8 py-10 cursor-pointer transition-all duration-300 relative overflow-hidden group min-h-[180px] flex flex-col justify-between" data-dark-bg
               >
                 {revealed ? (
                   /* 開いた後：数値を大きく */
@@ -711,20 +711,20 @@ function MarketTab() {
                         {s.value}
                       </p>
                       {s.isEstimate && (
-                        <span className="text-[8px] text-white/60 font-inter border border-white/15 px-1 mt-1 inline-block">推計</span>
+                        <span className="text-[8px] text-white/88 font-inter border border-white/15 px-1 mt-1 inline-block">推計</span>
                       )}
                     </div>
                     <div className="mt-4">
                       <p className="text-white/70 text-sm font-bold leading-snug">{s.label}</p>
-                      <p className="text-white/60 text-[10px] mt-1 font-inter leading-relaxed">{s.note}</p>
+                      <p className="text-white/88 text-[10px] mt-1 font-inter leading-relaxed">{s.note}</p>
                     </div>
                   </>
                 ) : (
                   /* 閉じた状態：ラベルを大きく */
                   <>
                     <p className="font-inter font-black text-white/80 text-xl leading-snug">{s.label}</p>
-                    <p className="text-white/60 text-[11px] mt-3 font-inter leading-relaxed">{s.note}</p>
-                    <p className="font-inter text-white/55 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">
+                    <p className="text-white/88 text-[11px] mt-3 font-inter leading-relaxed">{s.note}</p>
+                    <p className="font-inter text-white/70 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/85 transition-colors">
                       タップして確認 →
                     </p>
                   </>
@@ -740,7 +740,7 @@ function MarketTab() {
             <div
               data-cursor
               onClick={() => toggleReveal(s.label)}
-              className="mt-px bg-[#0A0A0A] px-8 py-10 cursor-pointer transition-all duration-300 flex items-center gap-12 group min-h-[120px]" data-dark-bg
+              className="mt-px bg-[#141414] px-8 py-10 cursor-pointer transition-all duration-300 flex items-center gap-12 group min-h-[120px]" data-dark-bg
             >
               {revealed ? (
                 <>
@@ -750,17 +750,17 @@ function MarketTab() {
                   </p>
                   <div>
                     <p className="text-white/70 text-lg font-bold">{s.label}</p>
-                    <p className="text-white/60 text-xs mt-1 font-inter leading-relaxed max-w-xl">{s.note}</p>
+                    <p className="text-white/88 text-xs mt-1 font-inter leading-relaxed max-w-xl">{s.note}</p>
                     {s.isEstimate && (
-                      <span className="text-[8px] text-white/60 font-inter border border-white/15 px-1 mt-2 inline-block">推計</span>
+                      <span className="text-[8px] text-white/88 font-inter border border-white/15 px-1 mt-2 inline-block">推計</span>
                     )}
                   </div>
                 </>
               ) : (
                 <div className="flex-1">
                   <p className="font-inter font-black text-white/80 text-2xl">{s.label}</p>
-                  <p className="text-white/60 text-xs mt-2 font-inter leading-relaxed max-w-xl">{s.note}</p>
-                  <p className="font-inter text-white/55 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">タップして確認 →</p>
+                  <p className="text-white/88 text-xs mt-2 font-inter leading-relaxed max-w-xl">{s.note}</p>
+                  <p className="font-inter text-white/70 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/85 transition-colors">タップして確認 →</p>
                 </div>
               )}
             </div>
@@ -770,7 +770,7 @@ function MarketTab() {
 
       {/* MARKET STRUCTURE — 20% / 80% サマリー + アコーディオン */}
       <div className="stagger-3 mb-10">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-6">
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/70 mb-6">
           Market Structure — 誰に届けるか
         </p>
 
@@ -783,10 +783,10 @@ function MarketTab() {
             className="flex-none px-8 py-8 text-left transition-opacity hover:opacity-80 active:opacity-60"
             style={{ width: "20%", background: expandedSide === "manifest" ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)" }}
           >
-            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-white/60 mb-1">顕在層</p>
+            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-white/88 mb-1">顕在層</p>
             <p className="font-inter font-black text-[56px] leading-none tabular-nums text-white/40">20%</p>
-            <p className="text-white/60 text-[10px] mt-3 leading-snug">競合と正面衝突になる市場</p>
-            <p className="text-white/50 text-[9px] mt-2">{expandedSide === "manifest" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
+            <p className="text-white/88 text-[10px] mt-3 leading-snug">競合と正面衝突になる市場</p>
+            <p className="text-white/85 text-[9px] mt-2">{expandedSide === "manifest" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
           </button>
           {/* 右: 潜在層 80% */}
           <button
@@ -835,7 +835,7 @@ function MarketTab() {
                       {seg.label}
                       {!isDark && <span className="ml-2 border border-white/20 px-1 text-[8px] uppercase tracking-wider">Target</span>}
                     </p>
-                    <p className="text-white/55 text-[10px] leading-relaxed">{seg.desc}</p>
+                    <p className="text-white/70 text-[10px] leading-relaxed">{seg.desc}</p>
                   </div>
                 </div>
               ))}
@@ -847,7 +847,7 @@ function MarketTab() {
       {/* FEE TABLE + KEY STAT */}
       <div className="grid grid-cols-2 gap-4 stagger-4">
         <div className="border border-white/10 px-8 py-6">
-          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-4">月額顧問料の相場（年商規模別）</p>
+          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/70 mb-4">月額顧問料の相場（年商規模別）</p>
           <table className="w-full text-sm">
             <tbody className="divide-y divide-white/10">
               {[
@@ -866,8 +866,8 @@ function MarketTab() {
         </div>
         <div className="border border-white/10 px-8 py-6 flex flex-col justify-between">
           <div>
-            <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-4">変更・乗り換えのトリガー</p>
-            <ul className="space-y-2 text-white/50 text-sm">
+            <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/70 mb-4">変更・乗り換えのトリガー</p>
+            <ul className="space-y-2 text-white/85 text-sm">
               {[
                 "個人事業主 → 法人成りのタイミング",
                 "税務調査後の対応への不信感",
@@ -875,7 +875,7 @@ function MarketTab() {
                 "クラウド会計・IT対応を求めた時",
               ].map(t => (
                 <li key={t} className="flex items-start gap-2">
-                  <span className="text-white/50 mt-0.5">—</span>
+                  <span className="text-white/85 mt-0.5">—</span>
                   <span>{t}</span>
                 </li>
               ))}
@@ -884,13 +884,13 @@ function MarketTab() {
           <p className="font-inter font-black text-white text-2xl mt-6">
             50.3<span className="text-base font-normal text-white/40 ml-1">% が一度も変更したことがない</span>
           </p>
-          <p className="text-white/55 text-[10px] mt-1 font-inter">船井総研 2023年調査</p>
+          <p className="text-white/70 text-[10px] mt-1 font-inter">船井総研 2023年調査</p>
         </div>
       </div>
 
       {/* 顧問料 × 企業数 横棒グラフ */}
       <div className="stagger-5 mt-4">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-5">
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/70 mb-5">
           Fee × Volume — 顧問料帯ごとの法人数（296万社ベース）
         </p>
         <div className="space-y-3">
@@ -902,7 +902,7 @@ function MarketTab() {
           ].map(({ range, fee, companies, pct }) => (
             <div key={range} className="flex items-center gap-4">
               {/* 年商ラベル */}
-              <span className="font-inter text-[11px] text-white/65 w-28 shrink-0 tabular-nums">{range}</span>
+              <span className="font-inter text-[11px] text-white/85 w-28 shrink-0 tabular-nums">{range}</span>
               {/* バー */}
               <div className="flex-1 relative h-8 bg-white/5">
                 <div
@@ -917,12 +917,12 @@ function MarketTab() {
               {/* 顧問料 + 割合 */}
               <div className="shrink-0 text-right w-36">
                 <p className="font-inter font-bold text-white text-[12px]">{fee}</p>
-                <p className="font-inter text-white/60 text-[10px] tabular-nums">全体の {pct}%</p>
+                <p className="font-inter text-white/88 text-[10px] tabular-nums">全体の {pct}%</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-white/50 text-[10px] mt-4 font-inter">
+        <p className="text-white/85 text-[10px] mt-4 font-inter">
           ※ 国税庁・会社標本調査の年商分布を296万社に適用した推計値
         </p>
       </div>
@@ -951,8 +951,8 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea, goodThe
       </div>
 
       {/* ブロック③：未活用キャパシティ（前向き） */}
-      <div className="border-l-4 border-black bg-[#0A0A0A] px-8 py-8 mb-8 stagger-2" data-dark-bg>
-        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/65 mb-3">Unused Capacity — 未活用の売上余地</p>
+      <div className="border-l-4 border-black bg-[#141414] px-8 py-8 mb-8 stagger-2" data-dark-bg>
+        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/85 mb-3">Unused Capacity — 未活用の売上余地</p>
         <div className="flex items-baseline gap-4 flex-wrap">
           <div>
             <p className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
@@ -961,7 +961,7 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea, goodThe
             <p className="text-white/40 text-sm mt-1">/月 — 今すぐ受けられる余力の月額換算</p>
           </div>
         </div>
-        <p className="text-white/55 text-xs mt-4">
+        <p className="text-white/70 text-xs mt-4">
           引受余力{capacityNum}件 × 平均顧問料¥{avgFeeNum.toLocaleString("ja-JP")} = ¥{unusedRevenue.toLocaleString("ja-JP")}/月
         </p>
       </div>
@@ -1146,17 +1146,17 @@ function MechanismTab() {
         </div>
       </div>
 
-      <div className="bg-[#0A0A0A] text-white px-10 py-10 stagger-4" data-dark-bg>
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-4">Blue Ocean Scale</p>
+      <div className="bg-[#141414] text-white px-10 py-10 stagger-4" data-dark-bg>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/70 mb-4">Blue Ocean Scale</p>
         <div className="flex items-baseline gap-3 mb-3">
           <span className="font-inter font-black text-[80px] leading-none tabular-nums">約400</span>
           <span className="font-bold text-3xl">万件</span>
         </div>
-        <p className="text-white/50 text-base max-w-xl leading-relaxed">
+        <p className="text-white/85 text-base max-w-xl leading-relaxed">
           WEB上に出てこない、潜在的な税理士ニーズを持つ企業数（推計）。<br />
           BizplatFormはこの市場に<span className="text-white font-bold">専門のコールセンター</span>で直接アプローチしています。
         </p>
-        <p className="text-white/60 text-sm mt-4">
+        <p className="text-white/88 text-sm mt-4">
           ↓ Step 04 では、先生の事務所へのインパクトを数字で確認します。
         </p>
       </div>
@@ -1169,7 +1169,7 @@ function MechanismTab() {
 // ============================================================
 function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[0] & { score: number })[]; hasInput: boolean }) {
   const digitalBadgeStyle = (d: string) =>
-    d === "デジタル得意" ? "bg-[#0A0A0A] text-white" : d === "中程度" ? "border border-black text-[#0A0A0A]" : "border border-black/20 text-black/65"
+    d === "デジタル得意" ? "bg-[#141414] text-white" : d === "中程度" ? "border border-black text-[#0A0A0A]" : "border border-black/20 text-black/65"
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
@@ -1191,9 +1191,9 @@ function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[
           {matched.map((c, i) => (
             <div key={c.id} className={`border border-black stagger-${Math.min(i + 2, 8)} hover:bg-[#FAFAFA] transition-colors`}>
               <div className="grid grid-cols-12">
-                <div className="col-span-1 bg-[#0A0A0A] flex flex-col items-center justify-center py-6">
+                <div className="col-span-1 bg-[#141414] flex flex-col items-center justify-center py-6">
                   <span className="font-inter font-black text-white text-2xl tabular-nums leading-none">{c.score}</span>
-                  <span className="text-white/65 text-[9px] uppercase tracking-wider mt-1">pt</span>
+                  <span className="text-white/85 text-[9px] uppercase tracking-wider mt-1">pt</span>
                 </div>
                 <div className="col-span-8 px-6 py-5 border-r border-black/10">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -1257,9 +1257,9 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
 
       <div className="grid grid-cols-5 gap-px bg-black mb-8 stagger-2">
         {/* LEFT: Commit hero */}
-        <div className="col-span-3 bg-[#0A0A0A] px-10 py-10 flex flex-col justify-between" data-dark-bg>
+        <div className="col-span-3 bg-[#141414] px-10 py-10 flex flex-col justify-between" data-dark-bg>
           <div>
-            <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/60 mb-2">
+            <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-white/88 mb-2">
               Commit Plan {String(selectedPlanIndex + 1).padStart(2, "0")} — 月間コミット顧問料
             </p>
             <p className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
@@ -1268,16 +1268,16 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             <p className="font-inter font-black text-[32px] leading-tight text-white/80 mt-2">
               コミットプラン
             </p>
-            <p className="text-white/65 text-sm mt-3 font-inter">事務所の月商が、ここまで変わる。</p>
+            <p className="text-white/85 text-sm mt-3 font-inter">事務所の月商が、ここまで変わる。</p>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
             <div>
-              <p className="text-white/65 text-[11px] uppercase tracking-wider font-inter mb-1">年間売上アップ額</p>
+              <p className="text-white/85 text-[11px] uppercase tracking-wider font-inter mb-1">年間売上アップ額</p>
               <p className="font-inter font-black text-3xl text-white tabular-nums">+¥{(activePlan.commit * 12).toLocaleString("ja-JP")}</p>
-              <p className="text-white/55 text-xs mt-1">年間売上アップ</p>
+              <p className="text-white/70 text-xs mt-1">年間売上アップ</p>
             </div>
             <div className="pt-4 border-t border-white/10">
-              <p className="text-white/50 text-[11px] uppercase tracking-wider font-inter mb-1">月額サービス料</p>
+              <p className="text-white/85 text-[11px] uppercase tracking-wider font-inter mb-1">月額サービス料</p>
               <p className="font-inter text-white/40 text-xl tabular-nums">¥{activePlan.monthly.toLocaleString("ja-JP")} / 月</p>
             </div>
           </div>
@@ -1320,7 +1320,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             <DialogTrigger asChild>
               <button data-cursor className="mt-6 w-full bg-black text-white font-inter text-[12px] font-bold tracking-[0.15em] uppercase px-6 py-4 hover:bg-black/80 transition-colors flex items-center justify-between">
                 <span>料金体系を確認する</span>
-                <span className="text-white/60">→</span>
+                <span className="text-white/88">→</span>
               </button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
@@ -1403,10 +1403,10 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
           <div className="mt-4 grid grid-cols-5 gap-px bg-black">
             {commitPlans.map((p: any, i: number) => (
               <button key={i} data-cursor onClick={() => setSelectedPlanIndex(i)}
-                className={`px-4 py-5 text-left transition-colors ${selectedPlanIndex === i ? "bg-[#0A0A0A] text-white" : "bg-white hover:bg-[#F4F4F4] text-[#0A0A0A]"}`}>
+                className={`px-4 py-5 text-left transition-colors ${selectedPlanIndex === i ? "bg-[#141414] text-white" : "bg-white hover:bg-[#F4F4F4] text-[#0A0A0A]"}`}>
                 <p className={`font-inter text-[9px] uppercase tracking-wider mb-2 ${selectedPlanIndex === i ? "text-white/40" : "text-black/60"}`}>Plan {String(i+1).padStart(2,"0")}</p>
                 <p className="font-inter font-black text-lg tabular-nums">¥{p.commit.toLocaleString("ja-JP")}</p>
-                <p className={`text-[10px] mt-1 ${selectedPlanIndex === i ? "text-white/60" : "text-black/55"}`}>¥{p.monthly.toLocaleString("ja-JP")}/月</p>
+                <p className={`text-[10px] mt-1 ${selectedPlanIndex === i ? "text-white/88" : "text-black/55"}`}>¥{p.monthly.toLocaleString("ja-JP")}/月</p>
               </button>
             ))}
           </div>
@@ -1601,15 +1601,15 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
   const handlePDF = () => window.print()
 
   return (
-    <div className="min-h-[calc(100vh-120px)] bg-[#0A0A0A] text-white px-8 py-16 flex flex-col justify-between max-w-5xl mx-auto">
+    <div className="min-h-[calc(100vh-120px)] bg-[#141414] text-white px-8 py-16 flex flex-col justify-between max-w-5xl mx-auto">
       <div>
         <div className="stagger-1 mb-16">
-          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-6">Step 08</p>
+          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/70 mb-6">Step 08</p>
           <h1 className="font-serif-display italic leading-[0.9] text-white">
             <span className="text-[72px]">あとは、</span><br />
             <span className="not-italic font-inter font-black text-[80px]">はじめるだけ。</span>
           </h1>
-          <p className="text-white/65 text-xl mt-8">{displayName} 様</p>
+          <p className="text-white/85 text-xl mt-8">{displayName} 様</p>
         </div>
 
         <div className="grid grid-cols-3 gap-px bg-white/8 stagger-2 mb-12">
@@ -1618,9 +1618,9 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
             { num: "02", title: "契約書の送付",    body: "翌営業日にメールにて電子契約書をお送りします。",              timing: "翌営業日" },
             { num: "03", title: "初回マッチング開始", body: "ご契約翌月より、AIマッチングと紹介を開始します。",         timing: "ご契約翌月" },
           ].map(({ num, title, body, timing }) => (
-            <div key={num} className="bg-[#0A0A0A] border border-white/10 px-8 py-8 relative overflow-hidden">
+            <div key={num} className="bg-[#141414] border border-white/10 px-8 py-8 relative overflow-hidden">
               <span className="absolute bottom-3 right-5 font-inter font-black text-[80px] leading-none text-white/4 tabular-nums select-none">{num}</span>
-              <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/55 mb-3">{timing}</p>
+              <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/70 mb-3">{timing}</p>
               <h3 className="font-bold text-white text-base mb-3">{title}</h3>
               <p className="text-white/40 text-sm leading-relaxed">{body}</p>
             </div>
@@ -1629,13 +1629,13 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
 
         <div className="border border-white/10 px-8 py-6 stagger-3 flex items-center justify-between">
           <div>
-            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/55 mb-1">選定プラン</p>
+            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/70 mb-1">選定プラン</p>
             <p className="font-inter font-black text-4xl tabular-nums text-white">
-              ¥{plan.monthly.toLocaleString("ja-JP")}<span className="text-lg font-normal text-white/65 ml-1">/ 月</span>
+              ¥{plan.monthly.toLocaleString("ja-JP")}<span className="text-lg font-normal text-white/85 ml-1">/ 月</span>
             </p>
           </div>
           <div className="text-right">
-            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/55 mb-1">月間コミット</p>
+            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/70 mb-1">月間コミット</p>
             <p className="font-inter font-black text-2xl tabular-nums text-white">¥{plan.commit.toLocaleString("ja-JP")}</p>
           </div>
         </div>
@@ -1644,12 +1644,12 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
       <div className="stagger-4 flex items-end justify-between mt-16">
         <div>
           <p className="font-inter font-black text-lg tracking-[0.15em] uppercase text-white mb-1">BizplatForm</p>
-          <p className="text-white/55 text-xs font-inter">株式会社BizplatForm — コミットプラン事業部</p>
+          <p className="text-white/70 text-xs font-inter">株式会社BizplatForm — コミットプラン事業部</p>
         </div>
         <button
           data-cursor
           onClick={handlePDF}
-          className="no-print border border-white/30 text-white/50 hover:border-white hover:text-white px-8 py-3 font-inter font-bold uppercase tracking-[0.15em] text-[11px] transition-all duration-200"
+          className="no-print border border-white/30 text-white/85 hover:border-white hover:text-white px-8 py-3 font-inter font-bold uppercase tracking-[0.15em] text-[11px] transition-all duration-200"
         >
           PDF をダウンロード
         </button>
