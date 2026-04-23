@@ -315,7 +315,7 @@ export function GrowthSimulator({ initialDisplayName = "" }: { initialDisplayNam
                   ${isDarkTab ? "border-white/10" : "border-black"}
                   ${isActive
                     ? isDarkTab ? "bg-white text-[#0A0A0A]" : "bg-[#0A0A0A] text-white"
-                    : isDarkTab ? "bg-transparent text-white/35 hover:text-white/70" : "bg-white text-[#0A0A0A]/30 hover:text-[#0A0A0A]/70"
+                    : isDarkTab ? "bg-transparent text-white/65 hover:text-white/70" : "bg-white text-[#0A0A0A]/30 hover:text-[#0A0A0A]/70"
                   }
                 `}
               >
@@ -351,7 +351,7 @@ export function GrowthSimulator({ initialDisplayName = "" }: { initialDisplayNam
                 data-cursor
                 onClick={() => goToTab(prev.id)}
                 className={`font-inter font-bold text-[11px] tracking-[0.15em] uppercase flex items-center gap-2 transition-colors ${
-                  isDarkTab ? "text-white/35 hover:text-white" : "text-black/30 hover:text-black"
+                  isDarkTab ? "text-white/65 hover:text-white" : "text-black/60 hover:text-black"
                 }`}
               >
                 ← {prev.num} {prev.label}
@@ -382,7 +382,7 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-12 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 01</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/60 mb-3">Step 01</p>
         <h1 className="font-serif-display italic text-5xl text-[#0A0A0A] leading-tight">
           先生の事務所を、<br />
           <em className="not-italic font-inter font-black">数字</em>で教えてください。
@@ -393,9 +393,9 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
         {/* 左 */}
         <div className="space-y-8">
           <div className="stagger-2">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">事務所名</label>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">事務所名</label>
             <input type="text" value={officeName} onChange={e => setOfficeName(e.target.value)} placeholder="〇〇税理士事務所"
-              className="w-full border-b-2 border-black bg-transparent pb-2 text-2xl font-bold text-[#0A0A0A] outline-none placeholder:text-black/20" />
+              className="w-full border-b-2 border-black bg-transparent pb-2 text-2xl font-bold text-[#0A0A0A] outline-none placeholder:text-black/50" />
           </div>
 
           <div className="grid grid-cols-2 gap-6 stagger-3">
@@ -408,18 +408,18 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
               { label: "自然減件数（年）", unit: "件", val: naturalDecrease, set: setNaturalDecrease, ph: "0" },
             ].map(({ label, unit, val, set, ph }) => (
               <div key={label}>
-                <label className="font-inter text-[9px] tracking-[0.18em] uppercase text-black/35 block mb-2">{label}</label>
+                <label className="font-inter text-[9px] tracking-[0.18em] uppercase text-black/65 block mb-2">{label}</label>
                 <div className="flex items-baseline gap-1 border-b border-black/20 pb-1">
                   <input type="number" value={val} onChange={e => set(e.target.value)} placeholder={ph}
-                    className="w-full bg-transparent text-2xl font-inter font-black text-[#0A0A0A] outline-none tabular-nums placeholder:text-black/20" />
-                  <span className="text-sm text-black/35">{unit}</span>
+                    className="w-full bg-transparent text-2xl font-inter font-black text-[#0A0A0A] outline-none tabular-nums placeholder:text-black/50" />
+                  <span className="text-sm text-black/65">{unit}</span>
                 </div>
               </div>
             ))}
           </div>
 
           <div className="stagger-4">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">拡大意欲</label>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">拡大意欲</label>
             <div className="space-y-2">
               {expansionOptions.map(opt => (
                 <label key={opt} className="flex items-center gap-3" data-cursor onClick={() => setExpansionWill(opt)}>
@@ -433,7 +433,7 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
           </div>
 
           <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">AI・デジタルツール活用状況</label>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">AI・デジタルツール活用状況</label>
             <div className="space-y-2">
               {aiUsageOptions.map(opt => (
                 <label key={opt} className="flex items-center gap-3" data-cursor onClick={() => setAiUsage(opt)}>
@@ -447,13 +447,13 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
           </div>
 
           <div className="stagger-4">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">対応会計ソフト</label>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">対応会計ソフト</label>
             <div className="grid grid-cols-3 gap-2">
               {accountingSoftware.map(sw => {
                 const on = selectedSoftware.includes(sw)
                 return (
                   <button key={sw} data-cursor onClick={() => toggle(selectedSoftware, sw, setSelectedSoftware)}
-                    className={`py-2 border text-xs font-bold transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                    className={`py-2 border text-xs font-bold transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/65 border-black/20 hover:border-black hover:text-black"}`}>
                     {sw}
                   </button>
                 )
@@ -462,13 +462,13 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
           </div>
 
           <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">
               希望する関与スタイル
             </label>
             <div className="flex flex-wrap gap-2">
               {accountingStyleOptions.map(opt => (
                 <button key={opt} data-cursor onClick={() => setPreferredAccountingStyle(opt)}
-                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredAccountingStyle === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredAccountingStyle === opt ? "bg-black text-white border-black" : "bg-white text-black/65 border-black/20 hover:border-black hover:text-black"}`}>
                   {opt}
                 </button>
               ))}
@@ -476,13 +476,13 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
           </div>
 
           <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">
               希望する顧客属性
             </label>
             <div className="flex gap-2">
               {preferredTypeOptions.map(opt => (
                 <button key={opt} data-cursor onClick={() => setPreferredType(opt)}
-                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredType === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredType === opt ? "bg-black text-white border-black" : "bg-white text-black/65 border-black/20 hover:border-black hover:text-black"}`}>
                   {opt}
                 </button>
               ))}
@@ -490,13 +490,13 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
           </div>
 
           <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">
               希望するデジタルレベル
             </label>
             <div className="flex flex-wrap gap-2">
               {digitalLevelOptions.map(opt => (
                 <button key={opt} data-cursor onClick={() => setPreferredDigitalLevel(opt)}
-                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredDigitalLevel === opt ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                  className={`px-3 py-1.5 border text-xs font-inter font-bold tracking-wide transition-all ${preferredDigitalLevel === opt ? "bg-black text-white border-black" : "bg-white text-black/65 border-black/20 hover:border-black hover:text-black"}`}>
                   {opt}
                 </button>
               ))}
@@ -507,13 +507,13 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
         {/* 右 */}
         <div className="space-y-8">
           <div className="stagger-3">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">対応エリア</label>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">対応エリア</label>
             <div className="flex flex-wrap gap-2">
               {areas.map(area => {
                 const on = selectedArea.includes(area)
                 return (
                   <button key={area} data-cursor onClick={() => toggle(selectedArea, area, setSelectedArea)}
-                    className={`px-3 py-1.5 border text-xs font-inter font-bold uppercase tracking-wider transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                    className={`px-3 py-1.5 border text-xs font-inter font-bold uppercase tracking-wider transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/65 border-black/20 hover:border-black hover:text-black"}`}>
                     {area}
                   </button>
                 )
@@ -523,15 +523,15 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 
           {/* 得意テーマ */}
           <div className="stagger-4">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">
-              得意テーマ <span className="normal-case tracking-normal text-black/25">（複数選択可）</span>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">
+              得意テーマ <span className="normal-case tracking-normal text-black/55">（複数選択可）</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
               {preferredThemeOptions.map(t => {
                 const on = goodThemes.includes(t)
                 return (
                   <button key={t} data-cursor onClick={() => toggle(goodThemes, t, setGoodThemes)}
-                    className={`py-2 border text-xs font-bold transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/35 border-black/20 hover:border-black hover:text-black"}`}>
+                    className={`py-2 border text-xs font-bold transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/65 border-black/20 hover:border-black hover:text-black"}`}>
                     {t}
                   </button>
                 )
@@ -541,15 +541,15 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 
           {/* 得意業種（加点） */}
           <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-1">
-              得意業種 <span className="normal-case tracking-normal text-black/25">（マッチ加点）</span>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-1">
+              得意業種 <span className="normal-case tracking-normal text-black/55">（マッチ加点）</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
               {industries.map(ind => {
                 const on = goodIndustries.includes(ind)
                 return (
                   <button key={ind} data-cursor onClick={() => toggle(goodIndustries, ind, setGoodIndustries)}
-                    className={`px-3 py-2 border text-xs font-bold text-left transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/30 border-black/10 hover:border-black/40 hover:text-black"}`}>
+                    className={`px-3 py-2 border text-xs font-bold text-left transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/60 border-black/10 hover:border-black/40 hover:text-black"}`}>
                     {on && "★ "}{ind}
                   </button>
                 )
@@ -559,7 +559,7 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
 
           {/* 得意年商レンジ */}
           <div className="stagger-6">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-3">得意な年商規模<span className="ml-2 normal-case tracking-normal text-black/25">複数選択可</span></label>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-3">得意な年商規模<span className="ml-2 normal-case tracking-normal text-black/55">複数選択可</span></label>
             <div className="space-y-2">
               {/* 指定なし */}
               <label key="all" className="flex items-center gap-3 cursor-pointer" data-cursor
@@ -588,15 +588,15 @@ function HearingTab({ officeName, setOfficeName, clientCount, setClientCount, ca
           </div>
 
           <div className="stagger-5">
-            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/35 block mb-1">
-              NG業種 <span className="normal-case tracking-normal text-black/25">（紹介不要な業種）</span>
+            <label className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/65 block mb-1">
+              NG業種 <span className="normal-case tracking-normal text-black/55">（紹介不要な業種）</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
               {industries.map(ind => {
                 const on = ngIndustries.includes(ind)
                 return (
                   <button key={ind} data-cursor onClick={() => toggle(ngIndustries, ind, setNgIndustries)}
-                    className={`px-3 py-2 border text-xs font-bold text-left transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/30 border-black/10 hover:border-black/40 hover:text-black"}`}>
+                    className={`px-3 py-2 border text-xs font-bold text-left transition-all ${on ? "bg-black text-white border-black" : "bg-white text-black/60 border-black/10 hover:border-black/40 hover:text-black"}`}>
                     {on && "✕ "}{ind}
                   </button>
                 )
@@ -670,7 +670,7 @@ function MarketTab() {
 
       {/* HERO */}
       <div className="mb-10 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/30 mb-3">Step 02</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/60 mb-3">Step 02</p>
         <div className="flex items-end gap-6">
           <div>
             <h1 className="font-serif-display italic text-white leading-none">
@@ -691,7 +691,7 @@ function MarketTab() {
           <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/40">
             Tax Industry Reference — 税理士市場の参考データ
           </p>
-          <span className="text-white/20 text-[9px] font-inter">以下は推計・参考値</span>
+          <span className="text-white/50 text-[9px] font-inter">以下は推計・参考値</span>
         </div>
         <div className="grid grid-cols-3 gap-px bg-white/10">
           {marketStats.slice(0, 6).map((s) => {
@@ -711,20 +711,20 @@ function MarketTab() {
                         {s.value}
                       </p>
                       {s.isEstimate && (
-                        <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-1 inline-block">推計</span>
+                        <span className="text-[8px] text-white/60 font-inter border border-white/15 px-1 mt-1 inline-block">推計</span>
                       )}
                     </div>
                     <div className="mt-4">
                       <p className="text-white/70 text-sm font-bold leading-snug">{s.label}</p>
-                      <p className="text-white/30 text-[10px] mt-1 font-inter leading-relaxed">{s.note}</p>
+                      <p className="text-white/60 text-[10px] mt-1 font-inter leading-relaxed">{s.note}</p>
                     </div>
                   </>
                 ) : (
                   /* 閉じた状態：ラベルを大きく */
                   <>
                     <p className="font-inter font-black text-white/80 text-xl leading-snug">{s.label}</p>
-                    <p className="text-white/30 text-[11px] mt-3 font-inter leading-relaxed">{s.note}</p>
-                    <p className="font-inter text-white/25 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">
+                    <p className="text-white/60 text-[11px] mt-3 font-inter leading-relaxed">{s.note}</p>
+                    <p className="font-inter text-white/55 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">
                       タップして確認 →
                     </p>
                   </>
@@ -750,17 +750,17 @@ function MarketTab() {
                   </p>
                   <div>
                     <p className="text-white/70 text-lg font-bold">{s.label}</p>
-                    <p className="text-white/30 text-xs mt-1 font-inter leading-relaxed max-w-xl">{s.note}</p>
+                    <p className="text-white/60 text-xs mt-1 font-inter leading-relaxed max-w-xl">{s.note}</p>
                     {s.isEstimate && (
-                      <span className="text-[8px] text-white/30 font-inter border border-white/15 px-1 mt-2 inline-block">推計</span>
+                      <span className="text-[8px] text-white/60 font-inter border border-white/15 px-1 mt-2 inline-block">推計</span>
                     )}
                   </div>
                 </>
               ) : (
                 <div className="flex-1">
                   <p className="font-inter font-black text-white/80 text-2xl">{s.label}</p>
-                  <p className="text-white/30 text-xs mt-2 font-inter leading-relaxed max-w-xl">{s.note}</p>
-                  <p className="font-inter text-white/25 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">タップして確認 →</p>
+                  <p className="text-white/60 text-xs mt-2 font-inter leading-relaxed max-w-xl">{s.note}</p>
+                  <p className="font-inter text-white/55 text-[10px] uppercase tracking-widest mt-4 group-hover:text-white/50 transition-colors">タップして確認 →</p>
                 </div>
               )}
             </div>
@@ -770,7 +770,7 @@ function MarketTab() {
 
       {/* MARKET STRUCTURE — 20% / 80% サマリー + アコーディオン */}
       <div className="stagger-3 mb-10">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-6">
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-6">
           Market Structure — 誰に届けるか
         </p>
 
@@ -783,10 +783,10 @@ function MarketTab() {
             className="flex-none px-8 py-8 text-left transition-opacity hover:opacity-80 active:opacity-60"
             style={{ width: "20%", background: expandedSide === "manifest" ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)" }}
           >
-            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-white/30 mb-1">顕在層</p>
+            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-white/60 mb-1">顕在層</p>
             <p className="font-inter font-black text-[56px] leading-none tabular-nums text-white/40">20%</p>
-            <p className="text-white/30 text-[10px] mt-3 leading-snug">競合と正面衝突になる市場</p>
-            <p className="text-white/20 text-[9px] mt-2">{expandedSide === "manifest" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
+            <p className="text-white/60 text-[10px] mt-3 leading-snug">競合と正面衝突になる市場</p>
+            <p className="text-white/50 text-[9px] mt-2">{expandedSide === "manifest" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
           </button>
           {/* 右: 潜在層 80% */}
           <button
@@ -795,13 +795,13 @@ function MarketTab() {
             className="flex-1 px-8 py-8 text-left transition-opacity hover:opacity-90 active:opacity-70"
             style={{ background: expandedSide === "latent" ? "rgba(255,255,255,0.70)" : "rgba(255,255,255,0.55)" }}
           >
-            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-black/35 mb-1">潜在層</p>
+            <p className="font-inter text-[9px] tracking-[0.2em] uppercase text-black/65 mb-1">潜在層</p>
             <p className="font-inter font-black text-[72px] leading-none tabular-nums text-[#0A0A0A]">80%</p>
             <p className="text-[#0A0A0A] text-sm mt-3 font-bold">BizplatFormだからこそ届く領域</p>
             <p className="text-black/40 text-xs mt-1 font-inter leading-relaxed">
               未検討層・不満はあるが自分からは動かない層。紹介型でしか刈り取れない市場。
             </p>
-            <p className="text-black/25 text-[9px] mt-2">{expandedSide === "latent" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
+            <p className="text-black/55 text-[9px] mt-2">{expandedSide === "latent" ? "▲ 閉じる" : "▼ 内訳を見る"}</p>
           </button>
         </div>
 
@@ -835,7 +835,7 @@ function MarketTab() {
                       {seg.label}
                       {!isDark && <span className="ml-2 border border-white/20 px-1 text-[8px] uppercase tracking-wider">Target</span>}
                     </p>
-                    <p className="text-white/25 text-[10px] leading-relaxed">{seg.desc}</p>
+                    <p className="text-white/55 text-[10px] leading-relaxed">{seg.desc}</p>
                   </div>
                 </div>
               ))}
@@ -847,7 +847,7 @@ function MarketTab() {
       {/* FEE TABLE + KEY STAT */}
       <div className="grid grid-cols-2 gap-4 stagger-4">
         <div className="border border-white/10 px-8 py-6">
-          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">月額顧問料の相場（年商規模別）</p>
+          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-4">月額顧問料の相場（年商規模別）</p>
           <table className="w-full text-sm">
             <tbody className="divide-y divide-white/10">
               {[
@@ -866,7 +866,7 @@ function MarketTab() {
         </div>
         <div className="border border-white/10 px-8 py-6 flex flex-col justify-between">
           <div>
-            <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">変更・乗り換えのトリガー</p>
+            <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-4">変更・乗り換えのトリガー</p>
             <ul className="space-y-2 text-white/50 text-sm">
               {[
                 "個人事業主 → 法人成りのタイミング",
@@ -875,7 +875,7 @@ function MarketTab() {
                 "クラウド会計・IT対応を求めた時",
               ].map(t => (
                 <li key={t} className="flex items-start gap-2">
-                  <span className="text-white/20 mt-0.5">—</span>
+                  <span className="text-white/50 mt-0.5">—</span>
                   <span>{t}</span>
                 </li>
               ))}
@@ -884,13 +884,13 @@ function MarketTab() {
           <p className="font-inter font-black text-white text-2xl mt-6">
             50.3<span className="text-base font-normal text-white/40 ml-1">% が一度も変更したことがない</span>
           </p>
-          <p className="text-white/25 text-[10px] mt-1 font-inter">船井総研 2023年調査</p>
+          <p className="text-white/55 text-[10px] mt-1 font-inter">船井総研 2023年調査</p>
         </div>
       </div>
 
       {/* 顧問料 × 企業数 横棒グラフ */}
       <div className="stagger-5 mt-4">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-5">
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-5">
           Fee × Volume — 顧問料帯ごとの法人数（296万社ベース）
         </p>
         <div className="space-y-3">
@@ -902,7 +902,7 @@ function MarketTab() {
           ].map(({ range, fee, companies, pct }) => (
             <div key={range} className="flex items-center gap-4">
               {/* 年商ラベル */}
-              <span className="font-inter text-[11px] text-white/35 w-28 shrink-0 tabular-nums">{range}</span>
+              <span className="font-inter text-[11px] text-white/65 w-28 shrink-0 tabular-nums">{range}</span>
               {/* バー */}
               <div className="flex-1 relative h-8 bg-white/5">
                 <div
@@ -917,12 +917,12 @@ function MarketTab() {
               {/* 顧問料 + 割合 */}
               <div className="shrink-0 text-right w-36">
                 <p className="font-inter font-bold text-white text-[12px]">{fee}</p>
-                <p className="font-inter text-white/30 text-[10px] tabular-nums">全体の {pct}%</p>
+                <p className="font-inter text-white/60 text-[10px] tabular-nums">全体の {pct}%</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-white/20 text-[10px] mt-4 font-inter">
+        <p className="text-white/50 text-[10px] mt-4 font-inter">
           ※ 国税庁・会社標本調査の年商分布を296万社に適用した推計値
         </p>
       </div>
@@ -942,17 +942,17 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea, goodThe
     <div className="max-w-5xl mx-auto px-8 py-12">
       {/* ヘッダー */}
       <div className="mb-10 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 04</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/60 mb-3">Step 04</p>
         <h1 className="font-serif-display italic text-4xl text-[#0A0A0A] leading-tight">
           先生の事務所の現在地と、<br />
           <span className="not-italic font-inter font-black">未活用の余白。</span>
         </h1>
-        <p className="text-black/35 text-xs mt-3">※ ヒアリング値を入力すると自動反映されます</p>
+        <p className="text-black/65 text-xs mt-3">※ ヒアリング値を入力すると自動反映されます</p>
       </div>
 
       {/* ブロック③：未活用キャパシティ（前向き） */}
       <div className="border-l-4 border-black bg-[#0A0A0A] px-8 py-8 mb-8 stagger-2" data-dark-bg>
-        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/35 mb-3">Unused Capacity — 未活用の売上余地</p>
+        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/65 mb-3">Unused Capacity — 未活用の売上余地</p>
         <div className="flex items-baseline gap-4 flex-wrap">
           <div>
             <p className="font-inter font-black text-[72px] leading-none tabular-nums text-white">
@@ -961,14 +961,14 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea, goodThe
             <p className="text-white/40 text-sm mt-1">/月 — 今すぐ受けられる余力の月額換算</p>
           </div>
         </div>
-        <p className="text-white/25 text-xs mt-4">
+        <p className="text-white/55 text-xs mt-4">
           引受余力{capacityNum}件 × 平均顧問料¥{avgFeeNum.toLocaleString("ja-JP")} = ¥{unusedRevenue.toLocaleString("ja-JP")}/月
         </p>
       </div>
 
       {/* ブロック④：提携事務所との比較 + 実績事例 */}
       <div className="stagger-3">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/25 mb-4">Partner Benchmark — 提携事務所との比較</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/55 mb-4">Partner Benchmark — 提携事務所との比較</p>
 
         {/* 平均値との比較 */}
         <div className="grid grid-cols-3 gap-px bg-black mb-1">
@@ -978,51 +978,51 @@ function DiagnosisTab({ diagnosis, capacityNum, avgFeeNum, selectedArea, goodThe
             { label: "月額平均顧問料",              mine: `¥${avgFeeNum.toLocaleString("ja-JP")}`,                          bench: "¥31,200" },
           ].map(({ label, mine, bench }) => (
             <div key={label} className="bg-white px-6 py-6">
-              <p className="font-inter text-[9px] uppercase tracking-wider text-black/30 mb-4">{label}</p>
+              <p className="font-inter text-[9px] uppercase tracking-wider text-black/60 mb-4">{label}</p>
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="font-inter text-[9px] text-black/25 mb-1">先生（現状）</p>
+                  <p className="font-inter text-[9px] text-black/55 mb-1">先生（現状）</p>
                   <p className="font-inter font-black text-xl text-[#0A0A0A] tabular-nums">{mine}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-inter text-[9px] text-black/25 mb-1">提携事務所平均</p>
+                  <p className="font-inter text-[9px] text-black/55 mb-1">提携事務所平均</p>
                   <p className="font-inter font-black text-xl text-[#0A0A0A] tabular-nums">{bench}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-black/20 text-[10px] font-inter mb-8">※ BizplatFormパートナー事務所の実績平均値（参考）</p>
+        <p className="text-black/50 text-[10px] font-inter mb-8">※ BizplatFormパートナー事務所の実績平均値（参考）</p>
 
         {/* 実績事例 — AIが先生に最も響く3件を選定 */}
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/25 mb-1">Partner Cases — 先生のエリア・規模感に近い実績事例</p>
-        <p className="text-black/30 text-[10px] font-inter mb-4">エリア・平均顧問料・規模感をもとに自動選定しています</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/55 mb-1">Partner Cases — 先生のエリア・規模感に近い実績事例</p>
+        <p className="text-black/60 text-[10px] font-inter mb-4">エリア・平均顧問料・規模感をもとに自動選定しています</p>
         <div className="grid grid-cols-3 gap-px bg-black mb-1">
           {resonantCases.map((c, i) => (
             <div key={c.name} className="bg-white px-6 py-6 relative overflow-hidden">
               <span className="absolute top-4 right-5 font-inter font-black text-[48px] leading-none text-black/5 tabular-nums select-none">{i + 1}</span>
-              <p className="font-inter text-[9px] uppercase tracking-wider text-black/25 mb-1">{c.area} · {c.region}</p>
+              <p className="font-inter text-[9px] uppercase tracking-wider text-black/55 mb-1">{c.area} · {c.region}</p>
               <p className="font-inter font-bold text-sm text-[#0A0A0A] mb-1 leading-snug">{anonymizeName(c.name)}</p>
-              <p className="text-black/35 text-[10px] mb-4 leading-relaxed">{c.note}</p>
+              <p className="text-black/65 text-[10px] mb-4 leading-relaxed">{c.note}</p>
               <div className="space-y-3">
                 <div>
-                  <p className="font-inter text-[9px] text-black/30 mb-0.5">累計成約件数</p>
+                  <p className="font-inter text-[9px] text-black/60 mb-0.5">累計成約件数</p>
                   <p className="font-inter font-black text-2xl tabular-nums text-[#0A0A0A]">{c.contracts}件</p>
                 </div>
                 <div>
-                  <p className="font-inter text-[9px] text-black/30 mb-0.5">月間顧問料合計</p>
+                  <p className="font-inter text-[9px] text-black/60 mb-0.5">月間顧問料合計</p>
                   <p className="font-inter font-black text-lg tabular-nums text-[#0A0A0A]">¥{c.monthlyFee.toLocaleString("ja-JP")}</p>
                 </div>
                 <div>
-                  <p className="font-inter text-[9px] text-black/30 mb-0.5">1件あたり平均顧問料</p>
+                  <p className="font-inter text-[9px] text-black/60 mb-0.5">1件あたり平均顧問料</p>
                   <p className="font-inter font-bold text-sm tabular-nums text-black/50">¥{c.avgFeePerClient.toLocaleString("ja-JP")}/月</p>
-                  <p className="font-inter text-[8px] text-black/20 mt-0.5 leading-tight">※ スポット・単発契約を含む場合あり（参考値）</p>
+                  <p className="font-inter text-[8px] text-black/50 mt-0.5 leading-tight">※ スポット・単発契約を含む場合あり（参考値）</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-black/20 text-[10px] font-inter">※ BizplatForm公式サイト掲載の顧問料合計ランキングより（参考）</p>
+        <p className="text-black/50 text-[10px] font-inter">※ BizplatForm公式サイト掲載の顧問料合計ランキングより（参考）</p>
       </div>
     </div>
   )
@@ -1080,7 +1080,7 @@ function MechanismTab() {
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-12 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 03</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/60 mb-3">Step 03</p>
         <h1 className="font-serif-display italic text-5xl text-[#0A0A0A] leading-tight">
           問い合わせが来る前の、<br />
           <span className="not-italic font-inter font-black">気づいていないお客様</span>に届ける。
@@ -1096,12 +1096,12 @@ function MechanismTab() {
               onClick={() => setExpandedStep(isOpen ? null : step)}
               className={`bg-white px-8 py-10 relative overflow-hidden cursor-pointer transition-all duration-200 ${isOpen ? "ring-2 ring-inset ring-black" : "hover:bg-[#FAFAFA]"}`}>
               <span className="absolute bottom-3 right-5 font-inter font-black text-[80px] leading-none text-black/5 tabular-nums select-none">{step}</span>
-              <p className="font-inter font-black text-[9px] tracking-[0.2em] uppercase text-black/25 mb-4">Step {step}</p>
+              <p className="font-inter font-black text-[9px] tracking-[0.2em] uppercase text-black/55 mb-4">Step {step}</p>
               <h3 className="font-bold text-[#0A0A0A] text-lg leading-snug mb-4 whitespace-pre-line">{title}</h3>
               <p className="text-black/45 text-sm leading-relaxed mb-5">{body}</p>
               <div className="flex items-center justify-between">
                 <span className="inline-block border border-black text-[#0A0A0A] text-[9px] px-2 py-1 uppercase tracking-widest font-inter font-bold">{tag}</span>
-                <span className="font-inter text-[10px] text-black/30 hover:text-black/60">{isOpen ? "▲ 閉じる" : "▼ 詳細"}</span>
+                <span className="font-inter text-[10px] text-black/60 hover:text-black/60">{isOpen ? "▲ 閉じる" : "▼ 詳細"}</span>
               </div>
 
               {/* 展開パネル */}
@@ -1110,7 +1110,7 @@ function MechanismTab() {
                   <ul className="space-y-3">
                     {details.map((d, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-[#0A0A0A] leading-relaxed">
-                        <span className="text-black/30 mt-0.5 shrink-0">—</span>
+                        <span className="text-black/60 mt-0.5 shrink-0">—</span>
                         <span>{d}</span>
                       </li>
                     ))}
@@ -1123,11 +1123,11 @@ function MechanismTab() {
       </div>
 
       <div className="stagger-3 mb-12">
-        <p className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/25 mb-5">他社との違い</p>
+        <p className="font-inter text-[10px] tracking-[0.2em] uppercase text-black/55 mb-5">他社との違い</p>
         <div className="border border-black">
           <div className="grid grid-cols-3 border-b border-black bg-[#F4F4F4]">
             {["比較項目", "一般的な紹介サービス", "BizplatForm コミットプラン"].map((h, i) => (
-              <div key={h} className={`px-6 py-3 ${i > 0 ? "border-l border-black" : ""} font-inter text-[10px] uppercase tracking-wider ${i === 2 ? "font-black text-[#0A0A0A]" : "text-black/35"}`}>{h}</div>
+              <div key={h} className={`px-6 py-3 ${i > 0 ? "border-l border-black" : ""} font-inter text-[10px] uppercase tracking-wider ${i === 2 ? "font-black text-[#0A0A0A]" : "text-black/65"}`}>{h}</div>
             ))}
           </div>
           {[
@@ -1139,7 +1139,7 @@ function MechanismTab() {
           ].map(([item, other, biz], i) => (
             <div key={item} className={`grid grid-cols-3 border-b border-black/15 last:border-b-0 ${i % 2 ? "bg-[#FAFAFA]" : "bg-white"}`}>
               <div className="px-6 py-4 text-sm font-bold text-[#0A0A0A]">{item}</div>
-              <div className="px-6 py-4 border-l border-black/10 text-sm text-black/35">{other}</div>
+              <div className="px-6 py-4 border-l border-black/10 text-sm text-black/65">{other}</div>
               <div className="px-6 py-4 border-l border-black text-sm font-bold text-[#0A0A0A]"><span className="mr-2">✓</span>{biz}</div>
             </div>
           ))}
@@ -1147,7 +1147,7 @@ function MechanismTab() {
       </div>
 
       <div className="bg-[#0A0A0A] text-white px-10 py-10 stagger-4" data-dark-bg>
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-4">Blue Ocean Scale</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-4">Blue Ocean Scale</p>
         <div className="flex items-baseline gap-3 mb-3">
           <span className="font-inter font-black text-[80px] leading-none tabular-nums">約400</span>
           <span className="font-bold text-3xl">万件</span>
@@ -1156,7 +1156,7 @@ function MechanismTab() {
           WEB上に出てこない、潜在的な税理士ニーズを持つ企業数（推計）。<br />
           BizplatFormはこの市場に<span className="text-white font-bold">専門のコールセンター</span>で直接アプローチしています。
         </p>
-        <p className="text-white/30 text-sm mt-4">
+        <p className="text-white/60 text-sm mt-4">
           ↓ Step 04 では、先生の事務所へのインパクトを数字で確認します。
         </p>
       </div>
@@ -1169,12 +1169,12 @@ function MechanismTab() {
 // ============================================================
 function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[0] & { score: number })[]; hasInput: boolean }) {
   const digitalBadgeStyle = (d: string) =>
-    d === "デジタル得意" ? "bg-[#0A0A0A] text-white" : d === "中程度" ? "border border-black text-[#0A0A0A]" : "border border-black/20 text-black/35"
+    d === "デジタル得意" ? "bg-[#0A0A0A] text-white" : d === "中程度" ? "border border-black text-[#0A0A0A]" : "border border-black/20 text-black/65"
 
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-10 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 05</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/60 mb-3">Step 05</p>
         <h1 className="font-serif-display italic text-5xl text-[#0A0A0A] leading-tight">
           AIが選んだ、<br />
           <span className="not-italic font-inter font-black">先生への紹介候補。</span>
@@ -1183,7 +1183,7 @@ function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[
 
       {!hasInput ? (
         <div className="border border-black/10 px-8 py-20 text-center stagger-2">
-          <p className="font-serif-display italic text-2xl text-black/25">Step 01 でソフト・エリア・条件を選択すると</p>
+          <p className="font-serif-display italic text-2xl text-black/55">Step 01 でソフト・エリア・条件を選択すると</p>
           <p className="font-inter font-black text-base text-black/15 mt-2">マッチング候補が表示されます</p>
         </div>
       ) : (
@@ -1193,18 +1193,18 @@ function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[
               <div className="grid grid-cols-12">
                 <div className="col-span-1 bg-[#0A0A0A] flex flex-col items-center justify-center py-6">
                   <span className="font-inter font-black text-white text-2xl tabular-nums leading-none">{c.score}</span>
-                  <span className="text-white/35 text-[9px] uppercase tracking-wider mt-1">pt</span>
+                  <span className="text-white/65 text-[9px] uppercase tracking-wider mt-1">pt</span>
                 </div>
                 <div className="col-span-8 px-6 py-5 border-r border-black/10">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
                     <span className="font-bold text-[#0A0A0A] text-base">{anonymizeName(c.name)}</span>
                     <span className="font-inter text-[9px] uppercase tracking-wider border border-black px-2 py-0.5 text-black/55">{c.industry}</span>
-                    <span className="font-inter text-[9px] uppercase tracking-wider border border-black/20 px-2 py-0.5 text-black/35">{c.type}</span>
+                    <span className="font-inter text-[9px] uppercase tracking-wider border border-black/20 px-2 py-0.5 text-black/65">{c.type}</span>
                     <span className="font-inter text-[9px] tracking-wide border border-black/20 px-2 py-0.5 text-black/40">{c.accountingStyle}</span>
                   </div>
                   <p className="text-[#0A0A0A] text-sm mb-2">{c.situation}</p>
-                  <p className="text-black/35 text-xs">{c.bookkeeping}</p>
-                  <div className="flex gap-4 mt-3 text-xs text-black/35 font-inter">
+                  <p className="text-black/65 text-xs">{c.bookkeeping}</p>
+                  <div className="flex gap-4 mt-3 text-xs text-black/65 font-inter">
                     <span>年商 <strong className="text-[#0A0A0A] tabular-nums">{c.revenue.toLocaleString("ja-JP")}万円</strong></span>
                     <span>従業員 <strong className="text-[#0A0A0A] tabular-nums">{c.employees}名</strong></span>
                     <span>創業 <strong className="text-[#0A0A0A] tabular-nums">{c.founded}年目</strong></span>
@@ -1213,15 +1213,15 @@ function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[
                 </div>
                 <div className="col-span-3 px-5 py-5 flex flex-col justify-between">
                   <div>
-                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/25 mb-1">想定月額顧問料</p>
+                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/55 mb-1">想定月額顧問料</p>
                     <p className="font-inter font-black text-3xl tabular-nums text-[#0A0A0A]">¥{c.fee.toLocaleString("ja-JP")}</p>
                   </div>
                   <div className="space-y-1">
                     <span className={`inline-block text-[9px] px-2 py-1 font-inter font-bold tracking-wider ${digitalBadgeStyle(c.digitalLevel)}`}>
                       {c.digitalLevel}
                     </span>
-                    <p className="text-black/25 text-[10px]">{c.software}</p>
-                    <p className="text-black/20 text-[9px]">{c.theme}</p>
+                    <p className="text-black/55 text-[10px]">{c.software}</p>
+                    <p className="text-black/50 text-[9px]">{c.theme}</p>
                   </div>
                 </div>
               </div>
@@ -1248,7 +1248,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-10 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 06</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/60 mb-3">Step 06</p>
         <h1 className="font-serif-display italic text-4xl text-[#0A0A0A] leading-tight">
           先生には、<br />
           <span className="not-italic font-inter font-black">このプランが最適です。</span>
@@ -1268,16 +1268,16 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             <p className="font-inter font-black text-[32px] leading-tight text-white/80 mt-2">
               コミットプラン
             </p>
-            <p className="text-white/35 text-sm mt-3 font-inter">事務所の月商が、ここまで変わる。</p>
+            <p className="text-white/65 text-sm mt-3 font-inter">事務所の月商が、ここまで変わる。</p>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
             <div>
-              <p className="text-white/35 text-[11px] uppercase tracking-wider font-inter mb-1">年間売上アップ額</p>
+              <p className="text-white/65 text-[11px] uppercase tracking-wider font-inter mb-1">年間売上アップ額</p>
               <p className="font-inter font-black text-3xl text-white tabular-nums">+¥{(activePlan.commit * 12).toLocaleString("ja-JP")}</p>
-              <p className="text-white/25 text-xs mt-1">年間売上アップ</p>
+              <p className="text-white/55 text-xs mt-1">年間売上アップ</p>
             </div>
             <div className="pt-4 border-t border-white/10">
-              <p className="text-white/20 text-[11px] uppercase tracking-wider font-inter mb-1">月額サービス料</p>
+              <p className="text-white/50 text-[11px] uppercase tracking-wider font-inter mb-1">月額サービス料</p>
               <p className="font-inter text-white/40 text-xl tabular-nums">¥{activePlan.monthly.toLocaleString("ja-JP")} / 月</p>
             </div>
           </div>
@@ -1286,7 +1286,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
         {/* RIGHT: Plan description card + Dialog */}
         <div className="col-span-2 bg-white px-8 py-10 flex flex-col justify-between">
           <div className="space-y-4">
-            <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-black/30 mb-5">プランの内容</p>
+            <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-black/60 mb-5">プランの内容</p>
 
             {/* 保証内容 */}
             <div className="bg-[#F7F7F7] px-5 py-4 border-l-4 border-black">
@@ -1312,7 +1312,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
               <p className="font-inter font-bold text-sm text-[#0A0A0A]">
                 ¥{activePlan.monthly.toLocaleString("ja-JP")} / 月
               </p>
-              <p className="text-[10px] text-black/30 mt-0.5">1年・3年・7年払いあり</p>
+              <p className="text-[10px] text-black/60 mt-0.5">1年・3年・7年払いあり</p>
             </div>
           </div>
 
@@ -1346,18 +1346,18 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                     : 0
                   return (
                   <TabsContent key={key} value={key} className="border border-black p-6">
-                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/35 mb-4">{label} — 月額サービス料</p>
+                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/65 mb-4">{label} — 月額サービス料</p>
                     <div className="grid grid-cols-3 gap-4 mb-4">
                       <div>
-                        <p className="text-[10px] text-black/30 mb-1">月額</p>
+                        <p className="text-[10px] text-black/60 mb-1">月額</p>
                         <p className="font-inter font-black text-2xl tabular-nums">¥{inst.monthly.toLocaleString("ja-JP")}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-black/30 mb-1">支払回数</p>
+                        <p className="text-[10px] text-black/60 mb-1">支払回数</p>
                         <p className="font-inter font-black text-2xl tabular-nums">{inst.months}回</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-black/30 mb-1">総額</p>
+                        <p className="text-[10px] text-black/60 mb-1">総額</p>
                         <p className="font-inter font-black text-2xl tabular-nums">¥{inst.total.toLocaleString("ja-JP")}</p>
                         {key !== "7y" && discount > 0 && (
                           <p className="font-inter font-bold text-xs mt-1 text-[#0A0A0A]">
@@ -1366,11 +1366,11 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                         )}
                       </div>
                     </div>
-                    <p className="text-black/30 text-[10px] border-t border-black/10 pt-3">※ 税抜表示</p>
+                    <p className="text-black/60 text-[10px] border-t border-black/10 pt-3">※ 税抜表示</p>
 
                     {/* システム利用料 */}
                     <div className="mt-5 border-t border-black/10 pt-5">
-                      <p className="font-inter text-[9px] uppercase tracking-wider text-black/35 mb-3">システム利用料（別途）</p>
+                      <p className="font-inter text-[9px] uppercase tracking-wider text-black/65 mb-3">システム利用料（別途）</p>
                       <div className="bg-[#F4F4F4] px-4 py-4">
                         <div className="flex items-baseline gap-2 mb-1">
                           <p className="font-inter font-black text-xl tabular-nums">¥2,000</p>
@@ -1379,7 +1379,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
                         <p className="text-black/40 text-xs leading-relaxed mt-1">
                           BizplatForm経由で成約した関与先との契約が継続する限り、1件あたり月額¥2,000のシステム利用料が発生します。最大84ヶ月（7年）間。
                         </p>
-                        <p className="text-black/25 text-[10px] mt-3 border-t border-black/10 pt-2">
+                        <p className="text-black/55 text-[10px] mt-3 border-t border-black/10 pt-2">
                           例）10件成約・全件継続中の場合 → ¥2,000 × 10件 = ¥20,000/月
                         </p>
                       </div>
@@ -1395,7 +1395,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
       {/* Other plans toggle */}
       <div className="stagger-3 mb-8">
         <button data-cursor onClick={() => setShowAllPlans(!showAllPlans)}
-          className="font-inter text-[11px] uppercase tracking-wider text-black/35 hover:text-black transition-colors flex items-center gap-2">
+          className="font-inter text-[11px] uppercase tracking-wider text-black/65 hover:text-black transition-colors flex items-center gap-2">
           <span className="border border-black/20 px-2 py-0.5">{showAllPlans ? "▲" : "▼"}</span>
           {showAllPlans ? "他のプランを閉じる" : "他のプランを見る"}
         </button>
@@ -1404,9 +1404,9 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
             {commitPlans.map((p: any, i: number) => (
               <button key={i} data-cursor onClick={() => setSelectedPlanIndex(i)}
                 className={`px-4 py-5 text-left transition-colors ${selectedPlanIndex === i ? "bg-[#0A0A0A] text-white" : "bg-white hover:bg-[#F4F4F4] text-[#0A0A0A]"}`}>
-                <p className={`font-inter text-[9px] uppercase tracking-wider mb-2 ${selectedPlanIndex === i ? "text-white/40" : "text-black/30"}`}>Plan {String(i+1).padStart(2,"0")}</p>
+                <p className={`font-inter text-[9px] uppercase tracking-wider mb-2 ${selectedPlanIndex === i ? "text-white/40" : "text-black/60"}`}>Plan {String(i+1).padStart(2,"0")}</p>
                 <p className="font-inter font-black text-lg tabular-nums">¥{p.commit.toLocaleString("ja-JP")}</p>
-                <p className={`text-[10px] mt-1 ${selectedPlanIndex === i ? "text-white/30" : "text-black/25"}`}>¥{p.monthly.toLocaleString("ja-JP")}/月</p>
+                <p className={`text-[10px] mt-1 ${selectedPlanIndex === i ? "text-white/60" : "text-black/55"}`}>¥{p.monthly.toLocaleString("ja-JP")}/月</p>
               </button>
             ))}
           </div>
@@ -1416,7 +1416,7 @@ function PlanTab({ plan, index, totalInvestment, commitRevenue, roi, payback, ca
       {/* Included items */}
       <div className="border border-black stagger-4">
         <div className="px-8 py-4 border-b border-black bg-[#F4F4F4]">
-          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35">このプランに含まれるもの</p>
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/65">このプランに含まれるもの</p>
         </div>
         <div className="grid grid-cols-3">
           {[
@@ -1466,7 +1466,7 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
   return (
     <div className="max-w-5xl mx-auto px-8 py-12">
       <div className="mb-10 stagger-1">
-        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/30 mb-3">Step 07</p>
+        <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-black/60 mb-3">Step 07</p>
         <h1 className="font-serif-display italic text-4xl text-[#0A0A0A] leading-tight">
           受注ペースを動かして、<br />
           <span className="not-italic font-inter font-black">収益性の変化を確認する。</span>
@@ -1475,35 +1475,35 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
 
       {/* Simulator inputs */}
       <div className="border border-black p-8 mb-8 stagger-2">
-        <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-black/25 mb-6">シミュレーター入力</p>
+        <p className="font-inter text-[9px] uppercase tracking-[0.3em] text-black/55 mb-6">シミュレーター入力</p>
         <div className="grid grid-cols-2 gap-12">
           {/* 月間受入ペース */}
           <div>
-            <label className="font-inter text-[10px] uppercase tracking-wider text-black/35 block mb-4">月間受入ペース</label>
+            <label className="font-inter text-[10px] uppercase tracking-wider text-black/65 block mb-4">月間受入ペース</label>
             <div className="flex items-center gap-4">
               <button data-cursor
                 onClick={() => setSimPace(Math.max(1, simPace - 1))}
                 className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">−</button>
               <div className="flex-1 text-center">
                 <span className="font-inter font-black text-[48px] leading-none tabular-nums text-[#0A0A0A]">{simPace}</span>
-                <span className="font-inter text-sm text-black/35 ml-1">件/月</span>
+                <span className="font-inter text-sm text-black/65 ml-1">件/月</span>
               </div>
               <button data-cursor
                 onClick={() => setSimPace(Math.min(10, simPace + 1))}
                 className="w-10 h-10 border border-black/20 flex items-center justify-center font-inter font-bold text-lg text-black/50 hover:border-black hover:text-black transition-colors select-none">＋</button>
             </div>
-            <p className="text-center text-[9px] text-black/20 font-inter mt-2">1〜10件</p>
+            <p className="text-center text-[9px] text-black/50 font-inter mt-2">1〜10件</p>
           </div>
           {/* 平均顧問料 */}
           <div>
             <div className="flex items-baseline justify-between mb-4">
-              <label className="font-inter text-[10px] uppercase tracking-wider text-black/35">平均顧問料</label>
-              <span className="font-inter font-black text-2xl text-[#0A0A0A]">¥{effectiveAvgFee.toLocaleString("ja-JP")}<span className="text-sm font-normal text-black/35 ml-1">/月</span></span>
+              <label className="font-inter text-[10px] uppercase tracking-wider text-black/65">平均顧問料</label>
+              <span className="font-inter font-black text-2xl text-[#0A0A0A]">¥{effectiveAvgFee.toLocaleString("ja-JP")}<span className="text-sm font-normal text-black/65 ml-1">/月</span></span>
             </div>
             <input type="range" min={10000} max={100000} step={5000} value={effectiveAvgFee}
               onChange={e => setSimAvgFee(Number(e.target.value))}
               className="w-full accent-black" />
-            <div className="flex justify-between text-[9px] text-black/25 font-inter mt-1">
+            <div className="flex justify-between text-[9px] text-black/55 font-inter mt-1">
               <span>¥10,000</span><span>¥100,000</span>
             </div>
           </div>
@@ -1513,8 +1513,8 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
       {/* Graph — 0〜24ヶ月 + 波線で84ヶ月継続を示す */}
       <div className="mb-8 stagger-3">
         <div className="flex items-baseline justify-between mb-4">
-          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35">月別 顧問料収入 vs サービス料（万円）</p>
-          <p className="text-[10px] text-black/25 font-inter">ペース {simPace}件/月</p>
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/65">月別 顧問料収入 vs サービス料（万円）</p>
+          <p className="text-[10px] text-black/55 font-inter">ペース {simPace}件/月</p>
         </div>
 
         {/* チャート本体 + 波線継続 */}
@@ -1544,33 +1544,33 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
               <path d="M0,10 Q7,2 14,10 Q21,18 28,10 Q35,2 42,10 Q49,18 56,10"
                 fill="none" stroke="#999" strokeWidth="1.5" />
             </svg>
-            <p className="font-inter text-[9px] text-black/30 mt-2 text-center leading-tight">84ヶ月目</p>
+            <p className="font-inter text-[9px] text-black/60 mt-2 text-center leading-tight">84ヶ月目</p>
             <p className="font-inter font-black text-xs tabular-nums text-black/50 mt-0.5">
               ¥{Math.round(plan.commit / 10000)}万/月
             </p>
           </div>
         </div>
 
-        <p className="text-black/25 text-[10px] mt-2 font-inter">
+        <p className="text-black/55 text-[10px] mt-2 font-inter">
           ※ 顧問料収入はペース通りに成約が積み上がった場合の推計。実際の達成タイミングはBizplatFormが7年以内を保証。
         </p>
       </div>
 
       {/* Cost ratio message */}
       <div className="border-l-4 border-black bg-[#F4F4F4] px-6 py-5 mb-8 stagger-5">
-        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35 mb-1">コスト構造の変化</p>
+        <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/65 mb-1">コスト構造の変化</p>
         <p className="text-lg font-bold text-[#0A0A0A]">
           コミット達成後、月額サービス料は顧問料収入の
           <span className="font-inter font-black text-[40px] leading-none tabular-nums mx-2">{finalRatio}%</span>
           に過ぎない。
         </p>
-        <p className="text-black/35 text-xs mt-2">新規成約が積み上がるほど、BizplatFormへの月額の比重は薄れていく。</p>
+        <p className="text-black/65 text-xs mt-2">新規成約が積み上がるほど、BizplatFormへの月額の比重は薄れていく。</p>
       </div>
 
       {/* Matched companies preview */}
       {matched && matched.length > 0 && (
         <div className="stagger-6">
-          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/35 mb-4">
+          <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-black/65 mb-4">
             対象となる企業イメージ — AIマッチング候補より
           </p>
           <div className="grid grid-cols-3 gap-px bg-black">
@@ -1583,7 +1583,7 @@ function ROITab({ plan, roi, payback, totalInvestment, commitRevenue, simPace, s
                 <p className="text-black/50 text-xs mb-3 leading-relaxed">{c.situation}</p>
                 <div className="flex items-baseline gap-1">
                   <span className="font-inter font-black text-xl text-[#0A0A0A] tabular-nums">¥{c.fee.toLocaleString("ja-JP")}</span>
-                  <span className="text-black/30 text-xs">/月</span>
+                  <span className="text-black/60 text-xs">/月</span>
                 </div>
               </div>
             ))}
@@ -1604,12 +1604,12 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
     <div className="min-h-[calc(100vh-120px)] bg-[#0A0A0A] text-white px-8 py-16 flex flex-col justify-between max-w-5xl mx-auto">
       <div>
         <div className="stagger-1 mb-16">
-          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/25 mb-6">Step 08</p>
+          <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/55 mb-6">Step 08</p>
           <h1 className="font-serif-display italic leading-[0.9] text-white">
             <span className="text-[72px]">あとは、</span><br />
             <span className="not-italic font-inter font-black text-[80px]">はじめるだけ。</span>
           </h1>
-          <p className="text-white/35 text-xl mt-8">{displayName} 様</p>
+          <p className="text-white/65 text-xl mt-8">{displayName} 様</p>
         </div>
 
         <div className="grid grid-cols-3 gap-px bg-white/8 stagger-2 mb-12">
@@ -1620,7 +1620,7 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
           ].map(({ num, title, body, timing }) => (
             <div key={num} className="bg-[#0A0A0A] border border-white/10 px-8 py-8 relative overflow-hidden">
               <span className="absolute bottom-3 right-5 font-inter font-black text-[80px] leading-none text-white/4 tabular-nums select-none">{num}</span>
-              <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/25 mb-3">{timing}</p>
+              <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/55 mb-3">{timing}</p>
               <h3 className="font-bold text-white text-base mb-3">{title}</h3>
               <p className="text-white/40 text-sm leading-relaxed">{body}</p>
             </div>
@@ -1629,13 +1629,13 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
 
         <div className="border border-white/10 px-8 py-6 stagger-3 flex items-center justify-between">
           <div>
-            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/25 mb-1">選定プラン</p>
+            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/55 mb-1">選定プラン</p>
             <p className="font-inter font-black text-4xl tabular-nums text-white">
-              ¥{plan.monthly.toLocaleString("ja-JP")}<span className="text-lg font-normal text-white/35 ml-1">/ 月</span>
+              ¥{plan.monthly.toLocaleString("ja-JP")}<span className="text-lg font-normal text-white/65 ml-1">/ 月</span>
             </p>
           </div>
           <div className="text-right">
-            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/25 mb-1">月間コミット</p>
+            <p className="font-inter text-[9px] uppercase tracking-[0.2em] text-white/55 mb-1">月間コミット</p>
             <p className="font-inter font-black text-2xl tabular-nums text-white">¥{plan.commit.toLocaleString("ja-JP")}</p>
           </div>
         </div>
@@ -1644,7 +1644,7 @@ function ClosingTab({ displayName, plan }: { displayName: string; plan: CommitPl
       <div className="stagger-4 flex items-end justify-between mt-16">
         <div>
           <p className="font-inter font-black text-lg tracking-[0.15em] uppercase text-white mb-1">BizplatForm</p>
-          <p className="text-white/25 text-xs font-inter">株式会社BizplatForm — コミットプラン事業部</p>
+          <p className="text-white/55 text-xs font-inter">株式会社BizplatForm — コミットプラン事業部</p>
         </div>
         <button
           data-cursor
