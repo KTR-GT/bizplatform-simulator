@@ -92,12 +92,12 @@ export function useSimulatorModel(inputs: SimulatorInputs) {
       .map(c => ({
         ...c,
         score:
-          (inputs.selectedSoftware.includes(c.software) ? 30 : inputs.selectedSoftware.length === 0 ? 10 : 0)
+          (inputs.selectedSoftware.includes(c.software) ? 30 : 0)
         + (inputs.selectedArea.length === 0 || inputs.selectedArea.includes("全国") ? 15 :
            inputs.selectedArea.some(a => areaMatch(a, c.prefecture)) ? 15 : 0)
         + ((inputs.preferredAccountingStyle as string) === "どちらでも" ? 0 :
-           (inputs.preferredAccountingStyle as string) === "丸投げ歓迎" && c.accountingStyle === "丸投げ" ? 20 :
-           (inputs.preferredAccountingStyle as string) === "クラウド推奨" && (c.accountingStyle === "クラウド自力" || c.accountingStyle === "クラウド移行中") ? 20 : 0)
+           (inputs.preferredAccountingStyle as string) === "丸投げ歓迎" && c.accountingStyle === "担当者任せ" ? 20 :
+           (inputs.preferredAccountingStyle as string) === "クラウド推奨" && (c.accountingStyle === "クラウド完結" || c.accountingStyle === "月次訪問希望") ? 20 : 0)
         + ((inputs.preferredType as string) === "どちらでも" ? 0 :
            (inputs.preferredType as string) === "法人メイン" && c.type === "法人" ? 15 :
            (inputs.preferredType as string) === "個人メイン" && c.type === "個人事業主" ? 15 : 0)

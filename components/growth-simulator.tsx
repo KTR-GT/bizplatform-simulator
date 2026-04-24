@@ -1196,32 +1196,35 @@ function MatchingTab({ matched, hasInput }: { matched: (typeof customerDatabase[
                   <span className="text-white/85 text-[9px] uppercase tracking-wider mt-1">pt</span>
                 </div>
                 <div className="col-span-8 px-6 py-5 border-r border-black/10">
-                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <div className="flex items-center gap-2 mb-3 flex-wrap">
                     <span className="font-bold text-[#0A0A0A] text-base">{anonymizeName(c.name)}</span>
                     <span className="font-inter text-[9px] uppercase tracking-wider border border-black px-2 py-0.5 text-black/55">{c.industry}</span>
                     <span className="font-inter text-[9px] uppercase tracking-wider border border-black/20 px-2 py-0.5 text-black/65">{c.type}</span>
-                    <span className="font-inter text-[9px] tracking-wide border border-black/20 px-2 py-0.5 text-black/40">{c.accountingStyle}</span>
+                    <span className="font-inter text-[9px] tracking-wide border border-black/20 px-2 py-0.5 text-black/40">{c.prefecture}</span>
                   </div>
-                  <p className="text-[#0A0A0A] text-sm mb-2">{c.situation}</p>
-                  <p className="text-black/65 text-xs">{c.bookkeeping}</p>
-                  <div className="flex gap-4 mt-3 text-xs text-black/65 font-inter">
-                    <span>年商 <strong className="text-[#0A0A0A] tabular-nums">{c.revenue.toLocaleString("ja-JP")}万円</strong></span>
-                    <span>従業員 <strong className="text-[#0A0A0A] tabular-nums">{c.employees}名</strong></span>
-                    <span>創業 <strong className="text-[#0A0A0A] tabular-nums">{c.founded}年目</strong></span>
-                    <span>{c.prefecture}</span>
+                  <div className="mb-2">
+                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/40 mb-0.5">依頼理由</p>
+                    <p className="text-[#0A0A0A] text-sm leading-snug">{c.situation}</p>
+                  </div>
+                  <div>
+                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/40 mb-0.5">会計処理</p>
+                    <p className="text-black/65 text-xs leading-snug">{c.bookkeeping}</p>
                   </div>
                 </div>
                 <div className="col-span-3 px-5 py-5 flex flex-col justify-between">
                   <div>
-                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/55 mb-1">想定月額顧問料</p>
+                    <p className="font-inter text-[9px] uppercase tracking-wider text-black/55 mb-1">月額顧問料</p>
                     <p className="font-inter font-black text-3xl tabular-nums text-[#0A0A0A]">¥{c.fee.toLocaleString("ja-JP")}</p>
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
+                    <div>
+                      <p className="font-inter text-[9px] uppercase tracking-wider text-black/40 mb-0.5">会計スタイル</p>
+                      <p className="text-black/65 text-[10px]">{c.accountingStyle}</p>
+                    </div>
                     <span className={`inline-block text-[9px] px-2 py-1 font-inter font-bold tracking-wider ${digitalBadgeStyle(c.digitalLevel)}`}>
                       {c.digitalLevel}
                     </span>
                     <p className="text-black/55 text-[10px]">{c.software}</p>
-                    <p className="text-black/50 text-[9px]">{c.theme}</p>
                   </div>
                 </div>
               </div>
