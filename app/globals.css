@@ -66,7 +66,12 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    cursor: none !important;
+  }
+  /* マウス操作可能なデバイスでのみ標準カーソルを隠す（カスタムカーソルを使用） */
+  @media (hover: hover) and (pointer: fine) {
+    * {
+      cursor: none !important;
+    }
   }
   body {
     @apply bg-background text-foreground;
@@ -106,6 +111,13 @@
 .custom-cursor.is-dark.is-hovering {
   background: transparent;
   border-color: #FFFFFF;
+}
+
+/* Touch device / キーボード主体のデバイスではカスタムカーソルを非表示 */
+@media (hover: none), (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
 }
 
 /* =====================================================
