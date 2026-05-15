@@ -15,19 +15,11 @@ import type { ScoredCustomer } from "@/lib/matching/select"
 // ACT 4 — REVEAL (メイン3社フルスクリーン + ニアミス2社)
 // ============================================================
 
-interface Props {
-  flow: DiagnosisFlow
-}
+interface Props { flow: DiagnosisFlow }
 
 const INDUSTRY_ICON: Record<string, LucideIcon> = {
-  建設: Hammer,
-  小売: Store,
-  飲食: UtensilsCrossed,
-  製造: Factory,
-  IT: Cpu,
-  不動産: Building2,
-  医療福祉: HeartPulse,
-  運輸: Truck,
+  建設: Hammer, 小売: Store, 飲食: UtensilsCrossed, 製造: Factory,
+  IT: Cpu, 不動産: Building2, 医療福祉: HeartPulse, 運輸: Truck,
 }
 
 const URGENCY_BADGE: Record<string, { label: string; color: string }> = {
@@ -41,13 +33,13 @@ function revenueLabel(revenue: number): string {
   return `${revenue.toLocaleString()}万円`
 }
 
-// ─── ボタン: hover で矢印アイコンが右へ ───
 function NextButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button
       data-cursor
       onClick={onClick}
-      className="group flex items-center justify-center gap-3 w-full py-4 bg-white text-black font-bold rounded-xl text-sm hover:bg-white/90 transition-colors"
+      className="group flex items-center justify-center gap-3 w-full bg-white text-black font-bold rounded-xl hover:bg-white/90 transition-colors"
+      style={{ padding: "16px 32px", fontSize: "clamp(13px, 1vw, 16px)" }}
     >
       {label}
       <ArrowRight
@@ -72,13 +64,18 @@ function MainCard({ scored, index, total, onNext, onFinish }: {
   const Icon = INDUSTRY_ICON[customer.industry] ?? Cpu
 
   return (
+    // 外枠: 100vh・縦中央寄せ・max-width 拡大
     <div
       data-dark-bg
-      className="min-h-screen bg-[#0a0a0a] flex flex-col px-5 py-8 md:py-10 mx-auto w-full"
-      style={{ maxWidth: "1100px" }}
+      className="bg-[#0a0a0a] flex flex-col w-full mx-auto"
+      style={{
+        minHeight: "100vh",
+        maxWidth: "1600px",
+        padding: "40px clamp(24px, 5vw, 80px) 48px",
+      }}
     >
-      {/* ── ヘッダー: Match n/n + Score (右上) ── */}
-      <div className="flex items-center justify-between mb-7">
+      {/* ── ヘッダー ── */}
+      <div className="flex items-center justify-between mb-8 flex-shrink-0">
         <span className="text-white/35 text-[11px] tracking-[0.3em] uppercase">
           Match {index + 1} / {total}
         </span>
@@ -87,125 +84,161 @@ function MainCard({ scored, index, total, onNext, onFinish }: {
         </span>
       </div>
 
-      {/* ── 2カラムグリッド ── */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_2fr] md:gap-12 mb-7">
+      {/* ── 中央寄せラッパー: 残高さを使って縦中央配置 ── */}
+      <div className="flex-1 flex flex-col justify-center gap-8">
 
-        {/* ━━ 左カラム ━━ */}
-        <div className="flex flex-col mb-8 md:mb-0">
+        {/* ── 2カラムグリッド ── */}
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 md:gap-16 lg:gap-24 items-start">
 
-          {/* (a) アイコン + メタタグ群 */}
-          <div className="flex md:flex-col gap-4 md:gap-5 mb-5 md:mb-6">
+          {/* ━━ 左カラム ━━ */}
+          <div className="flex flex-col gap-0">
+
             {/* アイコン */}
-            <div className="flex-shrink-0 flex items-start md:items-center">
+            <div className="mb-6">
               <Icon
                 strokeWidth={1.25}
                 className="text-white"
-                style={{ width: "clamp(40px,6vw,56px)", height: "clamp(40px,6vw,56px)" }}
+                style={{ width: "clamp(40px, 5vw, 64px)", height: "clamp(40px, 5vw, 64px)" }}
               />
             </div>
 
             {/* タグ群 */}
-            <div className="flex flex-wrap gap-1.5 items-start content-start">
-              {/* 業種 */}
+            <div className="flex flex-wrap gap-1.5 mb-6">
               <span className="text-white/55 text-[11px] border border-white/20 rounded-full px-2.5 py-0.5">
                 {customer.industry}
               </span>
-              {/* 緊急度 */}
               <span className={`text-[11px] border rounded-full px-2.5 py-0.5 ${URGENCY_BADGE[customer.urgency].color}`}>
                 {URGENCY_BADGE[customer.urgency].label}
               </span>
-              {/* 法人/個人 */}
               <span className="text-white/35 text-[11px] border border-white/10 rounded-full px-2.5 py-0.5">
                 {customer.customerType}
               </span>
-              {/* エリア */}
               <span className="text-white/35 text-[11px] border border-white/10 rounded-full px-2.5 py-0.5">
                 {customer.region}
               </span>
-              {/* 都道府県 */}
               <span className="text-white/25 text-[11px] border border-white/8 rounded-full px-2.5 py-0.5">
                 {customer.prefecture}
               </span>
             </div>
+
+            {/* 区切り線 */}
+            <div className="border-t border-white/10 mb-6" />
+
+            {/* 想定月額顧問料 — 主役 */}
+            <div className="mb-6">
+              <p className="text-white/35 text-[10px] tracking-widest uppercase mb-2">
+                想定月額顧問料
+              </p>
+              <p
+                className="font-serif-display text-white leading-none mb-4"
+                style={{ fontSize: "clamp(48px, 5vw, 72px)" }}
+              >
+                ¥{customer.monthlyFeeTypical.toLocaleString()}
+              </p>
+            </div>
+
+            {/* 区切り線 */}
+            <div className="border-t border-white/10 mb-5" />
+
+            {/* 規模情報テーブル */}
+            <table className="w-full border-collapse">
+              <tbody>
+                {[
+                  ["年商",   revenueLabel(customer.revenue)],
+                  ["従業員", `${customer.employees}名`],
+                  ["創業",   `${customer.foundedYears}年目`],
+                  ["エリア", customer.prefecture],
+                ].map(([label, value]) => (
+                  <tr key={label} className="border-b border-white/6 last:border-0">
+                    <td
+                      className="text-white/30 py-2 pr-4 whitespace-nowrap"
+                      style={{ fontSize: "clamp(11px, 0.85vw, 13px)" }}
+                    >
+                      {label}
+                    </td>
+                    <td
+                      className="text-white/70 py-2 font-medium"
+                      style={{ fontSize: "clamp(12px, 0.9vw, 14px)" }}
+                    >
+                      {value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* (b) 区切り線 */}
-          <div className="border-t border-white/10 mb-5 md:mb-6" />
+          {/* ━━ 右カラム ━━ */}
+          <div className="flex flex-col">
 
-          {/* (c) 月額顧問料 — 主役 */}
-          <div>
-            <p className="text-white/35 text-[10px] tracking-widest uppercase mb-2">
-              想定月額顧問料
-            </p>
-            <p
-              className="font-serif-display text-white leading-none mb-3"
-              style={{ fontSize: "clamp(38px, 5vw, 54px)" }}
+            {/* 顧客名 */}
+            <h2
+              className="text-white font-bold leading-tight mb-3"
+              style={{ fontSize: "clamp(40px, 5vw, 72px)" }}
             >
-              ¥{customer.monthlyFeeTypical.toLocaleString()}
+              {customer.displayName}
+            </h2>
+
+            {/* voice 引用 — DM Serif Display */}
+            <p
+              className="font-serif-display text-white/65 border-l-2 border-white/20 pl-5 mb-6"
+              style={{ fontSize: "clamp(20px, 2vw, 28px)", lineHeight: 1.6 }}
+            >
+              「{customer.voice}」
             </p>
-            <p className="text-white/35 text-xs leading-relaxed">
-              年商 {revenueLabel(customer.revenue)}<br />
-              従業員 {customer.employees}名 · 創業 {customer.foundedYears}年
+
+            {/* story */}
+            <p
+              className="text-white/50 mb-8"
+              style={{ fontSize: "clamp(15px, 1.2vw, 18px)", lineHeight: 1.7 }}
+            >
+              {customer.story}
             </p>
+
+            {/* Why It Matches */}
+            <div>
+              <p className="text-white/25 text-[10px] tracking-[0.25em] uppercase mb-5">
+                Why It Matches
+              </p>
+              <ul className="space-y-4">
+                {reasons.map((r, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <CheckCircle2
+                      size={17}
+                      strokeWidth={1.75}
+                      className="text-white/50 flex-shrink-0 mt-[3px]"
+                    />
+                    <div style={{ lineHeight: 1.6 }}>
+                      <span
+                        className="text-white"
+                        style={{ fontSize: "clamp(15px, 1.2vw, 18px)" }}
+                      >
+                        {r.label}
+                      </span>
+                      {r.detail && (
+                        <span
+                          className="text-white/35 ml-2"
+                          style={{ fontSize: "clamp(11px, 0.85vw, 13px)" }}
+                        >
+                          {r.detail}
+                        </span>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        {/* ━━ 右カラム ━━ */}
-        <div className="flex flex-col">
-          {/* 顧客名 */}
-          <h2
-            className="text-white font-bold leading-tight mb-3"
-            style={{ fontSize: "clamp(26px, 4vw, 50px)" }}
-          >
-            {customer.displayName}
-          </h2>
-
-          {/* voice 引用 */}
-          <p
-            className="text-white/65 italic border-l-2 border-white/20 pl-4 leading-relaxed mb-7"
-            style={{ fontSize: "clamp(14px, 1.8vw, 18px)" }}
-          >
-            「{customer.voice}」
-          </p>
-
-          {/* story */}
-          <p className="text-white/50 text-sm leading-relaxed mb-8">
-            {customer.story}
-          </p>
-
-          {/* Why it matches */}
-          <div>
-            <p className="text-white/25 text-[10px] tracking-[0.25em] uppercase mb-4">
-              Why it matches
-            </p>
-            <ul className="space-y-3.5">
-              {reasons.map((r, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <CheckCircle2
-                    size={15}
-                    strokeWidth={1.75}
-                    className="text-white/50 flex-shrink-0 mt-[2px]"
-                  />
-                  <div className="leading-snug">
-                    <span className="text-white text-sm">{r.label}</span>
-                    {r.detail && (
-                      <span className="text-white/35 text-xs ml-2">{r.detail}</span>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* ── ボタン: グリッド直下・中央 ── */}
+        <div className="w-full mx-auto" style={{ maxWidth: "360px" }}>
+          {index + 1 < total ? (
+            <NextButton label="次のマッチを見る" onClick={onNext} />
+          ) : (
+            <NextButton label="他の候補も見る" onClick={onFinish} />
+          )}
         </div>
-      </div>
-
-      {/* ── ボタン: 両カラム下部中央 ── */}
-      <div className="w-full md:max-w-xs md:mx-auto">
-        {index + 1 < total ? (
-          <NextButton label="次のマッチを見る" onClick={onNext} />
-        ) : (
-          <NextButton label="他の候補も見る" onClick={onFinish} />
-        )}
       </div>
     </div>
   )
@@ -222,55 +255,57 @@ function NearMissSection({ flow, nearMiss, main }: {
   return (
     <div
       data-dark-bg
-      className="min-h-screen bg-[#0a0a0a] px-5 py-10 mx-auto w-full flex flex-col"
-      style={{ maxWidth: "1100px" }}
+      className="bg-[#0a0a0a] flex flex-col w-full mx-auto"
+      style={{
+        minHeight: "100vh",
+        maxWidth: "1600px",
+        padding: "48px clamp(24px, 5vw, 80px) 56px",
+      }}
     >
       <p className="text-white/35 text-[11px] tracking-[0.3em] uppercase mb-5">Near Miss</p>
       <h2
         className="text-white font-bold mb-3"
-        style={{ fontSize: "clamp(20px, 3.5vw, 30px)" }}
+        style={{ fontSize: "clamp(24px, 3vw, 36px)" }}
       >
         他にも、こんな出会いがあります
       </h2>
-      <p className="text-white/45 text-sm mb-8">
+      <p
+        className="text-white/45 mb-10"
+        style={{ fontSize: "clamp(14px, 1vw, 16px)" }}
+      >
         条件が少し違いますが、可能性のある候補です。
       </p>
 
       {/* md以上で横 2列 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
         {nearMiss.map(({ customer, breakdown }) => {
           const Icon = INDUSTRY_ICON[customer.industry] ?? Cpu
           return (
             <div
               key={customer.id}
-              className="border border-white/10 rounded-xl p-5 bg-white/[0.02] flex flex-col gap-3"
+              className="border border-white/10 rounded-2xl p-6 bg-white/[0.02] flex flex-col gap-4"
             >
-              {/* アイコン + バッジ */}
               <div className="flex items-center gap-3 flex-wrap">
-                <Icon size={20} strokeWidth={1.5} className="text-white/60 flex-shrink-0" />
-                <span className="text-white/40 text-[11px] border border-white/15 rounded-full px-2 py-0.5">
+                <Icon size={22} strokeWidth={1.5} className="text-white/60 flex-shrink-0" />
+                <span className="text-white/40 text-[11px] border border-white/15 rounded-full px-2.5 py-0.5">
                   {customer.industry}
                 </span>
-                <span className={`text-[11px] border rounded-full px-2 py-0.5 ${URGENCY_BADGE[customer.urgency].color}`}>
+                <span className={`text-[11px] border rounded-full px-2.5 py-0.5 ${URGENCY_BADGE[customer.urgency].color}`}>
                   {URGENCY_BADGE[customer.urgency].label}
                 </span>
               </div>
-
-              {/* 顧客名 + voice */}
               <div>
-                <p className="text-white font-bold text-base leading-tight mb-1">
+                <p className="text-white font-bold text-lg leading-tight mb-1.5">
                   {customer.displayName}
                 </p>
-                <p className="text-white/45 text-sm italic">「{customer.voice}」</p>
+                <p className="text-white/45 text-sm italic" style={{ lineHeight: 1.6 }}>
+                  「{customer.voice}」
+                </p>
               </div>
-
-              {/* スコア + エリア */}
               <p className="text-white/30 text-[11px]">
                 Score {breakdown.total} / 100 · {customer.region} · {customer.customerType}
               </p>
-
-              {/* コメント */}
-              <p className="text-white/50 text-xs border-l border-white/15 pl-3 leading-relaxed">
+              <p className="text-white/50 text-xs border-l border-white/15 pl-3" style={{ lineHeight: 1.6 }}>
                 {buildNearMissComment(mainCustomers, customer)}
               </p>
             </div>
@@ -278,12 +313,11 @@ function NearMissSection({ flow, nearMiss, main }: {
         })}
       </div>
 
-      {/* サマリー + CTA */}
       <div className="mt-auto text-center">
         <p className="text-white/40 text-sm mb-6">
           計 {main.length + nearMiss.length} 件のマッチ候補が見つかりました
         </p>
-        <div className="w-full md:max-w-xs md:mx-auto">
+        <div className="w-full mx-auto" style={{ maxWidth: "360px" }}>
           <NextButton label="Zoom 相談を予約する" onClick={() => flow.goToAct(5)} />
         </div>
       </div>
@@ -299,10 +333,7 @@ export function Act4Reveal({ flow }: Props) {
   const result = flow.matchResult
   if (!result) {
     return (
-      <div
-        data-dark-bg
-        className="min-h-screen bg-[#0a0a0a] flex items-center justify-center"
-      >
+      <div data-dark-bg className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <p className="text-white/40">データを取得中...</p>
       </div>
     )
