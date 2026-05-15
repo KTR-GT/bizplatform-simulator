@@ -7,14 +7,12 @@ import { Act3Analyzing } from "./act-3-analyzing"
 import { Act4Reveal } from "./act-4-reveal"
 import { Act5Booking } from "./act-5-booking"
 import { ActPlaceholder } from "./act-placeholder"
-import { CustomCursor } from "./custom-cursor"
 
 export function DiagnosisFlow() {
   const flow = useDiagnosisFlow()
 
   return (
     <>
-      <CustomCursor />
       <div key={flow.act} className="tab-enter">
         {flow.act === 1 && <Act1Prologue onStart={flow.startHearing} />}
 

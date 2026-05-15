@@ -217,6 +217,56 @@
 }
 
 /* =====================================================
+   DOOR TRANSITION OVERLAY (新トップ カード遷移演出)
+===================================================== */
+
+/*
+  .door-overlay: 固定フルスクリーンの黒オーバーレイ。
+  clip-path: circle() でカードのクリック起点から円形に展開。
+  --door-ox / --door-oy: JS から注入するクリック位置 (0–1)。
+*/
+.door-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  pointer-events: none;
+  z-index: 9999;
+
+  /* 展開前: 起点に収縮した状態 */
+  clip-path: circle(0% at calc(var(--door-ox, 0.5) * 100%) calc(var(--door-oy, 0.5) * 100%));
+  opacity: 0;
+  transition: none;
+}
+
+.door-overlay--active {
+  /* デスクトップ: 円形展開 → 全画面 */
+  animation: door-expand 420ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes door-expand {
+  0% {
+    clip-path: circle(0% at calc(var(--door-ox) * 100%) calc(var(--door-oy) * 100%));
+    opacity: 1;
+  }
+  100% {
+    clip-path: circle(150% at calc(var(--door-ox) * 100%) calc(var(--door-oy) * 100%));
+    opacity: 1;
+  }
+}
+
+/* モバイル: フェードのみ (軽量化) */
+@media (hover: none) {
+  .door-overlay--active {
+    animation: door-fade 280ms ease-out forwards;
+    clip-path: none !important;
+  }
+  @keyframes door-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+/* =====================================================
    PRINT / PDF STYLES
 ===================================================== */
 @media print {

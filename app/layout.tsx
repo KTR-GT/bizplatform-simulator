@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Noto_Sans_JP, DM_Serif_Display } from 'next/font/google'
 import './globals.css'
+import { CustomCursor } from '@/components/layout/custom-cursor'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -40,7 +41,10 @@ export default function RootLayout({
       lang="ja"
       className={`${inter.variable} ${notoSansJP.variable} ${dmSerifDisplay.variable}`}
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <CustomCursor />
+        {children}
+      </body>
     </html>
   )
 }
