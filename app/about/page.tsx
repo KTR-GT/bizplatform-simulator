@@ -372,7 +372,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full flex flex-col md:flex-row md:items-end md:justify-between gap-10">
               <div>

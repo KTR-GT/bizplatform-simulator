@@ -315,6 +315,20 @@
 }
 
 /* =====================================================
+   SCROLL SNAP (mandatory: セクション単位で吸着、勢いで飛ばせる)
+===================================================== */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: 0;
+  scroll-behavior: smooth;
+}
+
+section[data-snap] {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+/* =====================================================
    REVEAL VARIANTS
 ===================================================== */
 
