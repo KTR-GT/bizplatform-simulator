@@ -51,7 +51,7 @@ export default function TopPage() {
       <main className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 py-12 md:py-16">
 
         {/* ヒーロー */}
-        <div className="w-full max-w-2xl mb-12 md:mb-14 text-center md:text-left">
+        <div className="w-full max-w-4xl mx-auto mb-12 md:mb-14 text-center">
           <p className="text-white/30 text-[11px] tracking-[0.3em] uppercase mb-4 md:mb-5 stagger-1">
             Proposal
           </p>
@@ -72,7 +72,7 @@ export default function TopPage() {
         </div>
 
         {/* 3入口カード (Client Component — ドア演出含む) */}
-        <div className="stagger-4 w-full">
+        <div className="stagger-4 w-full max-w-4xl mx-auto">
           <EntryCards />
         </div>
 

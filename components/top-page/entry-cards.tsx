@@ -80,7 +80,7 @@ export function EntryCards() {
   }, [router, isMobile])
 
   return (
-    <div className="relative w-full max-w-4xl">
+    <div className="relative w-full max-w-4xl mx-auto">
 
       {/* ドア演出オーバーレイ: 黒→白 */}
       <div

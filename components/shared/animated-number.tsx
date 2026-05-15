@@ -24,7 +24,7 @@ export function AnimatedNumber({
   duration = 1500,
   className,
 }: Props) {
-  const { ref, inView } = useInViewport({ threshold: 0.3 })
+  const { ref, inView } = useInViewport({ threshold: 0.1, rootMargin: "0px 0px -40px 0px" })
   const [display, setDisplay] = useState(from)
   const fired = useRef(false)
 

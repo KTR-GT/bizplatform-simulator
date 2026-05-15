@@ -11,7 +11,7 @@ interface Options {
  * IntersectionObserver ベースの「一度だけ発火」フック。
  * prefers-reduced-motion が有効な場合は即座に inView = true。
  */
-export function useInViewport({ threshold = 0.18, rootMargin = "0px" }: Options = {}) {
+export function useInViewport({ threshold = 0.08, rootMargin = "0px 0px -60px 0px" }: Options = {}) {
   const ref  = useRef<HTMLElement | null>(null)
   const [inView, setInView] = useState(false)
 
