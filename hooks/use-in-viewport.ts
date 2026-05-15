@@ -9,16 +9,18 @@ interface Options {
 
 /**
  * IntersectionObserver ベースの「一度だけ発火」フック。
- * prefers-reduced-motion が有効な場合は即座に inView = true。
+ * - threshold: 0 → 1px でも見えたら発火
+ * - rootMargin: "0px 0px -10% 0px" → viewport 下端より 10% 上で発火
+ * - 100ms 遅延でハイドレーション完了後に observe 開始
+ * - prefers-reduced-motion が有効な場合は即座に inView = true
  */
-export function useInViewport({ threshold = 0.08, rootMargin = "0px 0px -60px 0px" }: Options = {}) {
-  const ref  = useRef<HTMLElement | null>(null)
+export function useInViewport({ threshold = 0, rootMargin = "0px 0px -10% 0px" }: Options = {}) {
+  const ref    = useRef<HTMLElement | null>(null)
   const [inView, setInView] = useState(false)
 
   useEffect(() => {
     if (typeof window === "undefined") return
 
-    // モーション低減設定のユーザーには即表示
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setInView(true)
       return
@@ -30,14 +32,20 @@ export function useInViewport({ threshold = 0.08, rootMargin = "0px 0px -60px 0p
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          console.log("[reveal] intersecting →", el.className.slice(0, 60))
           setInView(true)
           observer.disconnect()
         }
       },
       { threshold, rootMargin },
     )
-    observer.observe(el)
-    return () => observer.disconnect()
+
+    // ハイドレーション完了後に observe 開始
+    const timer = setTimeout(() => observer.observe(el), 100)
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
   }, [threshold, rootMargin])
 
   return { ref, inView }
