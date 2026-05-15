@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * viewport に入った瞬間にカウントアップするアニメーション数字。
+ * viewport に入った瞬間にカウントアップ + scale 登場アニメーション。
  * easeOutCubic / prefers-reduced-motion 対応。
  */
 export function AnimatedNumber({
@@ -52,7 +52,7 @@ export function AnimatedNumber({
   return (
     <span
       ref={ref as React.RefObject<HTMLSpanElement>}
-      className={className}
+      className={`inline-block transition-transform duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${inView ? "scale-100" : "scale-[0.92]"} ${className ?? ""}`}
     >
       {prefix}{display.toLocaleString()}{suffix}
     </span>

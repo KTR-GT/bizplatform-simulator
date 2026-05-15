@@ -62,7 +62,7 @@ const MECHANISM_STEPS = [
   },
 ]
 
-// CSS delay shorthand
+// --reveal-delay shorthand
 const d = (ms: number): React.CSSProperties => ({ "--reveal-delay": `${ms}ms` } as React.CSSProperties)
 
 // ============================================================
@@ -96,21 +96,24 @@ export default function AboutPage() {
       <main>
 
         {/* ══════════════════════════════════════════════════
-            S1: HERO — ページロード stagger (スクロール不要)
+            S1: HERO — ページロード stagger
         ══════════════════════════════════════════════════ */}
-        <section className="px-6 md:px-10 py-20 md:py-32 max-w-5xl mx-auto">
+        <section
+          data-snap
+          className="min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-20 max-w-5xl mx-auto w-full"
+        >
           <p className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black stagger-1">
             01 / About
           </p>
           <h1
-            className="font-black leading-[1.1] mb-8 tracking-tight stagger-2"
+            className="font-black leading-[1.1] mb-8 tracking-tight"
             style={{ fontSize: "clamp(40px, 5vw, 72px)" }}
           >
-            先生は、<br />
-            どんなお客様を選びますか?
+            <span className="block stagger-2">先生は、</span>
+            <span className="block stagger-3">どんなお客様を選びますか?</span>
           </h1>
           <p
-            className="text-black/55 max-w-[52ch] stagger-3"
+            className="text-black/55 max-w-[52ch] stagger-4"
             style={{ fontSize: "clamp(15px, 1.2vw, 18px)", lineHeight: 1.8 }}
           >
             営業時間ゼロで、本業に集中する先生のもとへ、<br />
@@ -123,36 +126,41 @@ export default function AboutPage() {
             S2: Company
         ══════════════════════════════════════════════════ */}
         <RevealSection>
-          <section className="border-t border-black/8 px-6 md:px-10 py-20 md:py-28">
-            <div className="max-w-5xl mx-auto">
+          <section
+            data-snap
+            className="border-t border-black/8 min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+          >
+            <div className="max-w-5xl mx-auto w-full">
 
-              <p data-reveal-left="" style={d(0)}
-                className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-8 font-inter font-black">
+              <p data-reveal-pop="" style={d(0)}
+                className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
                 02 / Company
               </p>
-              <h2 data-reveal="" style={{ ...d(80), fontSize: "clamp(30px, 4.5vw, 64px)" }}
-                className="font-black leading-[1.05] mb-6 tracking-tight"
-              >
-                {companyInfo.vision}
+              <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
+
+              <h2 className="font-black leading-[1.05] mb-6 tracking-tight"
+                style={{ fontSize: "clamp(30px, 4.5vw, 64px)" }}>
+                <span data-reveal-sm="" style={d(80)} className="block">{companyInfo.vision}</span>
               </h2>
-              <p data-reveal="" style={{ ...d(160), fontSize: "clamp(14px, 1.2vw, 17px)" }}
-                className="text-black/55 leading-relaxed mb-16 max-w-[60ch]">
+              <p data-reveal="" style={{ ...d(180), fontSize: "clamp(14px, 1.2vw, 17px)" }}
+                className="text-black/55 leading-relaxed mb-14 max-w-[60ch]">
                 {companyInfo.mission}
               </p>
 
-              {/* KPI — クライアントコンポーネント (カウントアップ) */}
+              {/* KPI カウントアップ */}
               <KpiGrid items={companyInfo.kpiNumbers} />
 
-              <div data-reveal="" style={d(320)} className="mb-14 max-w-2xl">
-                <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">会社概要</p>
+              {/* 会社概要 */}
+              <div className="mb-14 max-w-2xl">
+                <p data-reveal-sm="" style={d(280)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">会社概要</p>
                 <dl className="divide-y divide-black/6">
                   {[
                     { dt: "会社名",   dd: companyInfo.name },
                     { dt: "設立",     dd: companyInfo.founded },
                     { dt: "代表者",   dd: `${companyInfo.representative.title} ${companyInfo.representative.name}` },
                     { dt: "事業内容", dd: companyInfo.business },
-                  ].map(({ dt, dd }) => (
-                    <div key={dt} className="flex gap-6 py-3.5">
+                  ].map(({ dt, dd }, i) => (
+                    <div key={dt} data-reveal-pop="" style={d(320 + i * 60)} className="flex gap-6 py-3.5">
                       <dt className="text-[12px] text-black/40 w-20 flex-shrink-0 font-inter">{dt}</dt>
                       <dd className="text-[12px] text-[#0a0a0a] leading-relaxed">{dd}</dd>
                     </div>
@@ -160,11 +168,12 @@ export default function AboutPage() {
                 </dl>
               </div>
 
-              <div data-reveal="" style={d(400)} className="mb-14">
-                <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">拠点</p>
+              {/* 拠点 */}
+              <div className="mb-14">
+                <p data-reveal-sm="" style={d(460)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">拠点</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-                  {companyInfo.offices.map((office) => (
-                    <div key={office.name} className="border border-black/8 px-5 py-5">
+                  {companyInfo.offices.map((office, i) => (
+                    <div key={office.name} data-reveal-pop="" style={d(500 + i * 80)} className="border border-black/8 px-5 py-5">
                       <p className="text-[10px] text-black/38 tracking-[0.2em] uppercase font-inter mb-3">{office.name}</p>
                       <p className="text-[12px] text-[#0a0a0a] leading-relaxed mb-2">〒{office.postalCode}<br />{office.address}</p>
                       <p className="text-[12px] text-black/50 font-inter">{office.tel}</p>
@@ -173,11 +182,12 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div data-reveal="" style={d(460)}>
-                <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">主要取引先</p>
+              {/* 主要取引先 */}
+              <div>
+                <p data-reveal-sm="" style={d(680)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">主要取引先</p>
                 <ul className="flex flex-col sm:flex-row gap-3">
-                  {companyInfo.notableClients.map((client) => (
-                    <li key={client} className="border border-black/8 px-4 py-3 text-[12px] text-[#0a0a0a]">{client}</li>
+                  {companyInfo.notableClients.map((client, i) => (
+                    <li key={client} data-reveal-pop="" style={d(720 + i * 80)} className="border border-black/8 px-4 py-3 text-[12px] text-[#0a0a0a]">{client}</li>
                   ))}
                 </ul>
               </div>
@@ -189,19 +199,26 @@ export default function AboutPage() {
             S3: Mechanism (黒背景)
         ══════════════════════════════════════════════════ */}
         <RevealSection>
-          <section className="border-t border-black/8 bg-[#0a0a0a] text-white px-6 md:px-10 py-20 md:py-28">
-            <div className="max-w-5xl mx-auto">
-              <p data-reveal-left="" style={d(0)}
-                className="text-white/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black">
+          <section
+            data-snap
+            className="border-t border-black/8 bg-[#0a0a0a] text-white min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+          >
+            <div className="max-w-5xl mx-auto w-full">
+              <p data-reveal-pop="" style={d(0)}
+                className="text-white/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
                 03 / Mechanism
               </p>
-              <h2 data-reveal="" style={{ ...d(80), fontSize: "clamp(24px, 3vw, 44px)" }}
-                className="font-black leading-[1.1] mb-14 tracking-tight">
-                口コミに頼らない、<br />3 ステップの集客構造
+              <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-white/12 mb-7" />
+
+              <h2 className="font-black leading-[1.1] mb-12 tracking-tight"
+                style={{ fontSize: "clamp(24px, 3vw, 44px)" }}>
+                <span data-reveal-sm="" style={d(80)} className="block">口コミに頼らない、</span>
+                <span data-reveal-sm="" style={d(160)} className="block">3 ステップの集客構造</span>
               </h2>
-              <div data-reveal="" style={d(180)} className="grid md:grid-cols-3 gap-px bg-white/8">
-                {MECHANISM_STEPS.map((step) => (
-                  <div key={step.num} className="bg-[#0a0a0a] p-6 md:p-8">
+
+              <div className="grid md:grid-cols-3 gap-px bg-white/8">
+                {MECHANISM_STEPS.map((step, i) => (
+                  <div key={step.num} data-reveal-pop="" style={d(200 + i * 100)} className="bg-[#0a0a0a] p-6 md:p-8">
                     <div className="flex items-center gap-3 mb-5">
                       <span className="font-serif-display text-white/20 leading-none" style={{ fontSize: "clamp(36px, 3.5vw, 52px)" }}>
                         {step.num}
@@ -233,31 +250,39 @@ export default function AboutPage() {
             S4: Market
         ══════════════════════════════════════════════════ */}
         <RevealSection>
-          <section className="border-t border-black/8 px-6 md:px-10 py-20 md:py-28 max-w-5xl mx-auto">
-            <p data-reveal-left="" style={d(0)}
-              className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black">
-              04 / Market
-            </p>
-            <h2 data-reveal="" style={{ ...d(80), fontSize: "clamp(24px, 3vw, 44px)" }}
-              className="font-black leading-[1.1] mb-4 tracking-tight">
-              なぜ今、このサービスが必要か。
-            </h2>
-            <p data-reveal="" style={d(160)} className="text-black/50 text-[13px] mb-12 max-w-[60ch] leading-relaxed">
-              以下の数字はすべて推計・参考値です。公的統計に基づく解釈であり、確定的な数値を保証するものではありません。
-            </p>
-            <div data-reveal="" style={d(240)} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-black/8 border border-black/8">
-              {marketStats.map((stat) => (
-                <div key={stat.label} className="bg-white px-5 py-6 md:px-7 md:py-7">
-                  <div className="flex items-start gap-2 mb-3">
-                    <p className="text-[11px] text-black/40 leading-snug flex-1">{stat.label}</p>
-                    {stat.isEstimate && (
-                      <span className="text-[9px] text-black/30 border border-black/15 rounded px-1.5 py-0.5 flex-shrink-0 tracking-wide">推計</span>
-                    )}
+          <section
+            data-snap
+            className="border-t border-black/8 min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+          >
+            <div className="max-w-5xl mx-auto w-full">
+              <p data-reveal-pop="" style={d(0)}
+                className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
+                04 / Market
+              </p>
+              <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
+
+              <h2 className="font-black leading-[1.1] mb-4 tracking-tight"
+                style={{ fontSize: "clamp(24px, 3vw, 44px)" }}>
+                <span data-reveal-sm="" style={d(80)} className="block">なぜ今、このサービスが必要か。</span>
+              </h2>
+              <p data-reveal="" style={d(160)} className="text-black/50 text-[13px] mb-10 max-w-[60ch] leading-relaxed">
+                以下の数字はすべて推計・参考値です。公的統計に基づく解釈であり、確定的な数値を保証するものではありません。
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-black/8 border border-black/8">
+                {marketStats.map((stat, i) => (
+                  <div key={stat.label} data-reveal-pop="" style={d(220 + i * 60)} className="bg-white px-5 py-6 md:px-7 md:py-7">
+                    <div className="flex items-start gap-2 mb-3">
+                      <p className="text-[11px] text-black/40 leading-snug flex-1">{stat.label}</p>
+                      {stat.isEstimate && (
+                        <span className="text-[9px] text-black/30 border border-black/15 rounded px-1.5 py-0.5 flex-shrink-0 tracking-wide">推計</span>
+                      )}
+                    </div>
+                    <p className="font-black text-[#0a0a0a] leading-none mb-2" style={{ fontSize: "clamp(24px, 2.5vw, 36px)" }}>{stat.value}</p>
+                    <p className="text-[11px] text-black/38 leading-snug">{stat.note}</p>
                   </div>
-                  <p className="font-black text-[#0a0a0a] leading-none mb-2" style={{ fontSize: "clamp(24px, 2.5vw, 36px)" }}>{stat.value}</p>
-                  <p className="text-[11px] text-black/38 leading-snug">{stat.note}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </section>
         </RevealSection>
@@ -266,27 +291,33 @@ export default function AboutPage() {
             S5: Results
         ══════════════════════════════════════════════════ */}
         <RevealSection>
-          <section className="border-t border-black/8 px-6 md:px-10 py-20 md:py-28 bg-[#fafafa]">
-            <div className="max-w-5xl mx-auto">
-              <p data-reveal-left="" style={d(0)}
-                className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black">
+          <section
+            data-snap
+            className="border-t border-black/8 min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24 bg-[#fafafa]"
+          >
+            <div className="max-w-5xl mx-auto w-full">
+              <p data-reveal-pop="" style={d(0)}
+                className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
                 05 / Results
               </p>
-              <h2 data-reveal="" style={{ ...d(80), fontSize: "clamp(24px, 3vw, 44px)" }}
-                className="font-black leading-[1.1] mb-4 tracking-tight">
-                全国 {totalOffices} 事務所・<br className="sm:hidden" />
-                累計 {totalContracts.toLocaleString()} 件の実績
+              <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
+
+              <h2 className="font-black leading-[1.1] mb-4 tracking-tight"
+                style={{ fontSize: "clamp(24px, 3vw, 44px)" }}>
+                <span data-reveal-sm="" style={d(80)} className="block">全国 {totalOffices} 事務所・</span>
+                <span data-reveal-sm="" style={d(160)} className="block">累計 {totalContracts.toLocaleString()} 件の実績</span>
               </h2>
-              <p data-reveal="" style={d(160)} className="text-black/45 text-[13px] mb-14 max-w-[60ch] leading-relaxed">
+              <p data-reveal="" style={d(240)} className="text-black/45 text-[13px] mb-12 max-w-[60ch] leading-relaxed">
                 提携事務所の月間顧問料合計・成約件数の一部をご紹介します。
                 地方都市でも、少数精鋭型でも、それぞれの戦略で成果を上げています。
               </p>
 
-              <div data-reveal="" style={d(240)} className="mb-14">
-                <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">エリア別 提携状況</p>
+              {/* エリア別 */}
+              <div className="mb-14">
+                <p data-reveal-sm="" style={d(280)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">エリア別 提携状況</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-black/8 border border-black/8">
-                  {regionStats.map((r) => (
-                    <div key={r.name} className="bg-white px-5 py-5 md:px-6 md:py-6">
+                  {regionStats.map((r, i) => (
+                    <div key={r.name} data-reveal-pop="" style={d(320 + i * 60)} className="bg-white px-5 py-5 md:px-6 md:py-6">
                       <p className="text-[11px] text-black/40 mb-2 font-inter">{r.name}</p>
                       <p className="font-black text-[#0a0a0a] leading-none mb-1" style={{ fontSize: "clamp(22px, 2.2vw, 32px)" }}>
                         {r.offices}<span className="text-[13px] font-bold ml-1">事務所</span>
@@ -297,12 +328,13 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div data-reveal="" style={d(320)}>
-                <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">月間顧問料 上位事務所 (一部抜粋)</p>
+              {/* テーブル */}
+              <div>
+                <p data-reveal-sm="" style={d(640)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">月間顧問料 上位事務所 (一部抜粋)</p>
                 <div className="overflow-x-auto -mx-6 md:mx-0">
                   <table className="min-w-full border-collapse text-[13px]">
                     <thead>
-                      <tr className="border-b border-black/8">
+                      <tr data-reveal-sm="" style={d(680)} className="border-b border-black/8">
                         <th className="text-left py-3 px-6 md:px-4 text-[10px] text-black/35 font-inter tracking-[0.15em] uppercase font-medium w-full">事務所名</th>
                         <th className="text-right py-3 px-4 text-[10px] text-black/35 font-inter tracking-[0.15em] uppercase font-medium whitespace-nowrap">エリア</th>
                         <th className="text-right py-3 px-4 text-[10px] text-black/35 font-inter tracking-[0.15em] uppercase font-medium whitespace-nowrap">成約件数</th>
@@ -311,7 +343,7 @@ export default function AboutPage() {
                     </thead>
                     <tbody className="divide-y divide-black/5">
                       {topCases.map((c, i) => (
-                        <tr key={c.name} className="hover:bg-black/[0.02] transition-colors">
+                        <tr key={c.name} data-reveal-sm="" style={d(720 + i * 50)} className="hover:bg-black/[0.02] transition-colors">
                           <td className="py-3.5 px-6 md:px-4">
                             <div className="flex items-center gap-2.5">
                               <span className="text-[10px] text-black/25 font-inter w-4 flex-shrink-0">{String(i + 1).padStart(2, "0")}</span>
@@ -326,7 +358,7 @@ export default function AboutPage() {
                     </tbody>
                   </table>
                 </div>
-                <p className="text-[11px] text-black/30 mt-4">
+                <p data-reveal-sm="" style={d(1020)} className="text-[11px] text-black/30 mt-4">
                   ※ 上記は公開情報をもとにした参考事例の一部抜粋です。成果を保証するものではありません。
                 </p>
               </div>
@@ -338,25 +370,31 @@ export default function AboutPage() {
             S6: CTA
         ══════════════════════════════════════════════════ */}
         <RevealSection>
-          <section className="border-t border-black/8 px-6 md:px-10 py-20 md:py-32">
-            <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+          <section
+            data-snap
+            className="border-t border-black/8 min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+          >
+            <div className="max-w-5xl mx-auto w-full flex flex-col md:flex-row md:items-end md:justify-between gap-10">
               <div>
-                <p data-reveal-left="" style={d(0)}
-                  className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black">
+                <p data-reveal-pop="" style={d(0)}
+                  className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
                   06 / Next Step
                 </p>
-                <h2 data-reveal="" style={{ ...d(80), fontSize: "clamp(24px, 3vw, 44px)" }}
-                  className="font-black leading-[1.1] mb-5 tracking-tight">
-                  先生の事務所に、<br />どんな顧客が来るのか。
+                <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
+
+                <h2 className="font-black leading-[1.1] mb-5 tracking-tight"
+                  style={{ fontSize: "clamp(24px, 3vw, 44px)" }}>
+                  <span data-reveal-sm="" style={d(80)} className="block">先生の事務所に、</span>
+                  <span data-reveal-sm="" style={d(160)} className="block">どんな顧客が来るのか。</span>
                 </h2>
-                <p data-reveal="" style={d(160)} className="text-black/50 text-[14px] max-w-[44ch] leading-relaxed">
+                <p data-reveal="" style={d(240)} className="text-black/50 text-[14px] max-w-[44ch] leading-relaxed">
                   AI 診断は 5 分。設問に答えるだけで、あなたの事務所にマッチする顧客像が見えます。
                 </p>
               </div>
               <Link
                 href="/diagnosis"
-                data-reveal=""
-                style={d(260)}
+                data-reveal-pop=""
+                style={d(320)}
                 className="group inline-flex items-center gap-3 bg-[#0a0a0a] text-white px-7 py-4 text-[13px] font-bold tracking-[0.18em] uppercase hover:bg-black/80 transition-colors self-start md:self-auto flex-shrink-0"
               >
                 AI 診断をはじめる

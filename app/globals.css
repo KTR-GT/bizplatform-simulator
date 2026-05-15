@@ -301,14 +301,72 @@
   transform: translateX(0);
 }
 
-/* prefers-reduced-motion: アニメーション無効化 */
+/* prefers-reduced-motion: transform なし、opacity フェードのみ残す */
 @media (prefers-reduced-motion: reduce) {
   .reveal-section [data-reveal],
-  .reveal-section [data-reveal-left] {
-    opacity: 1 !important;
+  .reveal-section [data-reveal-left],
+  .reveal-section [data-reveal-sm],
+  .reveal-section [data-reveal-pop],
+  .reveal-section [data-reveal-border] {
     transform: none !important;
-    transition: none !important;
+    transition: opacity 300ms ease var(--reveal-delay, 0ms) !important;
+    will-change: auto !important;
   }
+}
+
+/* =====================================================
+   SCROLL SNAP
+===================================================== */
+html {
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 80px;
+}
+
+section[data-snap] {
+  scroll-snap-align: start;
+}
+
+/* =====================================================
+   REVEAL VARIANTS
+===================================================== */
+
+/* data-reveal-sm: subtle 40px rise, for lines & small items */
+.reveal-section [data-reveal-sm] {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity  500ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal-section.is-visible [data-reveal-sm] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* data-reveal-pop: scale 0.95 + 16px rise, for cards & number labels */
+.reveal-section [data-reveal-pop] {
+  opacity: 0;
+  transform: scale(0.95) translateY(16px);
+  transition:
+    opacity  400ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 400ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal-section.is-visible [data-reveal-pop] {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* data-reveal-border: horizontal line draws left → right */
+.reveal-section [data-reveal-border] {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+  will-change: transform;
+}
+.reveal-section.is-visible [data-reveal-border] {
+  transform: scaleX(1);
 }
 
 /* =====================================================

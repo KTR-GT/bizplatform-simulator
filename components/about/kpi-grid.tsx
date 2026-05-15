@@ -21,17 +21,15 @@ function parseValue(v: string): { num: number; prefix: string; suffix: string } 
 
 export function KpiGrid({ items }: { items: KpiItem[] }) {
   return (
-    <div
-      className="grid grid-cols-2 md:grid-cols-4 gap-px bg-black/8 border border-black/8 mb-16"
-      data-reveal=""
-      style={{ "--reveal-delay": "240ms" } as React.CSSProperties}
-    >
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-black/8 border border-black/8 mb-16">
       {items.map((kpi, i) => {
         const { num, prefix, suffix } = parseValue(kpi.value)
         return (
           <div
             key={kpi.label}
             className="bg-white px-5 py-7 md:px-7 md:py-9"
+            data-reveal-pop=""
+            style={{ "--reveal-delay": `${i * 80}ms` } as React.CSSProperties}
           >
             <p
               className="font-serif-display leading-none text-[#0a0a0a] mb-2"
