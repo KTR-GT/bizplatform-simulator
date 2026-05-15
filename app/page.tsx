@@ -48,7 +48,7 @@ export default function TopPage() {
       </header>
 
       {/* ── メイン ───────────────────────────────── */}
-      <main className="flex-1 flex flex-col items-center justify-center px-5 py-12 md:py-16">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 py-12 md:py-16">
 
         {/* ヒーロー */}
         <div className="w-full max-w-2xl mb-12 md:mb-14 text-center md:text-left">
