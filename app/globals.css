@@ -228,7 +228,8 @@
 .door-overlay {
   position: fixed;
   inset: 0;
-  background: #0a0a0a;
+  /* --door-bg を JS から注入: 黒→白トランジション対応 */
+  background: var(--door-bg, #ffffff);
   pointer-events: none;
   z-index: 9999;
 

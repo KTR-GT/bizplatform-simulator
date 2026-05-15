@@ -1,58 +1,55 @@
 "use client"
 
-import { useRef, useState, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { Clock } from "lucide-react"
+import { Clock, Building2, Target, LineChart } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
 // ──────────────────────────────────────────────
 // カードデータ
 // ──────────────────────────────────────────────
 interface EntryDef {
-  num:      string
-  badge:    string | null
-  title:    string
-  desc:     string
-  minutes:  number
-  href:     string
-  soon:     boolean
-  inverted: boolean  // true = 白背景・黒文字
+  num:     string
+  title:   string
+  desc:    string
+  minutes: number
+  href:    string
+  soon:    boolean
+  Icon:    LucideIcon
 }
 
 const ENTRIES: EntryDef[] = [
   {
-    num:      "01",
-    badge:    null,
-    title:    "BizplatFormについて",
-    desc:     "サービスの仕組み・市場背景・提携事務所の実績をご覧いただけます。",
-    minutes:  3,
-    href:     "/about",
-    soon:     true,
-    inverted: false,
+    num:     "01",
+    title:   "BizplatFormについて",
+    desc:    "会社の仕組み・市場背景・提携実績を見る",
+    minutes: 3,
+    href:    "/about",
+    soon:    true,
+    Icon:    Building2,
   },
   {
-    num:      "02",
-    badge:    "おすすめ",
-    title:    "AI診断　顧客マッチング",
-    desc:     "5問に答えるだけで、先生の事務所に来る顧客像が見えます。結果はすぐ表示。",
-    minutes:  5,
-    href:     "/diagnosis",
-    soon:     false,
-    inverted: true,
+    num:     "02",
+    title:   "AI顧客診断",
+    desc:    "あなたの事務所に来る顧客像を AI が診断",
+    minutes: 5,
+    href:    "/diagnosis",
+    soon:    false,
+    Icon:    Target,
   },
   {
-    num:      "03",
-    badge:    null,
-    title:    "コミットプランシミュレーター",
-    desc:     "顧客紹介の件数・顧問料・ROI を数字で確認できます。",
-    minutes:  10,
-    href:     "/simulator",
-    soon:     false,
-    inverted: false,
+    num:     "03",
+    title:   "プランシミュレーター",
+    desc:    "顧客紹介の件数・顧問料・ROI を数字で確認",
+    minutes: 10,
+    href:    "/simulator",
+    soon:    false,
+    Icon:    LineChart,
   },
 ]
 
 // ──────────────────────────────────────────────
-// ドア演出オーバーレイ
+// EntryCards (Client Component)
 // ──────────────────────────────────────────────
 interface ExpandState {
   active:  boolean
@@ -60,9 +57,6 @@ interface ExpandState {
   originY: number
 }
 
-// ──────────────────────────────────────────────
-// EntryCards (Client Component)
-// ──────────────────────────────────────────────
 export function EntryCards() {
   const router = useRouter()
   const [expand, setExpand] = useState<ExpandState>({
@@ -74,8 +68,8 @@ export function EntryCards() {
   , [])
 
   const handleCardClick = useCallback((
-    href:  string,
-    e:     React.MouseEvent<HTMLElement>,
+    href: string,
+    e:    React.MouseEvent<HTMLElement>,
   ) => {
     e.preventDefault()
     const vw = window.innerWidth
@@ -83,21 +77,25 @@ export function EntryCards() {
 
     if (isMobile()) {
       setExpand({ active: true, originX: 0.5, originY: 0.5 })
-      setTimeout(() => router.push(href), 280)
+      setTimeout(() => router.push(href), 300)
     } else {
       setExpand({ active: true, originX: e.clientX / vw, originY: e.clientY / vh })
-      setTimeout(() => router.push(href), 420)
+      setTimeout(() => router.push(href), 480)
     }
   }, [router, isMobile])
 
   return (
-    <div className="relative w-full max-w-4xl px-0">
+    <div className="relative w-full max-w-4xl">
 
-      {/* ドア演出オーバーレイ */}
+      {/* ドア演出オーバーレイ: 黒→白 (--door-bg = white) */}
       <div
         aria-hidden
         className={`door-overlay${expand.active ? " door-overlay--active" : ""}`}
-        style={{ "--door-ox": expand.originX, "--door-oy": expand.originY } as React.CSSProperties}
+        style={{
+          "--door-ox": expand.originX,
+          "--door-oy": expand.originY,
+          "--door-bg": "#ffffff",
+        } as React.CSSProperties}
       />
 
       {/* 3列グリッド */}
@@ -119,7 +117,7 @@ export function EntryCards() {
 }
 
 // ──────────────────────────────────────────────
-// 単体カード — ドアのシルエット
+// 単体カード
 // ──────────────────────────────────────────────
 function EntryCard({
   entry,
@@ -128,127 +126,130 @@ function EntryCard({
   entry:      EntryDef
   onNavigate: (href: string, e: React.MouseEvent<HTMLElement>) => void
 }) {
-  const inv = entry.inverted
+  const { Icon, soon } = entry
 
-  // カラー変数
-  const bg         = inv ? "bg-white"      : "bg-[#0a0a0a]"
-  const borderBase = inv ? "border-black/12" : "border-white/10"
-  const borderHov  = inv ? "hover:border-black/30" : "hover:border-white/25"
-  const numCol     = inv ? "text-[#0a0a0a]"        : "text-white/12"
-  const titleCol   = inv ? "text-[#0a0a0a]"        : "text-white"
-  const descCol    = inv ? "text-black/45"          : "text-white/40"
-  const metaCol    = inv ? "text-black/35"          : "text-white/28"
-  const lineCol    = inv ? "bg-black/8"             : "bg-white/6"
-  const knobBase   = inv
-    ? "bg-black/18 group-hover:bg-black/55 group-hover:shadow-[0_0_10px_3px_rgba(0,0,0,0.25)]"
-    : "bg-white/18 group-hover:bg-white/65 group-hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.30)]"
-  const shadowHov  = inv
-    ? "hover:shadow-[0_12px_50px_rgba(0,0,0,0.18)]"
-    : "hover:shadow-[0_12px_50px_rgba(0,0,0,0.9)]"
-
-  const cardInner = (
+  const cardBody = (
     <div
       role="listitem"
       className={[
-        "group relative flex flex-col overflow-hidden border",
-        // 縦長比率: モバイル 380px, デスクトップ 520px
-        "h-[380px] md:h-[520px]",
-        bg,
-        borderBase,
-        entry.soon ? "opacity-50 select-none cursor-default" : `cursor-pointer ${borderHov} ${shadowHov}`,
-        "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        // ベース
+        "group relative flex flex-col overflow-hidden border border-white/10",
+        "bg-[#0a0a0a]",
+        // 縦長比率: モバイル 400px / デスクトップ 520px
+        "h-[400px] md:h-[520px]",
+        soon
+          ? "opacity-45 select-none cursor-default"
+          : "cursor-pointer hover:border-white/22 hover:shadow-[0_16px_60px_rgba(0,0,0,0.95)]",
+        "transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
       ].join(" ")}
     >
-      {/* ── ドアノブ (右中央) ─────────────────────── */}
-      {!entry.soon && (
+      {/* ── 中央縦線 (ホバーでドアの合わせ目) ── */}
+      {!soon && (
         <div
           aria-hidden
-          className={[
-            "absolute right-4 top-1/2 -translate-y-1/2 z-20",
-            "w-3.5 h-3.5 rounded-full",
-            "transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-            knobBase,
-          ].join(" ")}
+          className="
+            absolute left-1/2 -translate-x-1/2 top-8 bottom-8
+            w-px bg-white z-10
+            opacity-0 group-hover:opacity-30
+            transition-opacity duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+          "
         />
       )}
 
-      {/* ── 縦線 (ホバー時に現れるドアの合わせ目) ── */}
-      {!entry.soon && (
+      {/* ── 中央グロー (ホバーで光が漏れる) ── */}
+      {!soon && (
         <div
           aria-hidden
-          className={[
-            "absolute left-1/2 -translate-x-1/2 top-10 bottom-10",
-            "w-px z-10 opacity-0 group-hover:opacity-100",
-            lineCol,
-            "transition-opacity duration-200",
-          ].join(" ")}
+          className="
+            absolute inset-0 z-0
+            opacity-0 group-hover:opacity-100
+            transition-opacity duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+          "
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,255,255,0.055) 0%, transparent 70%)",
+          }}
         />
       )}
 
-      {/* ── ★おすすめバッジ ──────────────────────── */}
-      {entry.badge && (
-        <span className="absolute top-4 left-4 z-20 bg-[#0a0a0a] text-white text-[9px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-full">
-          ★ {entry.badge}
-        </span>
-      )}
+      {/* ── コンテンツ本体 (ホバーでわずかに左へ = ドアが開く) ── */}
+      <div
+        className={[
+          "relative z-20 flex flex-col h-full",
+          "transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+          !soon ? "group-hover:-translate-x-[3px]" : "",
+        ].join(" ")}
+      >
+        {/* 上段: アイコン + タイトル + サブテキスト (中央揃え、縦中央) */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 pt-10 pb-4 text-center">
 
-      {/* ── 番号 (上半分を占める章扉数字) ──────────── */}
-      <div className="flex flex-1 items-center justify-center px-4 pt-10">
-        <span
-          aria-hidden
-          className={[
-            "font-serif-display leading-none select-none",
-            numCol,
-            "transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-            entry.soon ? "" : "group-hover:-translate-y-1",
-          ].join(" ")}
-          style={{ fontSize: "clamp(100px, 10vw, 160px)" }}
-        >
-          {entry.num}
-        </span>
-      </div>
+          {/* 業種アイコン */}
+          <Icon
+            className="text-white/50 mb-5 flex-shrink-0"
+            style={{ width: "clamp(36px, 3.5vw, 48px)", height: "clamp(36px, 3.5vw, 48px)" }}
+            strokeWidth={1.5}
+            aria-hidden
+          />
 
-      {/* ── 下段: タイトル・説明・メタ ──────────── */}
-      <div className="px-5 pb-6 pt-3">
-        <div className="flex items-center gap-2 mb-1.5">
+          {/* タイトル — 最大サイズ */}
           <h2
-            className={`font-bold leading-snug ${titleCol}`}
-            style={{ fontSize: "clamp(13px, 1.2vw, 15px)" }}
+            className="text-white font-black leading-[1.1] mb-4 tracking-tight"
+            style={{ fontSize: "clamp(26px, 3vw, 44px)" }}
           >
             {entry.title}
           </h2>
-          {entry.soon && (
-            <span className={`text-[9px] tracking-wider border rounded-full px-1.5 py-0.5 flex-shrink-0 ${inv ? "border-black/18 text-black/35" : "border-white/14 text-white/28"}`}>
+
+          {/* サブテキスト */}
+          <p
+            className="text-white/45 leading-relaxed"
+            style={{ fontSize: "clamp(13px, 1vw, 15px)" }}
+          >
+            {entry.desc}
+          </p>
+
+          {/* 準備中バッジ */}
+          {soon && (
+            <span className="mt-4 text-[9px] tracking-[0.2em] uppercase border border-white/14 text-white/28 rounded-full px-2.5 py-1">
               準備中
             </span>
           )}
         </div>
-        <p
-          className={`leading-relaxed ${descCol}`}
-          style={{ fontSize: "clamp(10px, 0.9vw, 12px)" }}
-        >
-          {entry.desc}
-        </p>
-        {!entry.soon && (
-          <p className={`mt-3 flex items-center gap-1 text-[10px] ${metaCol}`}>
-            <Clock size={10} strokeWidth={1.75} aria-hidden />
-            約{entry.minutes}分
-          </p>
-        )}
+
+        {/* 下段: 番号 (補助) + 所要時間 */}
+        <div className="flex items-end justify-between px-5 pb-5">
+          <span
+            aria-hidden
+            className="
+              font-serif-display leading-none select-none text-white/25
+              transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+              group-hover:-translate-y-0.5
+            "
+            style={{ fontSize: "clamp(40px, 4vw, 64px)" }}
+          >
+            {entry.num}
+          </span>
+
+          {!soon && (
+            <span className="flex items-center gap-1 text-white/25 text-[11px] mb-1">
+              <Clock size={10} strokeWidth={1.75} aria-hidden />
+              約{entry.minutes}分
+            </span>
+          )}
+        </div>
       </div>
     </div>
   )
 
-  if (entry.soon) return cardInner
+  if (soon) return cardBody
 
   return (
     <a
       href={entry.href}
       onClick={(e) => onNavigate(entry.href, e)}
-      className="block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+      className="block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/35"
       aria-label={`${entry.title}（約${entry.minutes}分）`}
     >
-      {cardInner}
+      {cardBody}
     </a>
   )
 }
