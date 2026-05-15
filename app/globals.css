@@ -77,6 +77,9 @@
     @apply bg-background text-foreground;
     font-family: var(--font-noto), 'Noto Sans JP', sans-serif;
   }
+  /* 見出し: 行バランス自動調整 / 本文: 孤立行回避 */
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p { text-wrap: pretty; }
 }
 
 /* =====================================================

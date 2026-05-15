@@ -127,19 +127,19 @@ export default function AboutPage() {
             01 / About
           </p>
           <h1
-            className="font-black leading-[1.05] mb-8 tracking-tight"
-            style={{ fontSize: "clamp(36px, 6vw, 80px)" }}
+            className="font-black leading-[1.1] mb-8 tracking-tight"
+            style={{ fontSize: "clamp(40px, 5vw, 72px)" }}
           >
-            紹介の時代は、<br />
-            終わった。
+            先生は、<br />
+            どんなお客様を選びますか?
           </h1>
           <p
-            className="text-black/55 leading-relaxed max-w-xl"
-            style={{ fontSize: "clamp(15px, 1.3vw, 18px)" }}
+            className="text-black/55 max-w-[52ch]"
+            style={{ fontSize: "clamp(15px, 1.2vw, 18px)", lineHeight: 1.8 }}
           >
-            口コミ・紹介に依存した顧客獲得には限界がある。
-            BizplatForm は AI とアウトバウンドの力で、<br className="hidden md:block" />
-            先生の事務所が「待たずに選べる」状態をつくります。
+            営業時間ゼロで、本業に集中する先生のもとへ、<br />
+            私たちが先生に合うお客様を届けます。<br />
+            全国 2,000 事務所が選んだ仕組みです。
           </p>
         </section>
 
@@ -160,7 +160,7 @@ export default function AboutPage() {
               {companyInfo.vision}
             </h2>
             <p
-              className="text-black/55 leading-relaxed mb-16 max-w-2xl"
+              className="text-black/55 leading-relaxed mb-16 max-w-[60ch]"
               style={{ fontSize: "clamp(14px, 1.2vw, 17px)" }}
             >
               {companyInfo.mission}
@@ -305,7 +305,7 @@ export default function AboutPage() {
           >
             なぜ今、このサービスが必要か。
           </h2>
-          <p className="text-black/50 text-[13px] mb-12 max-w-lg leading-relaxed">
+          <p className="text-black/50 text-[13px] mb-12 max-w-[60ch] leading-relaxed">
             以下の数字はすべて推計・参考値です。公的統計に基づく解釈であり、
             確定的な数値を保証するものではありません。
           </p>
@@ -348,7 +348,7 @@ export default function AboutPage() {
               全国 {totalOffices} 事務所・<br className="sm:hidden" />
               累計 {totalContracts.toLocaleString()} 件の実績
             </h2>
-            <p className="text-black/45 text-[13px] mb-14 max-w-lg leading-relaxed">
+            <p className="text-black/45 text-[13px] mb-14 max-w-[60ch] leading-relaxed">
               提携事務所の月間顧問料合計・成約件数の一部をご紹介します。
               地方都市でも、少数精鋭型でも、それぞれの戦略で成果を上げています。
             </p>
@@ -448,7 +448,7 @@ export default function AboutPage() {
                 先生の事務所に、<br />
                 どんな顧客が来るのか。
               </h2>
-              <p className="text-black/50 text-[14px] max-w-sm leading-relaxed">
+              <p className="text-black/50 text-[14px] max-w-[44ch] leading-relaxed">
                 AI 診断は 5 分。設問に答えるだけで、
                 あなたの事務所にマッチする顧客像が見えます。
               </p>

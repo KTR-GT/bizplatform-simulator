@@ -59,15 +59,14 @@ export default function TopPage() {
             className="text-white font-black leading-[1.1] mb-4"
             style={{ fontSize: "clamp(32px, 5.5vw, 60px)" }}
           >
-            事務所の成長に、<wbr />コミットします。
+            事務所の成長に、<br className="hidden md:block" />
+            コミットします。
           </h1>
-          {/* 原則 3.5: コピーが営業の代わり */}
           <p
-            className="text-white/50 leading-relaxed"
+            className="text-white/50 leading-relaxed max-w-[46ch]"
             style={{ fontSize: "clamp(14px, 1.3vw, 16px)" }}
           >
-            全国 2,000 事務所が選んだ、AI 顧客紹介サービス。
-            <br className="hidden md:inline" />
+            全国 2,000 事務所が選んだ、AI 顧客紹介サービス。<br className="hidden md:inline" />
             どこから始めるか、選んでください。
           </p>
         </div>

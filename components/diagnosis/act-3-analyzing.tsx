@@ -77,7 +77,7 @@ export function Act3Analyzing({ flow }: Props) {
         Analyzing
       </p>
       <h2
-        className="text-white text-center font-bold mb-12 md:mb-16"
+        className="text-white text-center font-bold mb-12 md:mb-16 max-w-[22ch]"
         style={{ fontSize: "clamp(22px, 4.5vw, 42px)", lineHeight: 1.3 }}
       >
         全国 150 社のデータから<br />

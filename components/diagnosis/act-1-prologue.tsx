@@ -27,18 +27,15 @@ export function Act1Prologue({ onStart }: Act1PrologueProps) {
       </p>
 
       <h1
-        className="text-[#0a0a0a] font-inter font-black leading-[1.1] mb-6 sm:mb-8 stagger-2"
+        className="text-[#0a0a0a] font-inter font-black leading-[1.1] mb-6 sm:mb-8 stagger-2 max-w-[18ch]"
         style={{ fontSize: "clamp(28px, 6vw, 56px)" }}
       >
-        あなたの事務所に、
-        <br />
+        あなたの事務所に、<br />
         どんな顧客が来るのか。
       </h1>
 
-      <p className="text-black/50 text-sm font-inter leading-relaxed mb-10 sm:mb-12 stagger-3">
-        6 つの質問に、答えてください。
-        <br className="hidden sm:block" />
-        <span className="sm:hidden"> </span>
+      <p className="text-black/50 text-sm font-inter leading-[1.8] mb-10 sm:mb-12 stagger-3 max-w-[38ch]">
+        6 つの質問に、答えてください。<br className="hidden sm:block" />
         全国 500 社から、先生にマッチする 3 社をご紹介します。
       </p>
 
