@@ -23,7 +23,7 @@ const ENTRIES: EntryDef[] = [
     desc:    "会社の仕組み・市場背景・提携実績を見る",
     minutes: 3,
     href:    "/about",
-    soon:    true,
+    soon:    false,
   },
   {
     num:     "02",
