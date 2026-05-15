@@ -52,18 +52,18 @@ export default function TopPage() {
 
         {/* ヒーロー */}
         <div className="w-full max-w-2xl mb-12 md:mb-14 text-center md:text-left">
-          <p className="text-white/30 text-[11px] tracking-[0.3em] uppercase mb-4 md:mb-5">
+          <p className="text-white/30 text-[11px] tracking-[0.3em] uppercase mb-4 md:mb-5 stagger-1">
             Proposal
           </p>
           <h1
-            className="text-white font-black leading-[1.1] mb-4"
+            className="text-white font-black leading-[1.1] mb-4 stagger-2"
             style={{ fontSize: "clamp(32px, 5.5vw, 60px)" }}
           >
             事務所の成長に、<br className="hidden md:block" />
             コミットします。
           </h1>
           <p
-            className="text-white/50 leading-relaxed max-w-[46ch]"
+            className="text-white/50 leading-relaxed max-w-[46ch] stagger-3"
             style={{ fontSize: "clamp(14px, 1.3vw, 16px)" }}
           >
             全国 2,000 事務所が選んだ、AI 顧客紹介サービス。<br className="hidden md:inline" />
@@ -72,7 +72,9 @@ export default function TopPage() {
         </div>
 
         {/* 3入口カード (Client Component — ドア演出含む) */}
-        <EntryCards />
+        <div className="stagger-4 w-full">
+          <EntryCards />
+        </div>
 
         {/* 補助テキスト: 脱出口 (原則 3.1・3.5) */}
         <p className="mt-10 text-white/22 text-xs text-center max-w-sm leading-relaxed">
