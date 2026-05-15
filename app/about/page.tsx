@@ -102,7 +102,7 @@ export default function AboutPage() {
         ══════════════════════════════════════════════════ */}
         <section
           data-snap
-          className="min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-20 max-w-5xl mx-auto w-full"
+          className="h-[100dvh] overflow-hidden flex flex-col justify-center px-6 md:px-10 py-16 md:py-20 max-w-5xl mx-auto w-full"
         >
           <p className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black stagger-1">
             01 / About
@@ -130,7 +130,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 h-[100dvh] overflow-hidden flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full">
 
@@ -140,58 +140,60 @@ export default function AboutPage() {
               </p>
               <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
 
-              <h2 className="font-black leading-[1.05] mb-6 tracking-tight"
-                style={{ fontSize: "clamp(30px, 4.5vw, 64px)" }}>
+              <h2 className="font-black leading-[1.05] mb-4 tracking-tight"
+                style={{ fontSize: "clamp(26px, 3.5vw, 52px)" }}>
                 <span data-reveal-sm="" style={d(80)} className="block">{companyInfo.vision}</span>
               </h2>
               <p data-reveal="" style={{ ...d(180), fontSize: "clamp(14px, 1.2vw, 17px)" }}
-                className="text-black/55 leading-relaxed mb-14 max-w-[60ch]">
+                className="text-black/55 leading-relaxed mb-10 max-w-[60ch]">
                 {companyInfo.mission}
               </p>
 
               {/* KPI カウントアップ */}
               <KpiGrid items={companyInfo.kpiNumbers} />
 
-              {/* 会社概要 */}
-              <div className="mb-14 max-w-2xl">
-                <p data-reveal-sm="" style={d(280)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">会社概要</p>
-                <dl className="divide-y divide-black/6">
-                  {[
-                    { dt: "会社名",   dd: companyInfo.name },
-                    { dt: "設立",     dd: companyInfo.founded },
-                    { dt: "代表者",   dd: `${companyInfo.representative.title} ${companyInfo.representative.name}` },
-                    { dt: "事業内容", dd: companyInfo.business },
-                  ].map(({ dt, dd }, i) => (
-                    <div key={dt} data-reveal-pop="" style={d(320 + i * 60)} className="flex gap-6 py-3.5">
-                      <dt className="text-[12px] text-black/40 w-20 flex-shrink-0 font-inter">{dt}</dt>
-                      <dd className="text-[12px] text-[#0a0a0a] leading-relaxed">{dd}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-
-              {/* 拠点 */}
-              <div className="mb-14">
-                <p data-reveal-sm="" style={d(460)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">拠点</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-                  {companyInfo.offices.map((office, i) => (
-                    <div key={office.name} data-reveal-pop="" style={d(500 + i * 80)} className="border border-black/8 px-5 py-5">
-                      <p className="text-[10px] text-black/38 tracking-[0.2em] uppercase font-inter mb-3">{office.name}</p>
-                      <p className="text-[12px] text-[#0a0a0a] leading-relaxed mb-2">〒{office.postalCode}<br />{office.address}</p>
-                      <p className="text-[12px] text-black/50 font-inter">{office.tel}</p>
-                    </div>
-                  ))}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+                {/* 会社概要 */}
+                <div>
+                  <p data-reveal-sm="" style={d(280)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">会社概要</p>
+                  <dl className="divide-y divide-black/6">
+                    {[
+                      { dt: "会社名",   dd: companyInfo.name },
+                      { dt: "設立",     dd: companyInfo.founded },
+                      { dt: "代表者",   dd: `${companyInfo.representative.title} ${companyInfo.representative.name}` },
+                      { dt: "事業内容", dd: companyInfo.business },
+                    ].map(({ dt, dd }, i) => (
+                      <div key={dt} data-reveal-pop="" style={d(320 + i * 60)} className="flex gap-6 py-3.5">
+                        <dt className="text-[12px] text-black/40 w-20 flex-shrink-0 font-inter">{dt}</dt>
+                        <dd className="text-[12px] text-[#0a0a0a] leading-relaxed">{dd}</dd>
+                      </div>
+                    ))}
+                  </dl>
                 </div>
-              </div>
 
-              {/* 主要取引先 */}
-              <div>
-                <p data-reveal-sm="" style={d(680)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">主要取引先</p>
-                <ul className="flex flex-col sm:flex-row gap-3">
-                  {companyInfo.notableClients.map((client, i) => (
-                    <li key={client} data-reveal-pop="" style={d(720 + i * 80)} className="border border-black/8 px-4 py-3 text-[12px] text-[#0a0a0a]">{client}</li>
-                  ))}
-                </ul>
+                {/* 拠点 */}
+                <div>
+                  <p data-reveal-sm="" style={d(460)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">拠点</p>
+                  <div className="flex flex-col gap-3">
+                    {companyInfo.offices.map((office, i) => (
+                      <div key={office.name} data-reveal-pop="" style={d(500 + i * 80)} className="border border-black/8 px-4 py-4">
+                        <p className="text-[10px] text-black/38 tracking-[0.2em] uppercase font-inter mb-3">{office.name}</p>
+                        <p className="text-[12px] text-[#0a0a0a] leading-relaxed mb-2">〒{office.postalCode}<br />{office.address}</p>
+                        <p className="text-[12px] text-black/50 font-inter">{office.tel}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 主要取引先 */}
+                <div>
+                  <p data-reveal-sm="" style={d(680)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">主要取引先</p>
+                  <ul className="flex flex-col gap-2.5">
+                    {companyInfo.notableClients.map((client, i) => (
+                      <li key={client} data-reveal-pop="" style={d(720 + i * 80)} className="border border-black/8 px-3 py-2.5 text-[12px] text-[#0a0a0a]">{client}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </section>
@@ -203,7 +205,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 bg-[#0a0a0a] text-white min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 bg-[#0a0a0a] text-white h-[100dvh] overflow-hidden flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
@@ -254,7 +256,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 h-[100dvh] overflow-hidden flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
@@ -295,7 +297,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24 bg-[#fafafa]"
+            className="border-t border-black/8 h-[100dvh] overflow-hidden flex flex-col justify-center px-6 md:px-10 py-16 md:py-24 bg-[#fafafa]"
           >
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
@@ -333,7 +335,7 @@ export default function AboutPage() {
               {/* テーブル */}
               <div>
                 <p data-reveal-sm="" style={d(640)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">月間顧問料 上位事務所 (一部抜粋)</p>
-                <div className="overflow-x-auto -mx-6 md:mx-0">
+                <div data-snap-scrollable="" className="overflow-x-auto overflow-y-auto max-h-[50dvh] -mx-6 md:mx-0">
                   <table className="min-w-full border-collapse text-[13px]">
                     <thead>
                       <tr data-reveal-sm="" style={d(680)} className="border-b border-black/8">
@@ -374,7 +376,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 h-[100dvh] overflow-hidden flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full flex flex-col md:flex-row md:items-end md:justify-between gap-10">
               <div>
