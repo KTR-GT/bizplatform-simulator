@@ -136,20 +136,7 @@ function EntryCard({
       ].join(" ")}
     >
 
-      {/* ── 中央縦線 (ホバーで opacity 0→0.7) ───────── */}
-      {!soon && (
-        <div
-          aria-hidden
-          className="
-            pointer-events-none absolute left-1/2 -translate-x-px top-0 bottom-0
-            w-px bg-white z-30
-            opacity-0 group-hover:opacity-70
-            transition-opacity duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]
-          "
-        />
-      )}
-
-      {/* ── 中央グロー (ホバーで 0→20%) ─────────────── */}
+      {/* ── 右側グロー: ドアの隙間から光が漏れる ────── */}
       {!soon && (
         <div
           aria-hidden
@@ -160,7 +147,7 @@ function EntryCard({
           "
           style={{
             background:
-              "radial-gradient(ellipse 70% 90% at 50% 50%, rgba(255,255,255,0.20) 0%, transparent 65%)",
+              "linear-gradient(to left, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 42%)",
           }}
         />
       )}
@@ -176,19 +163,13 @@ function EntryCard({
             transition-all duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]
             group-hover:bg-white group-hover:opacity-100
             group-hover:rotate-[8deg]
-            group-hover:shadow-[0_0_0_3px_rgba(255,255,255,0.25),0_0_18px_6px_rgba(255,255,255,0.35)]
+            group-hover:shadow-[0_0_0_4px_rgba(255,255,255,0.20),0_0_24px_8px_rgba(255,255,255,0.40)]
           "
         />
       )}
 
-      {/* ── コンテンツ本体 (ホバーで左へ -12px スイング) ─ */}
-      <div
-        className={[
-          "relative z-10 flex flex-col h-full",
-          "transition-transform duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-          !soon ? "group-hover:-translate-x-[12px]" : "",
-        ].join(" ")}
-      >
+      {/* ── コンテンツ本体 ──────────────────────────── */}
+      <div className="relative z-10 flex flex-col h-full">
 
         {/* 上段: タイトル + サブテキスト (縦中央) */}
         <div className="flex-1 flex flex-col items-start justify-center px-7 pt-10 pb-4">
