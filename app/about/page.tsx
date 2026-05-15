@@ -5,7 +5,7 @@ import { companyInfo } from "@/data/company-info"
 import { marketStats } from "@/data/market-reference"
 import { partnerCases } from "@/data/partner-cases"
 import { RevealSection } from "@/components/shared/reveal-section"
-import { SnapThrottle } from "@/components/shared/snap-throttle"
+import { SectionSnap } from "@/components/shared/section-snap"
 import { KpiGrid } from "@/components/about/kpi-grid"
 
 export const metadata: Metadata = {
@@ -72,7 +72,7 @@ const d = (ms: number): React.CSSProperties => ({ "--reveal-delay": `${ms}ms` } 
 export default function AboutPage() {
   return (
     <div className="bg-white text-[#0a0a0a]">
-      <SnapThrottle />
+      <SectionSnap />
 
       {/* ── ヘッダー ──────────────────────────────────────── */}
       <header className="flex items-center justify-between px-6 py-5 md:px-10 md:py-7 border-b border-black/8">

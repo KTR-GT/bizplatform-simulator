@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Noto_Sans_JP, DM_Serif_Display } from 'next/font/google'
 import './globals.css'
 import { CustomCursor } from '@/components/layout/custom-cursor'
+import { SmoothScrollProvider } from '@/components/shared/smooth-scroll-provider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,8 +43,10 @@ export default function RootLayout({
       className={`${inter.variable} ${notoSansJP.variable} ${dmSerifDisplay.variable}`}
     >
       <body className="antialiased">
-        <CustomCursor />
-        {children}
+        <SmoothScrollProvider>
+          <CustomCursor />
+          {children}
+        </SmoothScrollProvider>
       </body>
     </html>
   )

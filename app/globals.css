@@ -315,20 +315,6 @@
 }
 
 /* =====================================================
-   SCROLL SNAP (mandatory + JS cooldown で連発抑制)
-===================================================== */
-html {
-  scroll-snap-type: y mandatory;
-  scroll-padding-top: 0;
-  scroll-behavior: smooth;
-}
-
-section[data-snap] {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
-}
-
-/* =====================================================
    REVEAL VARIANTS
 ===================================================== */
 
