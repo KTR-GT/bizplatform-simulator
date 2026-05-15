@@ -55,8 +55,9 @@ export interface Customer {
   digitalLevel:     DigitalLevel
   softwareUsage:    SoftwareUsage
   switchingReason?: SwitchingReason
-  monthlyFeeRange:  [number, number]
+  monthlyFeeRange:   [number, number]
   monthlyFeeTypical: number
+  spotFeeTypical?:   number  // spot-only 専用: 年額または1案件想定報酬（円）
   urgency:          Urgency
   voice:            string
   story:            string

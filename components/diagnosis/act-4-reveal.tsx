@@ -8,7 +8,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import type { DiagnosisFlow } from "@/hooks/use-diagnosis-flow"
-import { buildReasons, buildNearMissComment } from "@/lib/matching/reveal-copy"
+import { buildReasons, buildNearMissComment, buildSpotFeeLabel } from "@/lib/matching/reveal-copy"
 import type { ScoredCustomer } from "@/lib/matching/select"
 
 // ============================================================
@@ -110,6 +110,12 @@ function MainCard({ scored, index, total, onNext, onFinish }: {
               <span className={`text-[11px] border rounded-full px-2.5 py-0.5 ${URGENCY_BADGE[customer.urgency].color}`}>
                 {URGENCY_BADGE[customer.urgency].label}
               </span>
+              {/* spot-only バッジ */}
+              {customer.needType === "spot-only" && (
+                <span className="text-[11px] border border-amber-400/40 bg-amber-400/10 text-amber-300 rounded-full px-2.5 py-0.5">
+                  スポット案件
+                </span>
+              )}
               <span className="text-white/35 text-[11px] border border-white/10 rounded-full px-2.5 py-0.5">
                 {customer.customerType}
               </span>
@@ -124,18 +130,35 @@ function MainCard({ scored, index, total, onNext, onFinish }: {
             {/* 区切り線 */}
             <div className="border-t border-white/10 mb-6" />
 
-            {/* 想定月額顧問料 — 主役 */}
-            <div className="mb-6">
-              <p className="text-white/35 text-[10px] tracking-widest uppercase mb-2">
-                想定月額顧問料
-              </p>
-              <p
-                className="font-serif-display text-white leading-none mb-4"
-                style={{ fontSize: "clamp(48px, 5vw, 72px)" }}
-              >
-                ¥{customer.monthlyFeeTypical.toLocaleString()}
-              </p>
-            </div>
+            {/* 報酬表示 — spot-only と月額で分岐 */}
+            {customer.needType === "spot-only" ? (
+              <div className="mb-6">
+                <p className="text-white/35 text-[10px] tracking-widest uppercase mb-2">
+                  {buildSpotFeeLabel(customer).sub}
+                </p>
+                <p
+                  className="font-serif-display text-white leading-none mb-1"
+                  style={{ fontSize: "clamp(40px, 4.5vw, 64px)" }}
+                >
+                  {buildSpotFeeLabel(customer).label}
+                </p>
+                <p className="text-amber-300/60 text-[11px] mt-2">
+                  月額顧問契約なし・スポット対応
+                </p>
+              </div>
+            ) : (
+              <div className="mb-6">
+                <p className="text-white/35 text-[10px] tracking-widest uppercase mb-2">
+                  想定月額顧問料
+                </p>
+                <p
+                  className="font-serif-display text-white leading-none mb-4"
+                  style={{ fontSize: "clamp(48px, 5vw, 72px)" }}
+                >
+                  ¥{customer.monthlyFeeTypical.toLocaleString()}
+                </p>
+              </div>
+            )}
 
             {/* 区切り線 */}
             <div className="border-t border-white/10 mb-5" />
@@ -293,6 +316,11 @@ function NearMissSection({ flow, nearMiss, main }: {
                 <span className={`text-[11px] border rounded-full px-2.5 py-0.5 ${URGENCY_BADGE[customer.urgency].color}`}>
                   {URGENCY_BADGE[customer.urgency].label}
                 </span>
+                {customer.needType === "spot-only" && (
+                  <span className="text-[11px] border border-amber-400/40 bg-amber-400/10 text-amber-300 rounded-full px-2.5 py-0.5">
+                    スポット案件
+                  </span>
+                )}
               </div>
               <div>
                 <p className="text-white font-bold text-lg leading-tight mb-1.5">
@@ -304,6 +332,11 @@ function NearMissSection({ flow, nearMiss, main }: {
               </div>
               <p className="text-white/30 text-[11px]">
                 Score {breakdown.total} / 100 · {customer.region} · {customer.customerType}
+                {customer.needType === "spot-only" && customer.spotFeeTypical && (
+                  <span className="text-amber-300/70 ml-2">
+                    · {buildSpotFeeLabel(customer).label}
+                  </span>
+                )}
               </p>
               <p className="text-white/50 text-xs border-l border-white/15 pl-3" style={{ lineHeight: 1.6 }}>
                 {buildNearMissComment(mainCustomers, customer)}

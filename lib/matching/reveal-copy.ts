@@ -49,7 +49,6 @@ export function buildReasons(
     reasons.push({ label: "今すぐ動ける・緊急度が高い案件" })
   }
 
-  // 3つに絞る（多すぎると読みにくい）
   return reasons.slice(0, 3)
 }
 
@@ -65,4 +64,19 @@ export function buildNearMissComment(
   if (diffRegion)   return `条件は近いですがエリアが異なります（${nearMiss.region}）`
   if (diffNeed)     return `ニーズタイプが少し異なるケースです`
   return "もう一歩でマッチの惜しい案件です"
+}
+
+// spot-only 顧客の報酬表示ラベルを生成
+export function buildSpotFeeLabel(customer: Customer): { label: string; sub: string } {
+  const fee = customer.spotFeeTypical ?? 80000
+  if (fee >= 100000) {
+    return {
+      label: `年額 ¥${fee.toLocaleString()}`,
+      sub:   "申告・決算スポット",
+    }
+  }
+  return {
+    label: `¥${fee.toLocaleString()}`,
+    sub:   "1案件あたり想定",
+  }
 }
