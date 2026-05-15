@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
-import { companyInfo, keyMetrics } from "@/data/company-info"
+import { companyInfo } from "@/data/company-info"
 import { marketStats } from "@/data/market-reference"
 import { partnerCases } from "@/data/partner-cases"
 
@@ -146,60 +146,96 @@ export default function AboutPage() {
         {/* ══════════════════════════════════════════════════
             Section 2: 私たちは誰か
         ══════════════════════════════════════════════════ */}
-        <section className="border-t border-black/8 px-6 md:px-10 py-20 md:py-28 max-w-5xl mx-auto">
-          <p className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black">
-            02 / Company
-          </p>
-          <h2
-            className="font-black leading-[1.1] mb-12 tracking-tight"
-            style={{ fontSize: "clamp(26px, 3.5vw, 48px)" }}
-          >
-            {companyInfo.mission}
-          </h2>
-
-          {/* Key Metrics グリッド */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-black/8 border border-black/8 mb-16">
-            {keyMetrics.map((m) => (
-              <div key={m.label} className="bg-white px-5 py-6 md:px-7 md:py-8">
-                <p className="text-[10px] text-black/40 tracking-[0.2em] uppercase mb-2 font-inter">{m.label}</p>
-                <p
-                  className="font-serif-display leading-none text-[#0a0a0a] mb-1"
-                  style={{ fontSize: "clamp(32px, 3vw, 48px)" }}
-                >
-                  {m.value}
-                  {m.unit && (
-                    <span className="text-[14px] font-sans font-bold ml-1 align-baseline">{m.unit}</span>
-                  )}
-                </p>
-                {m.note && (
-                  <p className="text-[11px] text-black/38 mt-1">{m.note}</p>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* 会社概要テーブル */}
-          <div className="max-w-xl">
-            <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">
-              会社概要
+        <section className="border-t border-black/8 px-6 md:px-10 py-20 md:py-28">
+          <div className="max-w-5xl mx-auto">
+            <p className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-8 font-inter font-black">
+              02 / Company
             </p>
-            <dl className="divide-y divide-black/6">
-              {[
-                { dt: "会社名",   dd: companyInfo.name },
-                { dt: "設立",     dd: companyInfo.founded },
-                { dt: "代表者",   dd: companyInfo.ceo },
-                { dt: "所在地",   dd: companyInfo.address },
-                { dt: "事業内容", dd: companyInfo.business.join("、") },
-              ].map(({ dt, dd }) => (
-                <div key={dt} className="flex gap-6 py-3.5">
-                  <dt className="text-[12px] text-black/40 w-20 flex-shrink-0 font-inter">{dt}</dt>
-                  <dd className="text-[12px] text-[#0a0a0a]">{dd}</dd>
+
+            {/* ── Vision hero ─────────────────────────────── */}
+            <h2
+              className="font-black leading-[1.05] mb-6 tracking-tight"
+              style={{ fontSize: "clamp(30px, 4.5vw, 64px)" }}
+            >
+              {companyInfo.vision}
+            </h2>
+            <p
+              className="text-black/55 leading-relaxed mb-16 max-w-2xl"
+              style={{ fontSize: "clamp(14px, 1.2vw, 17px)" }}
+            >
+              {companyInfo.mission}
+            </p>
+
+            {/* ── KPI 4 数字 ──────────────────────────────── */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-black/8 border border-black/8 mb-16">
+              {companyInfo.kpiNumbers.map((kpi) => (
+                <div key={kpi.label} className="bg-white px-5 py-7 md:px-7 md:py-9">
+                  <p
+                    className="font-serif-display leading-none text-[#0a0a0a] mb-2"
+                    style={{ fontSize: "clamp(40px, 5vw, 72px)" }}
+                  >
+                    {kpi.value}
+                  </p>
+                  <p className="text-[12px] font-bold text-[#0a0a0a] mb-1">{kpi.label}</p>
+                  <p className="text-[11px] text-black/38">{kpi.note}</p>
                 </div>
               ))}
-            </dl>
-            <p className="text-[10px] text-black/28 mt-4">
-              ※ 上記情報は準備中のプレースホルダーです。正式な情報は近日公開予定。
-            </p>
+            </div>
+
+            {/* ── 会社概要テーブル ─────────────────────────── */}
+            <div className="mb-14 max-w-2xl">
+              <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">
+                会社概要
+              </p>
+              <dl className="divide-y divide-black/6">
+                {[
+                  { dt: "会社名",   dd: companyInfo.name },
+                  { dt: "設立",     dd: companyInfo.founded },
+                  { dt: "代表者",   dd: `${companyInfo.representative.title} ${companyInfo.representative.name}` },
+                  { dt: "事業内容", dd: companyInfo.business },
+                ].map(({ dt, dd }) => (
+                  <div key={dt} className="flex gap-6 py-3.5">
+                    <dt className="text-[12px] text-black/40 w-20 flex-shrink-0 font-inter">{dt}</dt>
+                    <dd className="text-[12px] text-[#0a0a0a] leading-relaxed">{dd}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            {/* ── 3 拠点カード ─────────────────────────────── */}
+            <div className="mb-14">
+              <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-5 font-inter font-black">
+                拠点
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                {companyInfo.offices.map((office) => (
+                  <div key={office.name} className="border border-black/8 px-5 py-5">
+                    <p className="text-[10px] text-black/38 tracking-[0.2em] uppercase font-inter mb-3">
+                      {office.name}
+                    </p>
+                    <p className="text-[12px] text-[#0a0a0a] leading-relaxed mb-2">
+                      〒{office.postalCode}<br />
+                      {office.address}
+                    </p>
+                    <p className="text-[12px] text-black/50 font-inter">{office.tel}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── 主要取引先 ───────────────────────────────── */}
+            <div>
+              <p className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">
+                主要取引先
+              </p>
+              <ul className="flex flex-col sm:flex-row gap-3">
+                {companyInfo.notableClients.map((client) => (
+                  <li key={client} className="border border-black/8 px-4 py-3 text-[12px] text-[#0a0a0a]">
+                    {client}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
