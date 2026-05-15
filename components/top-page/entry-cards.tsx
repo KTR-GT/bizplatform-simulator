@@ -2,8 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { Clock, Building2, Target, LineChart } from "lucide-react"
-import type { LucideIcon } from "lucide-react"
+import { Clock } from "lucide-react"
 
 // ──────────────────────────────────────────────
 // カードデータ
@@ -15,7 +14,6 @@ interface EntryDef {
   minutes: number
   href:    string
   soon:    boolean
-  Icon:    LucideIcon
 }
 
 const ENTRIES: EntryDef[] = [
@@ -26,7 +24,6 @@ const ENTRIES: EntryDef[] = [
     minutes: 3,
     href:    "/about",
     soon:    true,
-    Icon:    Building2,
   },
   {
     num:     "02",
@@ -35,7 +32,6 @@ const ENTRIES: EntryDef[] = [
     minutes: 5,
     href:    "/diagnosis",
     soon:    false,
-    Icon:    Target,
   },
   {
     num:     "03",
@@ -44,12 +40,11 @@ const ENTRIES: EntryDef[] = [
     minutes: 10,
     href:    "/simulator",
     soon:    false,
-    Icon:    LineChart,
   },
 ]
 
 // ──────────────────────────────────────────────
-// EntryCards (Client Component)
+// EntryCards
 // ──────────────────────────────────────────────
 interface ExpandState {
   active:  boolean
@@ -87,7 +82,7 @@ export function EntryCards() {
   return (
     <div className="relative w-full max-w-4xl">
 
-      {/* ドア演出オーバーレイ: 黒→白 (--door-bg = white) */}
+      {/* ドア演出オーバーレイ: 黒→白 */}
       <div
         aria-hidden
         className={`door-overlay${expand.active ? " door-overlay--active" : ""}`}
@@ -98,18 +93,13 @@ export function EntryCards() {
         } as React.CSSProperties}
       />
 
-      {/* 3列グリッド */}
       <div
         className="grid grid-cols-1 md:grid-cols-3 gap-[2px] md:gap-[3px]"
         role="list"
         aria-label="3つの入口"
       >
         {ENTRIES.map((entry) => (
-          <EntryCard
-            key={entry.num}
-            entry={entry}
-            onNavigate={handleCardClick}
-          />
+          <EntryCard key={entry.num} entry={entry} onNavigate={handleCardClick} />
         ))}
       </div>
     </div>
@@ -117,7 +107,7 @@ export function EntryCards() {
 }
 
 // ──────────────────────────────────────────────
-// 単体カード
+// 単体カード — ドアシルエット
 // ──────────────────────────────────────────────
 function EntryCard({
   entry,
@@ -126,72 +116,84 @@ function EntryCard({
   entry:      EntryDef
   onNavigate: (href: string, e: React.MouseEvent<HTMLElement>) => void
 }) {
-  const { Icon, soon } = entry
+  const { soon } = entry
 
   const cardBody = (
     <div
       role="listitem"
       className={[
-        // ベース
         "group relative flex flex-col overflow-hidden border border-white/10",
         "bg-[#0a0a0a]",
-        // 縦長比率: モバイル 400px / デスクトップ 520px
         "h-[400px] md:h-[520px]",
         soon
           ? "opacity-45 select-none cursor-default"
-          : "cursor-pointer hover:border-white/22 hover:shadow-[0_16px_60px_rgba(0,0,0,0.95)]",
-        "transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+          : [
+              "cursor-pointer",
+              "hover:border-white/20",
+              "hover:shadow-[0_20px_70px_rgba(0,0,0,0.98)]",
+            ].join(" "),
+        "transition-all duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
       ].join(" ")}
     >
-      {/* ── 中央縦線 (ホバーでドアの合わせ目) ── */}
+
+      {/* ── 中央縦線 (ホバーで opacity 0→0.7) ───────── */}
       {!soon && (
         <div
           aria-hidden
           className="
-            absolute left-1/2 -translate-x-1/2 top-8 bottom-8
-            w-px bg-white z-10
-            opacity-0 group-hover:opacity-30
-            transition-opacity duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+            pointer-events-none absolute left-1/2 -translate-x-px top-0 bottom-0
+            w-px bg-white z-30
+            opacity-0 group-hover:opacity-70
+            transition-opacity duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]
           "
         />
       )}
 
-      {/* ── 中央グロー (ホバーで光が漏れる) ── */}
+      {/* ── 中央グロー (ホバーで 0→20%) ─────────────── */}
       {!soon && (
         <div
           aria-hidden
           className="
-            absolute inset-0 z-0
+            pointer-events-none absolute inset-0 z-20
             opacity-0 group-hover:opacity-100
-            transition-opacity duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+            transition-opacity duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]
           "
           style={{
             background:
-              "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,255,255,0.055) 0%, transparent 70%)",
+              "radial-gradient(ellipse 70% 90% at 50% 50%, rgba(255,255,255,0.20) 0%, transparent 65%)",
           }}
         />
       )}
 
-      {/* ── コンテンツ本体 (ホバーでわずかに左へ = ドアが開く) ── */}
+      {/* ── ドアノブ (右中央, 14-18px) ───────────────── */}
+      {!soon && (
+        <div
+          aria-hidden
+          className="
+            pointer-events-none absolute right-7 top-1/2 -translate-y-1/2 z-40
+            w-4 h-4 rounded-full
+            bg-white/45
+            transition-all duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+            group-hover:bg-white group-hover:opacity-100
+            group-hover:rotate-[8deg]
+            group-hover:shadow-[0_0_0_3px_rgba(255,255,255,0.25),0_0_18px_6px_rgba(255,255,255,0.35)]
+          "
+        />
+      )}
+
+      {/* ── コンテンツ本体 (ホバーで左へ -12px スイング) ─ */}
       <div
         className={[
-          "relative z-20 flex flex-col h-full",
-          "transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-          !soon ? "group-hover:-translate-x-[3px]" : "",
+          "relative z-10 flex flex-col h-full",
+          "transition-transform duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+          !soon ? "group-hover:-translate-x-[12px]" : "",
         ].join(" ")}
       >
-        {/* 上段: アイコン + タイトル + サブテキスト (中央揃え、縦中央) */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 pt-10 pb-4 text-center">
 
-          {/* 業種アイコン */}
-          <Icon
-            className="text-white/50 mb-5 flex-shrink-0"
-            style={{ width: "clamp(36px, 3.5vw, 48px)", height: "clamp(36px, 3.5vw, 48px)" }}
-            strokeWidth={1.5}
-            aria-hidden
-          />
+        {/* 上段: タイトル + サブテキスト (縦中央) */}
+        <div className="flex-1 flex flex-col items-start justify-center px-7 pt-10 pb-4">
 
-          {/* タイトル — 最大サイズ */}
+          {/* タイトル — 最大要素 */}
           <h2
             className="text-white font-black leading-[1.1] mb-4 tracking-tight"
             style={{ fontSize: "clamp(26px, 3vw, 44px)" }}
@@ -209,19 +211,19 @@ function EntryCard({
 
           {/* 準備中バッジ */}
           {soon && (
-            <span className="mt-4 text-[9px] tracking-[0.2em] uppercase border border-white/14 text-white/28 rounded-full px-2.5 py-1">
+            <span className="mt-5 text-[9px] tracking-[0.2em] uppercase border border-white/14 text-white/28 rounded-full px-2.5 py-1">
               準備中
             </span>
           )}
         </div>
 
         {/* 下段: 番号 (補助) + 所要時間 */}
-        <div className="flex items-end justify-between px-5 pb-5">
+        <div className="flex items-end justify-between px-7 pb-6">
           <span
             aria-hidden
             className="
-              font-serif-display leading-none select-none text-white/25
-              transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+              font-serif-display leading-none select-none text-white/40
+              transition-transform duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)]
               group-hover:-translate-y-0.5
             "
             style={{ fontSize: "clamp(40px, 4vw, 64px)" }}
@@ -230,7 +232,7 @@ function EntryCard({
           </span>
 
           {!soon && (
-            <span className="flex items-center gap-1 text-white/25 text-[11px] mb-1">
+            <span className="flex items-center gap-1 text-white/25 text-[11px] mb-0.5">
               <Clock size={10} strokeWidth={1.75} aria-hidden />
               約{entry.minutes}分
             </span>
