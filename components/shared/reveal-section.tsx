@@ -3,10 +3,10 @@
 import { useInViewport } from "@/hooks/use-in-viewport"
 
 interface Props {
-  children:   React.ReactNode
-  className?: string
-  threshold?: number
-  /** ラッパー要素のタグ (default: div) */
+  children:    React.ReactNode
+  className?:  string
+  threshold?:  number
+  rootMargin?: string
   as?: "div" | "section"
 }
 
@@ -17,11 +17,12 @@ interface Props {
  */
 export function RevealSection({
   children,
-  className = "",
-  threshold = 0.15,
-  as: Tag = "div",
+  className  = "",
+  threshold  = 0,
+  rootMargin = "0px 0px -80px 0px",
+  as: Tag    = "div",
 }: Props) {
-  const { ref, inView } = useInViewport({ threshold })
+  const { ref, inView } = useInViewport({ threshold, rootMargin })
 
   return (
     <Tag
