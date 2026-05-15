@@ -14,7 +14,7 @@ interface Options {
  * - 100ms 遅延でハイドレーション完了後に observe 開始
  * - prefers-reduced-motion が有効な場合は即座に inView = true
  */
-export function useInViewport({ threshold = 0, rootMargin = "0px 0px -10% 0px" }: Options = {}) {
+export function useInViewport({ threshold = 0, rootMargin = "0px 0px -25% 0px" }: Options = {}) {
   const ref    = useRef<HTMLElement | null>(null)
   const [inView, setInView] = useState(false)
 

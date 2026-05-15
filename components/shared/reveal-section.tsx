@@ -19,7 +19,7 @@ export function RevealSection({
   children,
   className  = "",
   threshold  = 0,
-  rootMargin = "0px 0px -80px 0px",
+  rootMargin = "0px 0px -25% 0px",
   as: Tag    = "div",
 }: Props) {
   const { ref, inView } = useInViewport({ threshold, rootMargin })

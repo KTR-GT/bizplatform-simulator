@@ -100,7 +100,7 @@ export default function AboutPage() {
         ══════════════════════════════════════════════════ */}
         <section
           data-snap
-          className="min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-20 max-w-5xl mx-auto w-full"
+          className="min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-20 max-w-5xl mx-auto w-full"
         >
           <p className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-6 font-inter font-black stagger-1">
             01 / About
@@ -128,7 +128,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full">
 
@@ -201,7 +201,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 bg-[#0a0a0a] text-white min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 bg-[#0a0a0a] text-white min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
@@ -252,7 +252,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
           >
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
@@ -293,7 +293,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             data-snap
-            className="border-t border-black/8 min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-10 py-16 md:py-24 bg-[#fafafa]"
+            className="border-t border-black/8 min-h-[100dvh] flex flex-col justify-center px-6 md:px-10 py-16 md:py-24 bg-[#fafafa]"
           >
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
