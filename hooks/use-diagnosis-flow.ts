@@ -12,6 +12,7 @@ import {
   INITIAL_ANSWERS,
   TOTAL_QUESTIONS,
 } from "@/types/diagnosis"
+import type { MatchResult } from "@/lib/matching/select"
 
 // ============================================================
 // use-diagnosis-flow — ② AI診断 顧客マッチング の状態管理
@@ -27,6 +28,7 @@ export function useDiagnosisFlow() {
   const [act,           setAct]           = useState<Act>(1)
   const [questionIndex, setQuestionIndex] = useState<QuestionIndex>(0)
   const [answers,       setAnswers]       = useState<DiagnosisAnswers>(INITIAL_ANSWERS)
+  const [matchResult,   setMatchResult]   = useState<MatchResult | null>(null)
 
   // ── 幕の遷移 ─────────────────────────────────
   const startHearing = useCallback(() => {
@@ -133,6 +135,8 @@ export function useDiagnosisFlow() {
     act,
     questionIndex,
     answers,
+    matchResult,
+    setMatchResult,
     canAdvance,
     isHearingComplete,
     progress,
