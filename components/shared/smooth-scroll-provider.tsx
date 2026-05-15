@@ -21,7 +21,7 @@ export function SmoothScrollProvider({ children }: Props) {
     <ReactLenis
       root
       options={{
-        duration: 1.6,
+        duration: 1.0,
         easing: (t: number) => 1 - Math.pow(1 - t, 3),
         wheelMultiplier: 0.8,
         smoothWheel: true,

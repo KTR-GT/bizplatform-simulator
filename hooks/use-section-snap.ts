@@ -18,9 +18,11 @@ export function useSectionSnap() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
     let lastJumpAt = 0
-    const COOLDOWN       = 1400
+    const COOLDOWN       = 800
     const EDGE_THRESHOLD = 20
     const DELTA_MIN      = 10
+    const JUMP_DURATION  = 0.6
+    const jumpEasing     = (t: number) => 1 - Math.pow(1 - t, 4) // easeOutQuart
 
     const onWheel = (e: WheelEvent) => {
       const now = performance.now()
@@ -51,7 +53,7 @@ export function useSectionSnap() {
         const atBottom = rect.bottom <= vh + EDGE_THRESHOLD
         if (atBottom && idx < sections.length - 1) {
           e.preventDefault()
-          lenis.scrollTo(sections[idx + 1], { duration: 1.4 })
+          lenis.scrollTo(sections[idx + 1], { duration: JUMP_DURATION, easing: jumpEasing })
           lastJumpAt = now
         }
         return
@@ -62,7 +64,7 @@ export function useSectionSnap() {
         const atTop = rect.top >= -EDGE_THRESHOLD
         if (atTop && idx > 0) {
           e.preventDefault()
-          lenis.scrollTo(sections[idx - 1], { duration: 1.4 })
+          lenis.scrollTo(sections[idx - 1], { duration: JUMP_DURATION, easing: jumpEasing })
           lastJumpAt = now
         }
         return
