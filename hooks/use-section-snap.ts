@@ -4,8 +4,9 @@ import { useEffect } from "react"
 import { useLenis } from "lenis/react"
 
 /**
- * ホイール delta が一定以上溜まったら次の section[data-snap] に
- * Lenis でジャンプ。Apple 系のなめらかな切替を実現する。
+ * セクション内ではネイティブスクロールを許可し、
+ * セクションの上端 / 下端に達した瞬間だけ前後の section[data-snap] へジャンプする。
+ * Lenis でなめらかな切替 (1.4s)、ジャンプ後 1.4s は次の入力を抑制。
  * prefers-reduced-motion 環境では発火しない。
  */
 export function useSectionSnap() {
@@ -17,8 +18,9 @@ export function useSectionSnap() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
     let lastJumpAt = 0
-    const COOLDOWN  = 1200
-    const DELTA_MIN = 30
+    const COOLDOWN       = 1400
+    const EDGE_THRESHOLD = 20
+    const DELTA_MIN      = 10
 
     const onWheel = (e: WheelEvent) => {
       const now = performance.now()
@@ -26,25 +28,45 @@ export function useSectionSnap() {
         e.preventDefault()
         return
       }
+
       if (Math.abs(e.deltaY) < DELTA_MIN) return
 
       const sections = Array.from(
         document.querySelectorAll<HTMLElement>("section[data-snap]"),
       )
+      if (!sections.length) return
+
+      const vh = window.innerHeight
       const current = sections.find((s) => {
         const r = s.getBoundingClientRect()
-        return r.top <= 100 && r.bottom > 100
+        return r.top <= vh / 2 && r.bottom > vh / 2
       })
       if (!current) return
 
-      const idx     = sections.indexOf(current)
-      const nextIdx = e.deltaY > 0 ? idx + 1 : idx - 1
-      const target  = sections[nextIdx]
-      if (!target) return
+      const idx  = sections.indexOf(current)
+      const rect = current.getBoundingClientRect()
 
-      e.preventDefault()
-      lenis.scrollTo(target, { duration: 1.6 })
-      lastJumpAt = now
+      // 下向きスクロール: セクション下端に達していたら次のセクションへ
+      if (e.deltaY > 0) {
+        const atBottom = rect.bottom <= vh + EDGE_THRESHOLD
+        if (atBottom && idx < sections.length - 1) {
+          e.preventDefault()
+          lenis.scrollTo(sections[idx + 1], { duration: 1.4 })
+          lastJumpAt = now
+        }
+        return
+      }
+
+      // 上向きスクロール: セクション上端に達していたら前のセクションへ
+      if (e.deltaY < 0) {
+        const atTop = rect.top >= -EDGE_THRESHOLD
+        if (atTop && idx > 0) {
+          e.preventDefault()
+          lenis.scrollTo(sections[idx - 1], { duration: 1.4 })
+          lastJumpAt = now
+        }
+        return
+      }
     }
 
     window.addEventListener("wheel", onWheel, { passive: false })
