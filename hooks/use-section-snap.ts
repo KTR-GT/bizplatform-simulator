@@ -17,7 +17,7 @@ export function useSectionSnap() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
     let lastJumpAt = 0
-    const COOLDOWN = 800
+    const COOLDOWN = 550
 
     const goTo = (delta: 1 | -1) => {
       const now = performance.now()
@@ -39,8 +39,8 @@ export function useSectionSnap() {
       if (nextIdx === currentIdx) return
 
       lenis.scrollTo(sections[nextIdx], {
-        duration: 0.6,
-        easing: (t: number) => 1 - Math.pow(1 - t, 4),
+        duration: 0.45,
+        easing: (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
       })
       lastJumpAt = now
     }
@@ -51,7 +51,7 @@ export function useSectionSnap() {
       if (allow) return
 
       e.preventDefault()
-      if (Math.abs(e.deltaY) < 10) return
+      if (Math.abs(e.deltaY) < 5) return
       goTo(e.deltaY > 0 ? 1 : -1)
     }
 
@@ -71,7 +71,7 @@ export function useSectionSnap() {
     }
     const onTouchEnd = (e: TouchEvent) => {
       const dy = touchStartY - e.changedTouches[0].clientY
-      if (Math.abs(dy) < 50) return
+      if (Math.abs(dy) < 40) return
       const allow = (e.target as HTMLElement | null)?.closest?.("[data-snap-scrollable]")
       if (allow) return
       goTo(dy > 0 ? 1 : -1)

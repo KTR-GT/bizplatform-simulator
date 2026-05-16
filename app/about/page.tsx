@@ -125,7 +125,7 @@ export default function AboutPage() {
         </section>
 
         {/* ══════════════════════════════════════════════════
-            S2: Company
+            S2-a: Vision / Mission / KPI
         ══════════════════════════════════════════════════ */}
         <RevealSection>
           <section
@@ -145,17 +145,42 @@ export default function AboutPage() {
                 <span data-reveal-sm="" style={d(80)} className="block">{companyInfo.vision}</span>
               </h2>
               <p data-reveal="" style={{ ...d(180), fontSize: "clamp(14px, 1.2vw, 17px)" }}
-                className="text-black/55 leading-relaxed mb-10 max-w-[60ch]">
+                className="text-black/55 leading-relaxed mb-12 max-w-[60ch]">
                 {companyInfo.mission}
               </p>
 
               {/* KPI カウントアップ */}
               <KpiGrid items={companyInfo.kpiNumbers} />
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ══════════════════════════════════════════════════
+            S2-b: 会社概要 / 拠点 / 主要取引先
+        ══════════════════════════════════════════════════ */}
+        <RevealSection>
+          <section
+            data-snap
+            className="border-t border-black/8 h-[100dvh] overflow-hidden flex flex-col justify-center px-6 md:px-10 py-16 md:py-24"
+          >
+            <div className="max-w-5xl mx-auto w-full">
+
+              <p data-reveal-pop="" style={d(0)}
+                className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
+                03 / Profile
+              </p>
+              <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
+
+              <h2 className="font-black leading-[1.1] mb-10 tracking-tight"
+                style={{ fontSize: "clamp(22px, 2.4vw, 36px)" }}>
+                <span data-reveal-sm="" style={d(80)} className="block">会社情報</span>
+              </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+
                 {/* 会社概要 */}
                 <div>
-                  <p data-reveal-sm="" style={d(280)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">会社概要</p>
+                  <p data-reveal-sm="" style={d(160)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">会社概要</p>
                   <dl className="divide-y divide-black/6">
                     {[
                       { dt: "会社名",   dd: companyInfo.name },
@@ -163,7 +188,7 @@ export default function AboutPage() {
                       { dt: "代表者",   dd: `${companyInfo.representative.title} ${companyInfo.representative.name}` },
                       { dt: "事業内容", dd: companyInfo.business },
                     ].map(({ dt, dd }, i) => (
-                      <div key={dt} data-reveal-pop="" style={d(320 + i * 60)} className="flex gap-6 py-3.5">
+                      <div key={dt} data-reveal-pop="" style={d(200 + i * 60)} className="flex gap-6 py-3.5">
                         <dt className="text-[12px] text-black/40 w-20 flex-shrink-0 font-inter">{dt}</dt>
                         <dd className="text-[12px] text-[#0a0a0a] leading-relaxed">{dd}</dd>
                       </div>
@@ -173,10 +198,10 @@ export default function AboutPage() {
 
                 {/* 拠点 */}
                 <div>
-                  <p data-reveal-sm="" style={d(460)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">拠点</p>
+                  <p data-reveal-sm="" style={d(340)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">拠点</p>
                   <div className="flex flex-col gap-3">
                     {companyInfo.offices.map((office, i) => (
-                      <div key={office.name} data-reveal-pop="" style={d(500 + i * 80)} className="border border-black/8 px-4 py-4">
+                      <div key={office.name} data-reveal-pop="" style={d(380 + i * 80)} className="border border-black/8 px-4 py-4">
                         <p className="text-[10px] text-black/38 tracking-[0.2em] uppercase font-inter mb-3">{office.name}</p>
                         <p className="text-[12px] text-[#0a0a0a] leading-relaxed mb-2">〒{office.postalCode}<br />{office.address}</p>
                         <p className="text-[12px] text-black/50 font-inter">{office.tel}</p>
@@ -187,10 +212,10 @@ export default function AboutPage() {
 
                 {/* 主要取引先 */}
                 <div>
-                  <p data-reveal-sm="" style={d(680)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">主要取引先</p>
+                  <p data-reveal-sm="" style={d(560)} className="text-[10px] text-black/30 tracking-[0.25em] uppercase mb-4 font-inter font-black">主要取引先</p>
                   <ul className="flex flex-col gap-2.5">
                     {companyInfo.notableClients.map((client, i) => (
-                      <li key={client} data-reveal-pop="" style={d(720 + i * 80)} className="border border-black/8 px-3 py-2.5 text-[12px] text-[#0a0a0a]">{client}</li>
+                      <li key={client} data-reveal-pop="" style={d(600 + i * 80)} className="border border-black/8 px-3 py-2.5 text-[12px] text-[#0a0a0a]">{client}</li>
                     ))}
                   </ul>
                 </div>
@@ -210,7 +235,7 @@ export default function AboutPage() {
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
                 className="text-white/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
-                03 / Mechanism
+                04 / Mechanism
               </p>
               <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-white/12 mb-7" />
 
@@ -261,7 +286,7 @@ export default function AboutPage() {
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
                 className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
-                04 / Market
+                05 / Market
               </p>
               <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
 
@@ -302,7 +327,7 @@ export default function AboutPage() {
             <div className="max-w-5xl mx-auto w-full">
               <p data-reveal-pop="" style={d(0)}
                 className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
-                05 / Results
+                06 / Results
               </p>
               <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
 
@@ -382,7 +407,7 @@ export default function AboutPage() {
               <div>
                 <p data-reveal-pop="" style={d(0)}
                   className="text-black/30 text-[10px] tracking-[0.35em] uppercase mb-3 font-inter font-black">
-                  06 / Next Step
+                  07 / Next Step
                 </p>
                 <div aria-hidden data-reveal-border="" style={d(40)} className="h-px bg-black/10 mb-7" />
 
